@@ -26,7 +26,7 @@ module Heirloom
       end
 
       def delete(domain, key)
-        @sdb.delete_attributes(domain, key).body
+        @sdb.delete_attributes domain, key
       end
 
     end

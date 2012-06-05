@@ -14,7 +14,7 @@ include Grit
 module Heirloom
 
   class Heirloom
-    attr_accessor :heirloom_type, :commit, :source_dir
+    attr_accessor :heirloom_type, :commit, :source_dir, :prefix
 
     def self.list
       sdb = self.connect_to_sdb
@@ -52,6 +52,7 @@ module Heirloom
 
       self.heirloom_type = args[:heirloom_type]
       self.source_dir = args[:source_dir]
+      self.prefix = args[:prefix]
     end
 
     def build_and_upload_to_s3(args)
@@ -75,8 +76,8 @@ module Heirloom
     end
 
     def build_local_artifact
-      tgz = Zlib::GzipWriter.new(File.open(artifact_path, 'wb'))
-      Minitar.pack('.', tgz)
+      tgz = Zlib::GzipWriter.new File.open(artifact_path, 'wb')
+      Minitar.pack(source_dir, tgz)
     end
 
     def delete_local_artifact
@@ -137,8 +138,8 @@ module Heirloom
     private
 
     def buckets
-      { 
-        'intu-lc-us-west-1' => { 
+      {
+        "#{prefix}-us-west-1" => { 
           'region' => 'us-west-1'
         }
       }

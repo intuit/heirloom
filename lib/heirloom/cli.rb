@@ -9,8 +9,10 @@ build and manage artifacts
 
 Usage:
 
-heirloom [options] build
 heirloom list
+heirloom build [options]
+heirloom delete [options]
+heirloom info [options]
 EOS
         opt :help, "Display Help"
         opt :class, "Class of artifact.  This should match the SCM repo", :type => :string

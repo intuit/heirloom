@@ -111,6 +111,7 @@ module Heirloom
 
         # Connect to s3 in region of bucket
         region = options['region']
+        endpoint = options['endpoint']
         connection = Fog::Storage.new :provider                 => 'AWS',
                                       :aws_access_key_id        => ENV['AWS_ACCESS_KEY_ID'],
                                       :aws_secret_access_key    => ENV['AWS_SECRET_ACCESS_KEY'],
@@ -128,10 +129,10 @@ module Heirloom
         @sdb.put_attributes domain, sha, { "#{region}-s3-url" => "s3://#{bucket}/#{folder}/#{artifact}" }
 
         # Add the http url
-        @sdb.put_attributes domain, sha, { "#{region}-http-url" => "http://#{bucket}/#{folder}/#{artifact}" }
+        @sdb.put_attributes domain, sha, { "#{region}-http-url" => "http://#{endpoint}/#{folder}/#{artifact}" }
 
         # Add the https url
-        @sdb.put_attributes domain, sha, { "#{region}-https-url" => "https://#{bucket}/#{folder}/#{artifact}" }
+        @sdb.put_attributes domain, sha, { "#{region}-https-url" => "https://#{endpoint}/#{folder}/#{artifact}" }
       end
     end
 
@@ -140,7 +141,8 @@ module Heirloom
     def buckets
       {
         "#{prefix}-us-west-1" => { 
-          'region' => 'us-west-1'
+          'region' => 'us-west-1',
+          'endpoint' => 's3-us-west-1.amazonaws.com'
         }
       }
     end

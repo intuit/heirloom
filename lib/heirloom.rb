@@ -1,3 +1,4 @@
+require "heirloom/aws"
 require "heirloom/version"
 
 require 'socket'
@@ -11,20 +12,51 @@ include Archive::Tar
 include Grit
 
 module Heirloom
-  class Artifact
-    attr_accessor :artifact_type, :commit, :source_dirs,
-                  :access_key, :secret_key, :sdb
 
-    def initialize(args)
-      self.artifact_type = args[:artifact_type]
-      self.access_key = args[:access_key]
-      self.secret_key = args[:secret_key]
-      self.source_dir = args[:source_dir]
-      self.sdb = connect_to_sdb
+  class Heirloom
+    attr_accessor :heirloom_type, :commit, :source_dir
+
+    def self.list
+      sdb = self.connect_to_sdb
+
+      r = {}
+
+      sdb.domains.each do |domain|
+        r[domain] = sdb.select("select * from #{domain}")
+      end
+
+      r
     end
 
-    def build_artifact_and_upload_to_s3(args)
+    def self.info(args)
+      sdb = self.connect_to_sdb
+
+      sdb.select("select * from #{args[:class]} where itemName() = '#{args[:sha]}'")
+    end
+
+    def self.delete(args)
+      sdb = self.connect_to_sdb
+
+      sdb.delete args[:class], args[:sha]
+    end
+
+    def self.connect_to_sdb
+      @access_key = ENV['AWS_ACCESS_KEY_ID']
+      @secret_key = ENV['AWS_SECRET_ACCESS_KEY']
+
+      AWS::SimpleDb.new(@access_key, @secret_key)
+    end
+
+    def initialize(args)
+      @sdb = self.class.connect_to_sdb
+
+      self.heirloom_type = args[:heirloom_type]
+      self.source_dir = args[:source_dir]
+    end
+
+    def build_and_upload_to_s3(args)
       get_commit args[:sha]
+      raise 'Artifact already uploaded to S3' if already_in_sdb?
       build_local_artifact
       create_sdb_record
       upload_to_s3
@@ -36,7 +68,7 @@ module Heirloom
     def get_commit(sha = nil)
       r = Repo.new source_dir
       if sha
-        self.commit = r.commits(sha)
+        self.commit = r.commits(sha).first
       else
         self.commit = r.commits.first
       end
@@ -52,18 +84,22 @@ module Heirloom
     end
 
     def create_sdb_domain
-      sdb.create_domain(domain) unless sdb.list_domains.body['Domains'].include? domain
+      @sdb.create_domain(domain)
     end
 
     def create_sdb_record
       create_sdb_domain 
-      sdb.put_attributes domain, sha, { 'built_by' => "#{user}@#{hostname}",
-                                        'built_at' => Time.now.utc.iso8601,
-                                        'tests' => 'pending',
-                                        'sha' => sha,
-                                        'abbreviated_sha' => abbreviated_sha,
-                                        'message' => message,
-                                        'author' => author }
+      @sdb.put_attributes domain, sha, { 'built_by' => "#{user}@#{hostname}",
+                                         'built_at' => Time.now.utc.iso8601,
+                                         'tests' => 'pending',
+                                         'sha' => sha,
+                                         'abbreviated_sha' => abbreviated_sha,
+                                         'message' => message,
+                                         'author' => author }
+    end
+
+    def already_in_sdb?
+      @sdb.select("select * from #{domain} where itemName() = '#{sha}'").count > 0
     end
 
     def upload_to_s3
@@ -75,8 +111,8 @@ module Heirloom
         # Connect to s3 in region of bucket
         region = options['region']
         connection = Fog::Storage.new :provider                 => 'AWS',
-                                      :aws_access_key_id        => access_key,
-                                      :aws_secret_access_key    => secret_key,
+                                      :aws_access_key_id        => ENV['AWS_ACCESS_KEY_ID'],
+                                      :aws_secret_access_key    => ENV['AWS_SECRET_ACCESS_KEY'],
                                       :region                   => region
 
         # Get bucket
@@ -88,13 +124,13 @@ module Heirloom
                        :public => false
                        
         # Add the artifact location
-        sdb.put_attributes domain, sha, { "#{region}-s3-url" => "s3://#{bucket}/#{folder}/#{artifact}" }
+        @sdb.put_attributes domain, sha, { "#{region}-s3-url" => "s3://#{bucket}/#{folder}/#{artifact}" }
 
         # Add the http url
-        sdb.put_attributes domain, sha, { "#{region}-http-url" => "http://#{bucket}/#{folder}/#{artifact}" }
+        @sdb.put_attributes domain, sha, { "#{region}-http-url" => "http://#{bucket}/#{folder}/#{artifact}" }
 
         # Add the https url
-        sdb.put_attributes domain, sha, { "#{region}-https-url" => "https://#{bucket}/#{folder}/#{artifact}" }
+        @sdb.put_attributes domain, sha, { "#{region}-https-url" => "https://#{bucket}/#{folder}/#{artifact}" }
       end
     end
 
@@ -117,11 +153,11 @@ module Heirloom
     end
 
     def domain
-      artifact_type
+      heirloom_type
     end
 
     def folder
-      artifact_type
+      heirloom_type
     end
 
     def author
@@ -148,11 +184,5 @@ module Heirloom
       Socket.gethostname
     end
 
-    def connect_to_sdb
-      raise 'Please supply credentials' unless access_key && secret_key
-      sdb = Fog::AWS::SimpleDB.new :aws_access_key_id => access_key,
-                                   :aws_secret_access_key => secret_key,
-                                   :region => 'us-west-1'
-    end
   end
 end

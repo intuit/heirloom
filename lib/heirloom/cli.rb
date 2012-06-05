@@ -5,22 +5,41 @@ module Heirloom
     def self.start
       @opts = Trollop::options do
         banner <<-EOS
-build and manage artifact
+build and manage artifacts
 
 Usage:
 
-heirloom options sha
+heirloom [options] build
+heirloom list
 EOS
         opt :help, "Display Help"
-        opt :sha, "Git Sha To Upload"
+        opt :dir, "Directory which contains git repo", :type => :string
+        opt :sha, "Git Sha", :type => :string
+        opt :class, "Class of artifact.  This should match the SCM repo", :type => :string
       end
 
-    cmd = ARGV.shift
-    case cmd
-    when 'build'
-      Heirloom::Heirloom.new(@opts[:sha])
-    else
-      puts "Unkown command: '#{cmd}'."
+      cmd = ARGV.shift
+
+      case cmd
+      when 'build'
+        raise 'Missing required args' unless @opts[:sha] && @opts[:class]
+        h = Heirloom.new :heirloom_type => @opts[:class],
+                         :source_dir => @opts[:dir] ||= "."
+
+        h.build_and_upload_to_s3(:sha => @opts[:sha])
+      when 'list'
+        Heirloom.list.each do |a|
+          puts a.to_yaml
+        end
+      when 'info'
+        raise 'Missing required args' unless @opts[:sha] && @opts[:class]
+        puts Heirloom.info(:class => @opts[:class], :sha => @opts[:sha]).to_yaml
+      when 'delete'
+        raise 'Missing required args' unless @opts[:sha] && @opts[:class]
+        puts Heirloom.delete(:class => @opts[:class], :sha => @opts[:sha]).to_yaml
+      else
+        puts "Unkown command: '#{cmd}'."
+      end
     end
   end
 end

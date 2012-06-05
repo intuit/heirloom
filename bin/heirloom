@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'heirloom'
+require 'heirloom/cli'
+
+Heirloom::CLI.start

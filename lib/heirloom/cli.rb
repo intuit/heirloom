@@ -28,11 +28,14 @@ EOS
       case cmd
       when 'build'
         raise 'Missing required args' unless @opts[:sha] && @opts[:class]
+        
+        accounts = @opts[:accounts].nil? ? [] : @opts[:accounts].split(',')
+
         h = Heirloom.new :heirloom_type => @opts[:class],
                          :source_dir => @opts[:dir] ||= ".",
                          :prefix => @opts[:prefix],
                          :open => @opts[:open],
-                         :accounts => @opts[:accounts].split(',')
+                         :accounts => accounts
 
         h.build_and_upload_to_s3(:sha => @opts[:sha])
       when 'list'

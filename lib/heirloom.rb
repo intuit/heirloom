@@ -118,14 +118,17 @@ module Heirloom
         # Upload the artifact
         b.files.create :key    => "#{folder}/#{artifact}",
                        :body   => File.open(artifact_path),
-                       :public => @open
+                       :public => open?
                        
         # Get the bucket owner name and ID
         id = connection.get_bucket_acl(bucket).body['Owner']['ID']
         name = connection.get_bucket_acl(bucket).body['Owner']['Name']
 
         # Set the objects ACLs
-        connection.put_object_acl(bucket, "#{folder}/#{artifact}", build_bucket_grants(id, name))
+        # Only set them if ACLs exist
+        if @accounts.any?
+          connection.put_object_acl(bucket, "#{folder}/#{artifact}", build_bucket_grants(id, name))
+        end
                        
         # Add the artifact location
         @sdb.put_attributes domain, sha, { "#{region}-s3-url" => "s3://#{bucket}/#{folder}/#{artifact}" }
@@ -202,6 +205,10 @@ module Heirloom
 
     def user
       ENV['USER']
+    end
+
+    def open?
+      @open
     end
 
     def hostname

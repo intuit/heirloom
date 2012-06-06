@@ -118,20 +118,13 @@ module Heirloom
         b.files.create :key    => "#{folder}/#{artifact}",
                        :body   => File.open(artifact_path),
                        :public => false
-
+                       
         # Get the bucket owner name and ID
         id = connection.get_bucket_acl(bucket).body['Owner']['ID']
         name = connection.get_bucket_acl(bucket).body['Owner']['Name']
 
-
         # Set the objects ACLs
-        connection.put_object_acl(bucket, "#{folder}/#{artifact}", { 
-                                                                     'Owner' => { 
-                                                                       'DisplayName' => name,
-                                                                       'ID' => id
-                                                                     },
-                                                                     'AccessControlList' => grants
-                                                                   } )
+        connection.put_object_acl(bucket, "#{folder}/#{artifact}", build_bucket_grants(id, name))
                        
         # Add the artifact location
         @sdb.put_attributes domain, sha, { "#{region}-s3-url" => "s3://#{bucket}/#{folder}/#{artifact}" }
@@ -146,7 +139,8 @@ module Heirloom
 
     private
 
-    def grants
+    def build_bucket_grants(id, name)
+      # Creat the AccessControlList based on given accounts
       a = Array.new
       @accounts.each do |g|
         a << {
@@ -154,7 +148,14 @@ module Heirloom
                'Permission' => 'READ'
              } 
       end
-      a
+      
+      { 
+        'Owner' => { 
+          'DisplayName' => name,
+          'ID' => id
+        },
+        'AccessControlList' => a
+      }
     end
 
     def buckets

@@ -15,6 +15,7 @@ heirloom delete [options]
 heirloom info [options]
 EOS
         opt :help, "Display Help"
+        opt :accounts, "CSV list of accounts to authorize", :type => :string
         opt :class, "Class of artifact.  This should match the SCM repo", :type => :string
         opt :dir, "Directory which contains git repo", :type => :string
         opt :prefix, "Bucket prefix", :type => :string
@@ -28,7 +29,8 @@ EOS
         raise 'Missing required args' unless @opts[:sha] && @opts[:class]
         h = Heirloom.new :heirloom_type => @opts[:class],
                          :source_dir => @opts[:dir] ||= ".",
-                         :prefix => @opts[:prefix]
+                         :prefix => @opts[:prefix],
+                         :accounts => @opts[:accounts].split(',')
 
         h.build_and_upload_to_s3(:sha => @opts[:sha])
       when 'list'

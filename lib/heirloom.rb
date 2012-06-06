@@ -40,15 +40,9 @@ module Heirloom
       sdb.delete args[:class], args[:sha]
     end
 
-    def self.connect_to_sdb
-      @access_key = ENV['AWS_ACCESS_KEY_ID']
-      @secret_key = ENV['AWS_SECRET_ACCESS_KEY']
-
-      AWS::SimpleDb.new(@access_key, @secret_key)
-    end
-
     def initialize(args)
       @sdb = self.class.connect_to_sdb
+      @accounts = args[:accounts]
 
       self.heirloom_type = args[:heirloom_type]
       self.source_dir = args[:source_dir]
@@ -57,6 +51,7 @@ module Heirloom
 
     def build_and_upload_to_s3(args)
       get_commit args[:sha]
+      create_sdb_domain 
       raise 'Artifact already uploaded to S3' if already_in_sdb?
       build_local_artifact
       create_sdb_record
@@ -89,7 +84,6 @@ module Heirloom
     end
 
     def create_sdb_record
-      create_sdb_domain 
       @sdb.put_attributes domain, sha, { 'built_by' => "#{user}@#{hostname}",
                                          'built_at' => Time.now.utc.iso8601,
                                          'tests' => 'pending',
@@ -124,6 +118,20 @@ module Heirloom
         b.files.create :key    => "#{folder}/#{artifact}",
                        :body   => File.open(artifact_path),
                        :public => false
+
+        # Get the bucket owner name and ID
+        id = connection.get_bucket_acl(bucket).body['Owner']['ID']
+        name = connection.get_bucket_acl(bucket).body['Owner']['Name']
+
+
+        # Set the objects ACLs
+        connection.put_object_acl(bucket, "#{folder}/#{artifact}", { 
+                                                                     'Owner' => { 
+                                                                       'DisplayName' => name,
+                                                                       'ID' => id
+                                                                     },
+                                                                     'AccessControlList' => grants
+                                                                   } )
                        
         # Add the artifact location
         @sdb.put_attributes domain, sha, { "#{region}-s3-url" => "s3://#{bucket}/#{folder}/#{artifact}" }
@@ -137,6 +145,17 @@ module Heirloom
     end
 
     private
+
+    def grants
+      a = Array.new
+      @accounts.each do |g|
+        a << {
+               'Grantee' => { 'EmailAddress' => g } ,
+               'Permission' => 'READ'
+             } 
+      end
+      a
+    end
 
     def buckets
       {
@@ -185,6 +204,13 @@ module Heirloom
 
     def hostname
       Socket.gethostname
+    end
+
+    def self.connect_to_sdb
+      @access_key = ENV['AWS_ACCESS_KEY_ID']
+      @secret_key = ENV['AWS_SECRET_ACCESS_KEY']
+
+      AWS::SimpleDb.new(@access_key, @secret_key)
     end
 
   end

@@ -43,6 +43,7 @@ module Heirloom
     def initialize(args)
       @sdb = self.class.connect_to_sdb
       @accounts = args[:accounts]
+      @open = args[:open] ||= false
 
       self.heirloom_type = args[:heirloom_type]
       self.source_dir = args[:source_dir]
@@ -117,7 +118,7 @@ module Heirloom
         # Upload the artifact
         b.files.create :key    => "#{folder}/#{artifact}",
                        :body   => File.open(artifact_path),
-                       :public => false
+                       :public => @open
                        
         # Get the bucket owner name and ID
         id = connection.get_bucket_acl(bucket).body['Owner']['ID']

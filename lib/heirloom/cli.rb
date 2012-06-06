@@ -19,6 +19,7 @@ EOS
         opt :class, "Class of artifact.  This should match the SCM repo", :type => :string
         opt :dir, "Directory which contains git repo", :type => :string
         opt :prefix, "Bucket prefix", :type => :string
+        opt :open, "Is this artifact open to public read?"
         opt :sha, "Git Sha", :type => :string
       end
 
@@ -30,6 +31,7 @@ EOS
         h = Heirloom.new :heirloom_type => @opts[:class],
                          :source_dir => @opts[:dir] ||= ".",
                          :prefix => @opts[:prefix],
+                         :open => @opts[:open],
                          :accounts => @opts[:accounts].split(',')
 
         h.build_and_upload_to_s3(:sha => @opts[:sha])

@@ -1,4 +1,5 @@
 require "heirloom/aws"
+require "heirloom/config"
 require "heirloom/version"
 
 require 'socket'
@@ -108,8 +109,8 @@ module Heirloom
         region = options['region']
         endpoint = options['endpoint']
         connection = Fog::Storage.new :provider                 => 'AWS',
-                                      :aws_access_key_id        => ENV['AWS_ACCESS_KEY_ID'],
-                                      :aws_secret_access_key    => ENV['AWS_SECRET_ACCESS_KEY'],
+                                      :aws_access_key_id        => Config.access_key,
+                                      :aws_secret_access_key    => Config.secret_key,
                                       :region                   => region
 
         # Get bucket
@@ -216,8 +217,8 @@ module Heirloom
     end
 
     def self.connect_to_sdb
-      @access_key = ENV['AWS_ACCESS_KEY_ID']
-      @secret_key = ENV['AWS_SECRET_ACCESS_KEY']
+      @access_key = Config.access_key
+      @secret_key = Config.secret_key
 
       AWS::SimpleDb.new(@access_key, @secret_key)
     end

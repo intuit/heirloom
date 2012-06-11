@@ -88,7 +88,6 @@ module Heirloom
     def create_sdb_record
       @sdb.put_attributes domain, sha, { 'built_by' => "#{user}@#{hostname}",
                                          'built_at' => Time.now.utc.iso8601,
-                                         'tests' => 'pending',
                                          'sha' => sha,
                                          'abbreviated_sha' => abbreviated_sha,
                                          'message' => message,

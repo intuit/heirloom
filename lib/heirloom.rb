@@ -32,7 +32,9 @@ module Heirloom
     def self.info(args)
       sdb = self.connect_to_sdb
 
-      sdb.select("select * from #{args[:class]} where itemName() = '#{args[:sha]}'")
+      s = sdb.select("select * from #{args[:class]} where itemName() = '#{args[:sha]}'")
+
+      s[args[:sha]]
     end
 
     def self.delete(args)
@@ -45,6 +47,7 @@ module Heirloom
       @sdb = self.class.connect_to_sdb
       @accounts = args[:accounts]
       @open = args[:open] ||= false
+      @config = Config.new
 
       self.heirloom_type = args[:heirloom_type]
       self.source_dir = args[:source_dir]
@@ -108,8 +111,8 @@ module Heirloom
         region = options['region']
         endpoint = options['endpoint']
         connection = Fog::Storage.new :provider                 => 'AWS',
-                                      :aws_access_key_id        => Config.access_key,
-                                      :aws_secret_access_key    => Config.secret_key,
+                                      :aws_access_key_id        => @config.access_key,
+                                      :aws_secret_access_key    => @config.secret_key,
                                       :region                   => region
 
         # Get bucket
@@ -216,8 +219,9 @@ module Heirloom
     end
 
     def self.connect_to_sdb
-      @access_key = Config.access_key
-      @secret_key = Config.secret_key
+      config = Config.new
+      @access_key = config.access_key
+      @secret_key = config.secret_key
 
       AWS::SimpleDb.new(@access_key, @secret_key)
     end

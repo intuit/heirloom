@@ -1,15 +1,10 @@
 module Heirloom
   class Config
 
-    attr_accessor = :access_key, :secret_key
+    attr_accessor :access_key, :secret_key
 
-    def initiatize(args={})
-      if args[:config]
-        self.access_key = args[:config][:access_key]
-        self.secret_key = args[:config][:secret_key]
-      else
-        load_config_file
-      end
+    def initialize
+      load_config_file
     end
 
     def load_config_file

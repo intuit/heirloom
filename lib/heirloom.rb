@@ -137,10 +137,10 @@ module Heirloom
         @sdb.put_attributes domain, sha, { "#{region}-s3-url" => "s3://#{bucket}/#{folder}/#{artifact}" }
 
         # Add the http url
-        @sdb.put_attributes domain, sha, { "#{region}-http-url" => "http://#{endpoint}/#{folder}/#{artifact}" }
+        @sdb.put_attributes domain, sha, { "#{region}-http-url" => "http://#{endpoint}/#{bucket}/#{folder}/#{artifact}" }
 
         # Add the https url
-        @sdb.put_attributes domain, sha, { "#{region}-https-url" => "https://#{endpoint}/#{folder}/#{artifact}" }
+        @sdb.put_attributes domain, sha, { "#{region}-https-url" => "https://#{endpoint}/#{bucket}/#{folder}/#{artifact}" }
       end
     end
 

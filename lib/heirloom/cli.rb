@@ -5,7 +5,7 @@ module Heirloom
     def self.start
       @opts = Trollop::options do
         banner <<-EOS
-build and manage artifacts
+I build and manage artifacts
 
 Usage:
 
@@ -15,12 +15,12 @@ heirloom delete [options]
 heirloom info [options]
 EOS
         opt :help, "Display Help"
-        opt :accounts, "CSV list of accounts to authorize", :type => :string
-        opt :class, "Class of artifact.  This should match the SCM repo", :type => :string
-        opt :dir, "Directory which contains git repo", :type => :string
-        opt :prefix, "Bucket prefix", :type => :string
-        opt :open, "Is this artifact open to public read?"
-        opt :sha, "Git Sha", :type => :string
+        opt :accounts, "CSV list of AWS accounts to authorize.", :type => :string
+        opt :bucket, "Bucket prefix.", :type => :string
+        opt :class, "Class of artifact.  This should match the Git repo name.", :type => :string
+        opt :dir, "Directory which contains git repo to package.", :type => :string
+        opt :public, "Is this artifact public read?"
+        opt :sha, "Git sha to rebase to and package.", :type => :string
       end
 
       cmd = ARGV.shift

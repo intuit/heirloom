@@ -1,6 +1,6 @@
 require 'zlib'
 require 'archive/tar/minitar'
-require 'tempdir'
+require 'tmpdir'
 require 'grit'
 
 include Archive::Tar

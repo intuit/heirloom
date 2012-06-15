@@ -1,6 +1,7 @@
-module Heirloom
+require 'fog'
 
-  class AWS
+module Heirloom
+  module AWS
     class S3
 
       def initialize(args)
@@ -11,6 +12,10 @@ module Heirloom
                                :aws_access_key_id        => @config.access_key,
                                :aws_secret_access_key    => @config.secret_key,
                                :region                   => @region
+      end
+
+      def get_bucket(bucket)
+        @s3.directories.get bucket
       end
 
     end

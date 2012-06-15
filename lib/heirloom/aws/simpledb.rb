@@ -1,6 +1,7 @@
-module Heirloom
+require 'fog'
 
-  class AWS
+module Heirloom
+  module AWS
     class SimpleDB
 
       def initialize(args)

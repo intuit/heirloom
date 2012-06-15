@@ -16,11 +16,8 @@ module Heirloom
       @git_directory = GitDirectory.new args[:directory]
       @commit = @git_directory.commit @id
 
-      create_domain @name
-      artifact_file = @git_directory.build_artifact_from_directory
       create_artifact_record
-      upload_artifact :file => artifact_file,
-                      :public => @public
+      @git_directory.build_artifact_from_directory
     end
 
     private
@@ -30,23 +27,14 @@ module Heirloom
     end
 
     def create_artifact_record
-      sdb.put_attributes domain, @id, { 'built_by'        => "#{user}@#{hostname}",
-                                        'built_at'        => Time.now.utc.iso8601,
-                                        'sha'             => @id,
-                                        'abbreviated_sha' => @commit.abbreviated_sha,
-                                        'message'         => @commit.message,
-                                        'author'          => @commit.author }
-    end
-
-    def upload_artifact(args)
-      @config.regions.each do |region|
-        s3_uploader = Uploader::S3.new :config => @config,
-                                       :region => region
-
-        s3_uploader.upload_file :file => args[:file],
-                                :key_name => @id,
-                                :key_folder => @name
-      end
+      create_artifact_domain
+      attributes = { 'built_by'        => "#{user}@#{hostname}",
+                     'built_at'        => Time.now.utc.iso8601,
+                     'sha'             => @id,
+                     'abbreviated_sha' => @commit.id_abbrev,
+                     'message'         => @commit.message,
+                     'author'          => @commit.author.name }
+      sdb.put_attributes @name, @id, attributes
     end
 
     def sdb

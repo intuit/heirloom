@@ -5,10 +5,10 @@ module Heirloom
       def initialize(args)
         @config = args[:config]
         @region = args[:region]
-        @bucket = args[:bucket]
       end
 
       def allow_read_acccess_from_accounts_to_file(args)
+        bucket = args[:bucket]
         key_name = args[:key_name]
         key_folder = args[:key_folder]
 
@@ -48,8 +48,8 @@ module Heirloom
       end
 
       def s3
-        @s3 ||= AWS::SimpleDB.new :config => @config,
-                                  :region => @region
+        @s3 ||= AWS::S3.new :config => @config,
+                            :region => @region
       end
 
     end

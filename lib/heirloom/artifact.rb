@@ -13,14 +13,15 @@ module Heirloom
 
     def build(args)
       file = artifact_builder.build(args)
-      artifact_uploader.upload :config => @config,
-                               :id     => args[:id],
-                               :name   => args[:name],
-                               :file   => file
-      artifact_authorizer.authorize :config => @config,
-                               :id     => args[:id],
-                               :name   => args[:name],
-                               :file   => file
+
+      artifact_uploader.upload :id              => args[:id],
+                               :name            => args[:name],
+                               :file            => file,
+                               :public_readable => args[:public]
+
+      artifact_authorizer.authorize :id               => args[:id],
+                                    :name             => args[:name],
+                                    :public_readable  => args[:public_readable]
     end
 
     def show(args)

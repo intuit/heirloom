@@ -8,8 +8,12 @@ module Heirloom
 
     def show(args)
       domain = args[:name]
-      version = args[:version]
-      sdb.select "select * from #{domain} where itemName() = '#{version}'"
+      id = args[:id]
+      sdb.select "select * from #{domain} where itemName() = '#{id}'"
+    end
+
+    def exists?(args)
+      show(args).any?
     end
 
     private

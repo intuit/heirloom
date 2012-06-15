@@ -12,13 +12,12 @@ Usage:
 heirloom list
 heirloom versions -n NAME
 heirloom show -n NAME -i VERSION
-heirloom build -n NAME -i VERSION
+heirloom build -n NAME -i VERSION -d DIRECTORY [-p]
 heirloom destroy -n NAME -i VERSION
 EOS
         opt :help, "Display Help"
-        opt :accouts, "AWS accounts who can read the artifact"
         opt :directory, "Source directory of artifact build.", :type => :string
-        opt :id, "Version of artifact.", :type => :string
+        opt :id, "Id of artifact.", :type => :string
         opt :name, "Name of artifact.", :type => :string
         opt :public, "Is this artifact public?"
       end
@@ -29,11 +28,11 @@ EOS
       case cmd
       when 'list'
         puts a.list
-      when 'versions'
+      when 'versions', 'artifacts'
         puts a.versions :name => @opts[:name]
       when 'show'
         puts a.show(:name => @opts[:name],
-                    :version => @opts[:id]).to_yaml
+                    :id => @opts[:id]).to_yaml
       when 'build'
         a.build :name => @opts[:name],
                 :id => @opts[:id],

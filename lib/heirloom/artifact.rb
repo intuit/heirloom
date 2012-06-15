@@ -10,22 +10,31 @@ module Heirloom
   class Artifact
     def initialize(args)
       @config = Config.new :config => args[:config]
+      @logger = args[:logger] ||= Logger.new(STDOUT)
     end
 
     def build(args)
+      if artifact_reader.exists?(args)
+        @logger.info "Destroying existing artifact."
+        destroy(args)
+      end
+
       file = artifact_builder.build(args)
 
+      @logger.info "Uploading artifact."
       artifact_uploader.upload :id              => args[:id],
                                :name            => args[:name],
                                :file            => file,
                                :public_readable => args[:public]
 
+      @logger.info "Authorizing accounts."
       artifact_authorizer.authorize :id               => args[:id],
                                     :name             => args[:name],
                                     :public_readable  => args[:public_readable]
     end
 
     def destroy(args)
+      @logger.info "Destroying #{args[:name]} - #{args[:id]}"
       artifact_destroyer.destroy(args)
     end
 

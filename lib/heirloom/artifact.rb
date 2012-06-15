@@ -1,6 +1,8 @@
 require 'heirloom/artifact/artifact_lister.rb'
 require 'heirloom/artifact/artifact_reader.rb'
 require 'heirloom/artifact/artifact_builder.rb'
+require 'heirloom/artifact/artifact_uploader.rb'
+require 'heirloom/artifact/artifact_authorizer.rb'
 
 module Heirloom
 

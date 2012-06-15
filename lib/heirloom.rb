@@ -1,5 +1,7 @@
+require "heirloom/acl"
 require "heirloom/aws"
 require "heirloom/artifact"
 require "heirloom/config"
 require "heirloom/directory"
+require "heirloom/uploader"
 require "heirloom/version"

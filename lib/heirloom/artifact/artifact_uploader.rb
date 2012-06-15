@@ -19,7 +19,7 @@ module Heirloom
 
         s3_uploader.upload_file :file => args[:file]
                                 :key_name => @id,
-                                :key_folder => @name,
+                                :key_folder => @name
       end
     end
 

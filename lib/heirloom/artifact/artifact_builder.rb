@@ -17,11 +17,13 @@ module Heirloom
       @commit = @git_directory.commit @id
 
       create_domain @name
-      artifact_fil = @git_directory.build_artifact_from_directory
+      artifact_file = @git_directory.build_artifact_from_directory
       create_artifact_record
       upload_artifact :file => artifact_file,
                       :public => @public
     end
+
+    private
 
     def create_artifact_domain
       sdb.create_domain @name
@@ -31,7 +33,7 @@ module Heirloom
       sdb.put_attributes domain, @id, { 'built_by'        => "#{user}@#{hostname}",
                                         'built_at'        => Time.now.utc.iso8601,
                                         'sha'             => @id,
-                                        'abbreviated_sha' => @commit.abbreviated_sha
+                                        'abbreviated_sha' => @commit.abbreviated_sha,
                                         'message'         => @commit.message,
                                         'author'          => @commit.author }
     end
@@ -41,13 +43,11 @@ module Heirloom
         s3_uploader = Uploader::S3.new :config => @config,
                                        :region => region
 
-        s3_uploader.upload_file :file => args[:file]
+        s3_uploader.upload_file :file => args[:file],
                                 :key_name => @id,
-                                :key_folder => @name,
+                                :key_folder => @name
       end
     end
-
-    private
 
     def sdb
       @sdb ||= AWS::SimpleDB.new :config => @config

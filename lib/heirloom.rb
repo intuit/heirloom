@@ -1,4 +1,5 @@
 require "heirloom/aws"
 require "heirloom/artifact"
 require "heirloom/config"
+require "heirloom/directory"
 require "heirloom/version"

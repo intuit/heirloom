@@ -1,14 +1,6 @@
 require 'heirloom/artifact/artifact_lister.rb'
-
-require 'socket'
-require 'fog'
-require 'grit'
-require 'logger'
-require 'time'
-require 'zlib'
-require 'archive/tar/minitar'
-include Archive::Tar
-include Grit
+require 'heirloom/artifact/artifact_reader.rb'
+require 'heirloom/artifact/artifact_builder.rb'
 
 module Heirloom
 
@@ -17,8 +9,19 @@ module Heirloom
       @config = Config.new :config => args[:config]
     end
 
+    def build(args)
+      file = artifact_builder.build(args)
+      artifact_uploader.upload :config => @config,
+                               :id     => args[:id],
+                               :name   => args[:name],
+                               :file   => file
+      artifact_authorizer.authorize :config => @config,
+                               :id     => args[:id],
+                               :name   => args[:name],
+                               :file   => file
+    end
+
     def show(args)
-      puts args
       artifact_reader.show(args)
     end
 
@@ -38,6 +41,18 @@ module Heirloom
 
     def artifact_reader
       @artifact_reader ||= ArtifactReader.new :config => @config
+    end
+
+    def artifact_builder
+      @artifact_builder ||= ArtifactBuilder.new :config => @config
+    end
+
+    def artifact_uploader
+      @artifact_uploader ||= ArtifactUploader.new :config => @config
+    end
+
+    def artifact_authorizer
+      @artifact_authorizer ||= ArtifactAuthorizer.new :config => @config
     end
 
   end

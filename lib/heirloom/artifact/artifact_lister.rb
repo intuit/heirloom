@@ -8,7 +8,7 @@ module Heirloom
 
     def versions(args)
       domain = args[:name]
-      sdb.select("select * from #{domain}").keys
+      sdb.select("select * from #{domain}").keys.reverse
     end
 
     def list

@@ -1,1 +1,2 @@
-require "heirloom/aws/simpledb"
+require 'fog'
+require 'heirloom/aws/simpledb'

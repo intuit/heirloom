@@ -9,7 +9,6 @@ module Heirloom
     def show(args)
       domain = args[:name]
       version = args[:version]
-      raise "select * from #{domain} where itemName() = '#{version}'".inspect
       sdb.select "select * from #{domain} where itemName() = '#{version}'"
     end
 

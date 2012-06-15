@@ -13,6 +13,7 @@ heirloom list
 heirloom versions -n NAME
 heirloom show -n NAME -i VERSION
 heirloom build -n NAME -i VERSION
+heirloom destroy -n NAME -i VERSION
 EOS
         opt :help, "Display Help"
         opt :accouts, "AWS accounts who can read the artifact"
@@ -39,6 +40,9 @@ EOS
                 :accounts => @opts[:accounts],
                 :directory => @opts[:directory],
                 :public => @opts[:public]
+      when 'destroy', 'delete'
+        a.destroy :name => @opts[:name],
+                  :id => @opts[:id]
       else
         puts "Unkown command: '#{cmd}'."
       end

@@ -2,7 +2,7 @@ module Heirloom
   class Config
 
     attr_accessor :access_key, :secret_key, :regions, 
-                  :primary_region, :bucket_prefix, :authorized_accounts
+                  :primary_region, :bucket_prefix, :authorized_aws_accounts
 
     def initialize(args = {})
       @config = args[:config]
@@ -18,7 +18,7 @@ module Heirloom
       self.regions = c['aws']['regions']
       self.primary_region = regions.first
       self.bucket_prefix = c['aws']['bucket_prefix']
-      self.authorized_accounts = c['aws']['authorized_aws_accounts']
+      self.authorized_aws_accounts = c['aws']['authorized_aws_accounts']
     end
 
   end

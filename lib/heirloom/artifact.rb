@@ -3,6 +3,7 @@ require 'heirloom/artifact/artifact_reader.rb'
 require 'heirloom/artifact/artifact_builder.rb'
 require 'heirloom/artifact/artifact_uploader.rb'
 require 'heirloom/artifact/artifact_authorizer.rb'
+require 'heirloom/artifact/artifact_destroyer.rb'
 
 module Heirloom
 
@@ -22,6 +23,10 @@ module Heirloom
       artifact_authorizer.authorize :id               => args[:id],
                                     :name             => args[:name],
                                     :public_readable  => args[:public_readable]
+    end
+
+    def destroy(args)
+      artifact_destroyer.destroy(args)
     end
 
     def show(args)
@@ -56,6 +61,10 @@ module Heirloom
 
     def artifact_authorizer
       @artifact_authorizer ||= ArtifactAuthorizer.new :config => @config
+    end
+
+    def artifact_destroyer
+      @artifact_destroyer ||= ArtifactDestroyer.new :config => @config
     end
 
   end

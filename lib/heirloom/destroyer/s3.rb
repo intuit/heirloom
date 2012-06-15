@@ -1,5 +1,5 @@
 module Heirloom
-  module Uploader
+  module Destroyer
     class S3
 
       def initialize(args)
@@ -7,18 +7,12 @@ module Heirloom
         @region = args[:region]
       end
 
-      def upload_file(args)
-        file = args[:file]
+      def destroy_file(args)
         key_name = args[:key_name]
         key_folder = args[:key_folder]
-        public_readable = args[:public_readable]
         bucket = args[:bucket]
 
-        s3_bucket = s3.get_bucket bucket
-
-        s3_bucket.files.create :key    => "#{key_folder}/#{key_name}",
-                               :body   => File.open(file),
-                               :public => public_readable
+        s3.delete_object bucket, "#{key_folder}/#{key_name}"
       end
 
       private

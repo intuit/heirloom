@@ -14,8 +14,20 @@ module Heirloom
                                :region                   => @region
       end
 
+      def delete_object(bucket_name, object_name, options = {})
+        @s3.delete_object(bucket_name, object_name, options = {})
+      end
+
       def get_bucket(bucket)
         @s3.directories.get bucket
+      end
+
+      def get_bucket_acl(bucket)
+        @s3.get_bucket_acl(bucket).body
+      end
+
+      def put_object_acl(bucket, key, grants)
+        @s3.put_object_acl(bucket, key, grants)
       end
 
     end

@@ -10,17 +10,12 @@ I build and manage artifacts
 Usage:
 
 heirloom list
-heirloom build [options]
-heirloom delete [options]
-heirloom info [options]
+heirloom versions -n NAME
+heirloom show -n NAME -v VERSION
 EOS
         opt :help, "Display Help"
-        opt :accounts, "CSV list of AWS accounts to authorize.", :type => :string
-        opt :bucket, "Bucket prefix.", :type => :string
         opt :name, "Name of artifact.", :type => :string
-        opt :dir, "Directory which contains git repo to package.", :type => :string
-        opt :public, "Is this artifact public read?"
-        opt :sha, "Git sha to rebase to and package.", :type => :string
+        opt :version, "Version of artifact.", :type => :string
       end
 
       cmd = ARGV.shift
@@ -28,7 +23,12 @@ EOS
 
       case cmd
       when 'list'
-        puts a.list :name => @opts[:name]
+        puts a.list
+      when 'versions'
+        puts a.versions :name => @opts[:name]
+      when 'show'
+        puts a.show :name => @opts[:name],
+                    :version => @opts[:version]
       else
         puts "Unkown command: '#{cmd}'."
       end

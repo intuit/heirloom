@@ -17,14 +17,27 @@ module Heirloom
       @config = Config.new :config => args[:config]
     end
 
-    def list(args)
-      artifact_lister.all(args)
+    def show(args)
+      puts args
+      artifact_reader.show(args)
+    end
+
+    def versions(args)
+      artifact_lister.versions(args)
+    end
+
+    def list
+      artifact_lister.list
     end
 
     private
 
     def artifact_lister
       @artifact_lister ||= ArtifactLister.new :config => @config
+    end
+
+    def artifact_reader
+      @artifact_reader ||= ArtifactReader.new :config => @config
     end
 
   end

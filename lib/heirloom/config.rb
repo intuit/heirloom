@@ -1,7 +1,7 @@
 module Heirloom
   class Config
 
-    attr_accessor :access_key, :secret_key, :regions
+    attr_accessor :access_key, :secret_key, :regions, :primary_region
 
     def initialize(args = {})
       @config = args[:config]
@@ -15,6 +15,7 @@ module Heirloom
       self.access_key = c['access_key']
       self.secret_key = c['secret_key']
       self.regions = c['regions']
+      self.primary_region = regions.first
     end
 
   end

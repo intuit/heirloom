@@ -11,6 +11,11 @@ module Heirloom
     def initialize(args)
       @config = Config.new :config => args[:config]
       @logger = args[:logger] ||= Logger.new(STDOUT)
+
+      @logger.datetime_format = "%Y-%m-%d %H:%M:%S"
+      @logger.formatter = proc do |severity, datetime, progname, msg|
+          "#{datetime}: #{msg}\n"
+      end
     end
 
     def build(args)
@@ -21,20 +26,19 @@ module Heirloom
 
       file = artifact_builder.build(args)
 
-      @logger.info "Uploading artifact."
       artifact_uploader.upload :id              => args[:id],
                                :name            => args[:name],
                                :file            => file,
                                :public_readable => args[:public]
 
-      @logger.info "Authorizing accounts."
-      artifact_authorizer.authorize :id               => args[:id],
-                                    :name             => args[:name],
-                                    :public_readable  => args[:public_readable]
+      unless args[:public]
+        artifact_authorizer.authorize :id               => args[:id],
+                                      :name             => args[:name],
+                                      :public_readable  => args[:public_readable]
+      end
     end
 
     def destroy(args)
-      @logger.info "Destroying #{args[:name]} - #{args[:id]}"
       artifact_destroyer.destroy(args)
     end
 
@@ -61,19 +65,23 @@ module Heirloom
     end
 
     def artifact_builder
-      @artifact_builder ||= ArtifactBuilder.new :config => @config
+      @artifact_builder ||= ArtifactBuilder.new :config => @config,
+                                                :logger => @logger
     end
 
     def artifact_uploader
-      @artifact_uploader ||= ArtifactUploader.new :config => @config
+      @artifact_uploader ||= ArtifactUploader.new :config => @config,
+                                                  :logger => @logger
     end
 
     def artifact_authorizer
-      @artifact_authorizer ||= ArtifactAuthorizer.new :config => @config
+      @artifact_authorizer ||= ArtifactAuthorizer.new :config => @config,
+                                                      :logger => @logger
     end
 
     def artifact_destroyer
-      @artifact_destroyer ||= ArtifactDestroyer.new :config => @config
+      @artifact_destroyer ||= ArtifactDestroyer.new :config => @config,
+                                                    :logger => @logger
     end
 
   end

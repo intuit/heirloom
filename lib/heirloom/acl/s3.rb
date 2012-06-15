@@ -5,6 +5,7 @@ module Heirloom
       def initialize(args)
         @config = args[:config]
         @region = args[:region]
+        @logger = args[:logger]
         @accounts = @config.authorized_aws_accounts
       end
 
@@ -13,15 +14,20 @@ module Heirloom
         key_name = args[:key_name]
         key_folder = args[:key_folder]
 
+        key = "#{key_folder}/#{key_name}.tar.gz"
+
         current_acls = s3.get_bucket_acl(bucket)
 
         name = current_acls['Owner']['Name']
         id = current_acls['Owner']['ID']
         grants = build_bucket_grants :id => id,
                                      :name => name,
-                                     :accounts => args[:accounts]
+                                     :accounts => @accounts
 
-        s3.put_object_acl bucket, "#{key_folder}/#{key_name}", grants
+        @accounts.each do |a|
+          @logger.info "Authorizing #{a} to s3://#{bucket}/#{key}"
+        end
+        s3.put_object_acl bucket, key, grants
       end
 
       private

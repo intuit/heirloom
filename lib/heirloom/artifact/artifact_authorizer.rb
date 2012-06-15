@@ -1,12 +1,10 @@
-require 'socket'
-require 'time'
-
 module Heirloom
 
   class ArtifactAuthorizer
 
     def initialize(args)
       @config = args[:config]
+      @logger = args[:logger]
     end
 
     def authorize(args)
@@ -19,6 +17,7 @@ module Heirloom
           bucket = "#{@config.bucket_prefix}-#{region}"
 
           s3_acl = ACL::S3.new :config => @config,
+                               :logger => @logger,
                                :region => region
 
           s3_acl.allow_read_acccess_from_accounts :key_name => id,

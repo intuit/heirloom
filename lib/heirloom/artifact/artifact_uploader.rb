@@ -4,12 +4,14 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
+      @logger = args[:logger]
     end
 
     def upload(args)
       id = args[:id]
       name = args[:name]
       file = args[:file]
+      key = "#{id}.tar.gz"
       public_readable = args[:public_readable]
 
       @config.regions.each do |region|
@@ -20,15 +22,21 @@ module Heirloom
 
         s3_uploader.upload_file :file => file,
                                 :bucket => bucket,
-                                :key_name => "#{id}.tar.gz",
+                                :key_name => key,
                                 :key_folder => name,
                                 :public_readable => public_readable
         sdb.put_attributes name, id, { "#{region}-s3-url" => 
-                                       "s3://#{bucket}/#{name}/#{id}.tar.gz" }
+                                       "s3://#{bucket}/#{name}/#{key}" }
+
+        @logger.info "Uploading s3://#{bucket}/#{name}/#{key}"
+
         sdb.put_attributes name, id, { "#{region}-http-url" => 
-                                       "http://#{s3_endpoints[region]}/#{bucket}/#{name}/#{id}.tar.gz" }
+                                       "http://#{s3_endpoints[region]}/#{bucket}/#{name}/#{key}" }
+        @logger.info "Uploading http://#{s3_endpoints[region]}/#{bucket}/#{name}/#{key}"
+
         sdb.put_attributes name, id, { "#{region}-https-url" => 
-                                       "https://#{s3_endpoints[region]}/#{bucket}/#{name}/#{id}.tar.gz" }
+                                       "https://#{s3_endpoints[region]}/#{bucket}/#{name}/#{key}" }
+        @logger.info "Uploading https://#{s3_endpoints[region]}/#{bucket}/#{name}/#{key}"
       end
     end
 

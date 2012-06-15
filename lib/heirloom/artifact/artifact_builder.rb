@@ -7,13 +7,16 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
+      @logger = args[:logger]
     end
 
     def build(args)
       @name = args[:name]
       @id = args[:id]
       @public = args[:public]
-      @git_directory = GitDirectory.new args[:directory]
+      @git_directory = GitDirectory.new :directory => args[:directory],
+                                        :logger => @logger
+                                        
       @commit = @git_directory.commit @id
 
       create_artifact_record
@@ -23,6 +26,7 @@ module Heirloom
     private
 
     def create_artifact_domain
+      @logger.info "Verifying artifact domain #{@name} exists."
       sdb.create_domain @name
     end
 

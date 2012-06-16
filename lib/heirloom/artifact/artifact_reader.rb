@@ -3,7 +3,7 @@ module Heirloom
   class ArtifactReader
 
     def initialize(args)
-      @config = Config.new
+      @config = args[:config]
     end
 
     def show(args)

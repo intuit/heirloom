@@ -8,6 +8,7 @@ require 'heirloom/artifact/artifact_destroyer.rb'
 module Heirloom
 
   class Artifact
+
     def initialize(args)
       @config = Config.new :config => args[:config]
       @logger = args[:logger] ||= Logger.new(STDOUT)

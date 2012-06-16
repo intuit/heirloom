@@ -3,7 +3,7 @@ module Heirloom
   class ArtifactLister
 
     def initialize(args)
-      @config = Config.new
+      @config = args[:config]
     end
 
     def versions(args)

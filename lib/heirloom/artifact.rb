@@ -43,7 +43,7 @@ module Heirloom
     end
 
     def show(args)
-      artifact_reader.show(args)
+      artifact_reader.show(args)[args[:id]]
     end
 
     def versions(args)

@@ -35,7 +35,7 @@ module Heirloom
 
       artifact_authorizer.authorize :id               => args[:id],
                                     :name             => args[:name],
-                                    :public_readable  => args[:public_readable]
+                                    :public_readable  => args[:public]
       
       @logger.info "Artifact build completed."
     end

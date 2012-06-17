@@ -19,8 +19,8 @@ module Heirloom
         @sdb.create_domain(domain) unless domains.include? domain
       end
 
-      def put_attributes(domain, key, args)
-        @sdb.put_attributes domain, key, args
+      def put_attributes(domain, key, attributes, options)
+        @sdb.put_attributes domain, key, attributes, options
       end
 
       def select(query)

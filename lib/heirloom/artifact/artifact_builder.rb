@@ -20,18 +20,19 @@ module Heirloom
       @directory = Directory.new :directory => directory,
                                  :logger    => @logger
 
-      @directory.build_artifact_from_directory
+      artifact = @directory.build_artifact_from_directory
 
       create_artifact_record
 
       if args[:git]
-        @git_directory = GitDirectory.new :directory => args[:directory],
+        @git_directory = GitDirectory.new :directory => directory,
                                           :logger    => @logger
         @logger.info "Adding git commit to attributes."
         @commit = @git_directory.commit @id
         add_git_commit_to_artifact_record
       end
 
+      artifact
     end
 
     private

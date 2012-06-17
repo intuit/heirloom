@@ -33,7 +33,7 @@ module Heirloom
                                :file            => file
 
       unless args[:public]
-        @logger.info "Setting artifact to public read."
+        @logger.info "Authorizing access to artifact."
         artifact_authorizer.authorize :id               => args[:id],
                                       :name             => args[:name],
                                       :public_readable  => args[:public_readable]

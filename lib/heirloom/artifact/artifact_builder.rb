@@ -14,13 +14,21 @@ module Heirloom
       @name = args[:name]
       @id = args[:id]
       @public = args[:public]
-      @git_directory = GitDirectory.new :directory => args[:directory],
-                                        :logger => @logger
-                                        
-      @commit = @git_directory.commit @id
+
+      @directory = Directory.new :directory => args[:directory],
+                                 :logger    => @logger
+
+      @directory.build_artifact_from_directory
 
       create_artifact_record
-      @git_directory.build_artifact_from_directory
+
+      if args[:git]
+        @git_directory = GitDirectory.new :directory => args[:directory],
+                                          :logger    => @logger
+        @commit = @git_directory.commit @id
+        add_git_commit_to_artifact_record
+      end
+
     end
 
     private
@@ -34,7 +42,12 @@ module Heirloom
       create_artifact_domain
       attributes = { 'built_by'        => "#{user}@#{hostname}",
                      'built_at'        => Time.now.utc.iso8601,
-                     'sha'             => @id,
+                     'id'              => @id }
+      sdb.put_attributes @name, @id, attributes
+    end
+
+    def add_git_commit_to_artifact_record
+      attributes = { 'sha'             => @id,
                      'abbreviated_sha' => @commit.id_abbrev,
                      'message'         => @commit.message,
                      'author'          => @commit.author.name }

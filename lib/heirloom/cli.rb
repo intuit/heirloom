@@ -13,12 +13,13 @@ Usage:
 heirloom list
 heirloom versions -n NAME
 heirloom show -n NAME -i ID
-heirloom build -n NAME -i ID -d DIRECTORY [-p]
+heirloom build -n NAME -i ID -d DIRECTORY [-p] [-g]
 heirloom destroy -n NAME -i ID
 
 EOS
         opt :help, "Display Help"
         opt :directory, "Source directory of artifact build.", :type => :string
+        opt :git, "Read git commit information."
         opt :id, "Id of artifact.", :type => :string
         opt :name, "Name of artifact.", :type => :string
         opt :public, "Is this artifact public?"
@@ -40,7 +41,8 @@ EOS
                 :id        => @opts[:id],
                 :accounts  => @opts[:accounts],
                 :directory => @opts[:directory],
-                :public    => @opts[:public]
+                :public    => @opts[:public],
+                :git       => @opts[:git]
       when 'destroy', 'delete'
         a.destroy :name => @opts[:name],
                   :id   => @opts[:id]

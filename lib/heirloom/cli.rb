@@ -22,6 +22,8 @@ EOS
         opt :attribute, "Attribute to update.", :type => :string
         opt :directory, "Source directory of build.", :type => :string, 
                                                       :default => '.'
+        opt :exclude, "Comma spereate list of files or directories to exclude.", :type => :string,
+                                                                                 :default => ''
         opt :git, "Read git commit information from directory."
         opt :id, "Id of artifact.", :type => :string
         opt :name, "Name of artifact.", :type => :string
@@ -45,6 +47,7 @@ EOS
                 :id        => @opts[:id],
                 :accounts  => @opts[:accounts],
                 :directory => @opts[:directory],
+                :exclude   => @opts[:exclude].split(','),
                 :public    => @opts[:public],
                 :git       => @opts[:git]
       when 'update'

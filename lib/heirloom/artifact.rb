@@ -37,6 +37,8 @@ module Heirloom
                                     :name             => args[:name],
                                     :public_readable  => args[:public]
       
+      artifact_builder.cleanup
+
       @logger.info "Artifact build completed."
     end
 

@@ -13,26 +13,32 @@ module Heirloom
     def build(args)
       @name = args[:name]
       @id = args[:id]
-      @public = args[:public]
+      @exclude = args[:exclude]
 
       directory = args[:directory] ||= '.'
 
       @directory = Directory.new :directory => directory,
+                                 :exclude   => @exclude,
                                  :logger    => @logger
 
-      artifact = @directory.build_artifact_from_directory
+      @local_build = @directory.build_artifact_from_directory
 
       create_artifact_record
 
       if args[:git]
-        @git_directory = GitDirectory.new :directory => directory,
-                                          :logger    => @logger
+        git_directory = GitDirectory.new :directory => directory,
+                                         :logger    => @logger
         @logger.info "Adding git commit to attributes."
-        @commit = @git_directory.commit @id
+        @commit = git_directory.commit @id
         add_git_commit_to_artifact_record
       end
 
-      artifact
+      @local_build
+    end
+
+    def cleanup
+      @logger.info "Cleaning up local build #{@local_build}."
+      File.delete @local_build
     end
 
     private

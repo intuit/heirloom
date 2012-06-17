@@ -16,7 +16,7 @@ module Heirloom
 
         key = "#{key_folder}/#{key_name}.tar.gz"
 
-        current_acls = s3.get_bucket_acl(bucket)
+        current_acls = s3.get_bucket_acl bucket
 
         name = current_acls['Owner']['Name']
         id = current_acls['Owner']['ID']

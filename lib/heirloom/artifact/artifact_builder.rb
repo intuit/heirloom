@@ -56,8 +56,11 @@ module Heirloom
                      'abbreviated_sha' => @commit.id_abbrev,
                      'message'         => @commit.message,
                      'author'          => @commit.author.name }
-      @logger.info "Git sha: #{@id}, abbreviated_sha #{@commit.id_abbrev}"
-      @logger.info "Git message: #{@commit.message}, author #{@commit.author.name}"
+      @logger.info "Git sha: #{@id}"
+      @logger.info "Git abbreviated_sha: #{@commit.id_abbrev}"
+      @logger.info "Git message: #{@commit.message}"
+      @logger.info "Git author: #{@commit.author.name}"
+
       sdb.put_attributes @name, @id, attributes
     end
 

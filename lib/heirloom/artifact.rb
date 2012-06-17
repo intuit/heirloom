@@ -1,6 +1,7 @@
 require 'heirloom/artifact/artifact_lister.rb'
 require 'heirloom/artifact/artifact_reader.rb'
 require 'heirloom/artifact/artifact_builder.rb'
+require 'heirloom/artifact/artifact_updater.rb'
 require 'heirloom/artifact/artifact_uploader.rb'
 require 'heirloom/artifact/artifact_authorizer.rb'
 require 'heirloom/artifact/artifact_destroyer.rb'
@@ -44,6 +45,10 @@ module Heirloom
       artifact_destroyer.destroy(args)
     end
 
+    def update(args)
+      artifact_updater.update(args)
+    end
+
     def show(args)
       artifact_reader.show(args)[args[:id]]
     end
@@ -68,6 +73,11 @@ module Heirloom
 
     def artifact_builder
       @artifact_builder ||= ArtifactBuilder.new :config => @config,
+                                                :logger => @logger
+    end
+
+    def artifact_updater
+      @artifact_updater ||= ArtifactUpdater.new :config => @config,
                                                 :logger => @logger
     end
 

@@ -13,16 +13,20 @@ Usage:
 heirloom list
 heirloom versions -n NAME
 heirloom show -n NAME -i ID
-heirloom build -n NAME -i ID -d DIRECTORY [-p] [-g]
+heirloom build -n NAME -i ID [-d DIRECTORY] [-p] [-g]
+heirloom update -n NAME -i ID -a ATTRIBUTE -u UPDATE
 heirloom destroy -n NAME -i ID
 
 EOS
         opt :help, "Display Help"
-        opt :directory, "Source directory of artifact build.", :type => :string
-        opt :git, "Read git commit information."
+        opt :attribute, "Attribute to update.", :type => :string
+        opt :directory, "Source directory of build.", :type => :string, 
+                                                      :default => '.'
+        opt :git, "Read git commit information from directory."
         opt :id, "Id of artifact.", :type => :string
         opt :name, "Name of artifact.", :type => :string
-        opt :public, "Is this artifact public?"
+        opt :public, "Set this artifact as public readable?"
+        opt :update, "Update value of attribute.", :type => :string
       end
 
       cmd = ARGV.shift
@@ -43,6 +47,11 @@ EOS
                 :directory => @opts[:directory],
                 :public    => @opts[:public],
                 :git       => @opts[:git]
+      when 'update'
+        a.update :name      => @opts[:name],
+                 :id        => @opts[:id],
+                 :attribute => @opts[:attribute],
+                 :update    => @opts[:update]
       when 'destroy', 'delete'
         a.destroy :name => @opts[:name],
                   :id   => @opts[:id]

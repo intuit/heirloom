@@ -20,19 +20,20 @@ module Heirloom
     end
 
     def build(args)
-      if artifact_reader.exists?(args)
+      if artifact_reader.exists? args
         @logger.info "Destroying existing artifact."
         destroy(args)
       end
 
-      file = artifact_builder.build(args)
+      file = artifact_builder.build args
 
       artifact_uploader.upload :id              => args[:id],
                                :name            => args[:name],
-                               :file            => file,
-                               :public_readable => args[:public]
+                               :public_readable => args[:public],
+                               :file            => file
 
       unless args[:public]
+        @logger.info "Setting artifact to public read."
         artifact_authorizer.authorize :id               => args[:id],
                                       :name             => args[:name],
                                       :public_readable  => args[:public_readable]

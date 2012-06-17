@@ -20,6 +20,7 @@ module Heirloom
 
         name = current_acls['Owner']['Name']
         id = current_acls['Owner']['ID']
+
         grants = build_bucket_grants :id => id,
                                      :name => name,
                                      :accounts => @accounts

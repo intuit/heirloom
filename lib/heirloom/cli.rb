@@ -10,8 +10,8 @@ I build and manage artifacts
 
 Usage:
 
-heirloom list
-heirloom versions -n NAME
+heirloom names
+heirloom list -n NAME
 heirloom show -n NAME -i ID
 heirloom build -n NAME -i ID [-d DIRECTORY] [-p] [-g]
 heirloom update -n NAME -i ID -a ATTRIBUTE -u UPDATE
@@ -33,10 +33,10 @@ EOS
       a = Artifact.new :config => nil
 
       case cmd
+      when 'names'
+        puts a.names
       when 'list'
-        puts a.list
-      when 'versions', 'artifacts', 'ids'
-        puts a.versions :name => @opts[:name]
+        puts a.list :name => @opts[:name]
       when 'show'
         puts a.show(:name => @opts[:name],
                     :id   => @opts[:id]).to_yaml

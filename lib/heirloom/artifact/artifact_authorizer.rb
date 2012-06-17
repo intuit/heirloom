@@ -12,7 +12,9 @@ module Heirloom
       name = args[:name]
       public_readable = args[:public_readable]
 
-      unless @public_readable
+      unless public_readable
+        @logger.info "Authorizing access to artifact."
+
         @config.regions.each do |region|
           bucket = "#{@config.bucket_prefix}-#{region}"
 

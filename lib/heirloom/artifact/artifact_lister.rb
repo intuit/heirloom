@@ -6,12 +6,12 @@ module Heirloom
       @config = args[:config]
     end
 
-    def versions(args)
+    def list(args)
       domain = args[:name]
       sdb.select("select * from #{domain}").keys.reverse
     end
 
-    def list
+    def names
       sdb.domains
     end
 

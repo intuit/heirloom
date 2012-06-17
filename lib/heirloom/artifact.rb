@@ -33,32 +33,33 @@ module Heirloom
                                :public_readable => args[:public],
                                :file            => file
 
-      unless args[:public]
-        @logger.info "Authorizing access to artifact."
-        artifact_authorizer.authorize :id               => args[:id],
-                                      :name             => args[:name],
-                                      :public_readable  => args[:public_readable]
-      end
+      artifact_authorizer.authorize :id               => args[:id],
+                                    :name             => args[:name],
+                                    :public_readable  => args[:public_readable]
+      
+      @logger.info "Artifact build completed."
     end
 
     def destroy(args)
       artifact_destroyer.destroy(args)
+      @logger.info "Artifact destroyed."
     end
 
     def update(args)
       artifact_updater.update(args)
+      @logger.info "Artifact update completed."
     end
 
     def show(args)
       artifact_reader.show(args)[args[:id]]
     end
 
-    def versions(args)
-      artifact_lister.versions(args)
+    def list(args)
+      artifact_lister.list(args)
     end
 
-    def list
-      artifact_lister.list
+    def names
+      artifact_lister.names
     end
 
     private

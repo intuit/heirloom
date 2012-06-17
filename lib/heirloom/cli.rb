@@ -14,6 +14,7 @@ heirloom names
 heirloom list -n NAME
 heirloom show -n NAME -i ID
 heirloom build -n NAME -i ID [-d DIRECTORY] [-p] [-g]
+heirloom download -n NAME -i ID -r REGION -o OUTPUT_FILE
 heirloom update -n NAME -i ID -a ATTRIBUTE -u UPDATE
 heirloom destroy -n NAME -i ID
 
@@ -23,11 +24,13 @@ EOS
         opt :directory, "Source directory of build.", :type => :string, 
                                                       :default => '.'
         opt :exclude, "Comma spereate list of files or directories to exclude.", :type => :string,
-                                                                                 :default => ''
+                                                                                 :default => '.git'
         opt :git, "Read git commit information from directory."
         opt :id, "Id of artifact.", :type => :string
         opt :name, "Name of artifact.", :type => :string
+        opt :output, "Output download to file.", :type => :string
         opt :public, "Set this artifact as public readable?"
+        opt :region, "Region to download artifact.", :type => :string
         opt :update, "Update value of attribute.", :type => :string
       end
 
@@ -55,6 +58,11 @@ EOS
                  :id        => @opts[:id],
                  :attribute => @opts[:attribute],
                  :update    => @opts[:update]
+      when 'download'
+        a.download :name   => @opts[:name],
+                   :id     => @opts[:id],
+                   :output => @opts[:output],
+                   :region => @opts[:region]
       when 'destroy', 'delete'
         a.destroy :name => @opts[:name],
                   :id   => @opts[:id]

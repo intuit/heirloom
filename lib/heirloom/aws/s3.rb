@@ -22,6 +22,10 @@ module Heirloom
         @s3.directories.get bucket
       end
 
+      def get_object(bucket_name, object_name)
+        @s3.get_object(bucket_name, object_name).body
+      end
+
       def get_bucket_acl(bucket)
         @s3.get_bucket_acl(bucket).body
       end

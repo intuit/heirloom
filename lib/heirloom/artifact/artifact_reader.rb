@@ -9,11 +9,12 @@ module Heirloom
     def show(args)
       domain = args[:name]
       id = args[:id]
-      sdb.select "select * from #{domain} where itemName() = '#{id}'"
+      items = sdb.select "select * from #{domain} where itemName() = '#{id}'"
+      items[id]
     end
 
     def exists?(args)
-      show(args).any?
+      show(args) != nil
     end
 
     private

@@ -3,6 +3,7 @@ require 'heirloom/artifact/artifact_reader.rb'
 require 'heirloom/artifact/artifact_builder.rb'
 require 'heirloom/artifact/artifact_updater.rb'
 require 'heirloom/artifact/artifact_uploader.rb'
+require 'heirloom/artifact/artifact_downloader.rb'
 require 'heirloom/artifact/artifact_authorizer.rb'
 require 'heirloom/artifact/artifact_destroyer.rb'
 
@@ -42,18 +43,23 @@ module Heirloom
       @logger.info "Artifact build completed."
     end
 
-    def destroy(args)
-      artifact_destroyer.destroy(args)
-      @logger.info "Artifact destroyed."
-    end
-
     def update(args)
       artifact_updater.update(args)
       @logger.info "Artifact update completed."
     end
 
+    def download(args)
+      artifact_downloader.download(args)
+      @logger.info "Artifact download completed."
+    end
+
+    def destroy(args)
+      artifact_destroyer.destroy(args)
+      @logger.info "Artifact destroyed."
+    end
+
     def show(args)
-      artifact_reader.show(args)[args[:id]]
+      artifact_reader.show(args)
     end
 
     def list(args)
@@ -87,6 +93,11 @@ module Heirloom
     def artifact_uploader
       @artifact_uploader ||= ArtifactUploader.new :config => @config,
                                                   :logger => @logger
+    end
+
+    def artifact_downloader
+      @artifact_downloader ||= ArtifactDownloader.new :config => @config,
+                                                      :logger => @logger
     end
 
     def artifact_authorizer

@@ -23,10 +23,10 @@ aws:
     - UPDATE@ME
 ```
 
-* access_key / secret_key : Account where you would like the artifacts storaged.
-* bucket prefix: Heirloom expects a bucket with the prefix - region to be created in each zone, for example if the prefix is my-artifact, heirloom would expect my-artifact-us-west-1 to be created (as well as any addition regions listed).
-* regions: AWS regions where the artifcat should be uploaded
-* authorized_aws_accounts: Heirloom expects you to deploy to seperate accounts from where the artifact is stored.  authorized_aws_accounts specifices the **email** address of other accounts to be authorized to access private artifacts.
+* **access_key / secret_key**: Account where you would like the artifacts storaged.
+* **bucket prefix**: Heirloom expects a bucket with the prefix - region to be created in each zone, for example if the prefix is my-artifact, heirloom would expect my-artifact-us-west-1 to be created (as well as any addition regions listed).
+* **regions**: AWS regions where the artifcat should be uploaded
+* **authorized_aws_accounts**: Heirloom expects you to deploy to seperate accounts from where the artifact is stored.  authorized_aws_accounts specifices the **email** address of other accounts to be authorized to access private artifacts.
 
 Platforms
 ---------

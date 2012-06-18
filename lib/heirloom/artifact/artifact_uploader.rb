@@ -13,10 +13,11 @@ module Heirloom
       key_folder = args[:name]
       key_name = "#{id}.tar.gz"
       name = args[:name]
+      bucket_prefix = args[:bucket_prefix]
       public_readable = args[:public_readable]
 
       @config.regions.each do |region|
-        bucket = "#{@config.bucket_prefix}-#{region}"
+        bucket = "#{bucket_prefix}-#{region}"
 
         s3_uploader = Uploader::S3.new :config => @config,
                                        :logger => @logger,

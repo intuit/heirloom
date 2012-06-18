@@ -13,7 +13,7 @@ Usage:
 heirloom names
 heirloom list -n NAME
 heirloom show -n NAME -i ID
-heirloom build -n NAME -i ID [-d DIRECTORY] [-p] [-g]
+heirloom build -n NAME -i ID -b BUCKET_PREFIX [-d DIRECTORY] [-p] [-g]
 heirloom download -n NAME -i ID -r REGION -o OUTPUT_FILE
 heirloom update -n NAME -i ID -a ATTRIBUTE -u UPDATE
 heirloom destroy -n NAME -i ID
@@ -21,6 +21,7 @@ heirloom destroy -n NAME -i ID
 EOS
         opt :help, "Display Help"
         opt :attribute, "Attribute to update.", :type => :string
+        opt :bucket_prefix, "Bucket prefix which will be combined with region.", :type => :string
         opt :directory, "Source directory of build.", :type    => :string, 
                                                       :default => '.'
         opt :exclude, "Comma spereate list of files or directories to exclude.", :type => :string,
@@ -52,13 +53,14 @@ EOS
         puts a.show(:name => @opts[:name],
                     :id   => @opts[:id]).to_yaml
       when 'build'
-        a.build :name      => @opts[:name],
-                :id        => @opts[:id],
-                :accounts  => @opts[:accounts],
-                :directory => @opts[:directory],
-                :exclude   => @opts[:exclude].split(','),
-                :public    => @opts[:public],
-                :git       => @opts[:git]
+        a.build :name           => @opts[:name],
+                :id             => @opts[:id],
+                :accounts       => @opts[:accounts],
+                :bucket_prefix  => @opts[:bucket_prefix],
+                :directory      => @opts[:directory],
+                :exclude        => @opts[:exclude].split(','),
+                :public         => @opts[:public],
+                :git            => @opts[:git]
       when 'update'
         a.update :name      => @opts[:name],
                  :id        => @opts[:id],

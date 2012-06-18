@@ -26,6 +26,7 @@ module Heirloom
 
       artifact_uploader.upload :id              => args[:id],
                                :name            => args[:name],
+                               :bucket_prefix   => args[:bucket_prefix],
                                :public_readable => args[:public],
                                :file            => file
 

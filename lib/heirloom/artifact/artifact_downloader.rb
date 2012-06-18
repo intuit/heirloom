@@ -17,10 +17,18 @@ module Heirloom
                                          :logger => @logger,
                                          :region => @region
 
-      @logger.info "Downloading s3://#{get_bucket}/#{get_key} from #{@region}."
+      bucket = artifact_reader.get_bucket :region => @region,
+                                          :name   => @name,
+                                          :id     => @id
 
-      file = s3_downloader.download_file :bucket => get_bucket,
-                                         :key    => get_key
+      key = artifact_reader.get_key :region => @region,
+                                    :name   => @name,
+                                    :id     => @id
+
+      @logger.info "Downloading s3://#{bucket}/#{key} from #{@region}."
+
+      file = s3_downloader.download_file :bucket => bucket,
+                                         :key    => key
 
       @logger.info "Writing file to #{@output}."
 

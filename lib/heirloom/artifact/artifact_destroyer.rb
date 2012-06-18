@@ -14,7 +14,10 @@ module Heirloom
       @logger.info "Destroying #{args[:name]} - #{args[:id]}"
 
       @config.regions.each do |region|
-        bucket = "#{@config.bucket_prefix}-#{region}"
+        puts "#{region}, #{name}, #{id}"
+        bucket = artifact_reader.get_bucket :region => region,
+                                            :name   => name,
+                                            :id     => id
         key = "#{id}.tar.gz"
 
         @logger.info "Deleting s3://#{bucket}/#{name}/#{key}"
@@ -26,14 +29,18 @@ module Heirloom
                                   :key_folder => name,
                                   :bucket => bucket
 
-        sdb.delete name, id
       end
+      sdb.delete name, id
     end
 
     private
 
     def sdb
       @sdb ||= AWS::SimpleDB.new :config => @config
+    end
+
+    def artifact_reader
+      @artifact_reader ||= ArtifactReader.new :config => @config
     end
 
   end

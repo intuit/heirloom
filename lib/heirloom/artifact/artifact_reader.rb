@@ -17,6 +17,26 @@ module Heirloom
       show(args) != nil
     end
 
+    def get_bucket(args)
+      artifact = show :name => args[:name],
+                      :id   => args[:id]
+
+      url = artifact["#{args[:region]}-s3-url"].first
+
+      bucket = url.gsub('s3://', '').split('/').first
+    end
+
+    def get_key(args)
+      artifact = show :name => args[:name],
+                      :id   => args[:id]
+
+      url = artifact["#{args[:region]}-s3-url"].first
+
+      bucket = url.gsub('s3://', '').gsub(get_bucket(args), '')
+      bucket.slice!(0)
+      bucket
+    end
+
     private
 
     def sdb

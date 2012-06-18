@@ -6,7 +6,7 @@ describe Heirloom do
                 'secret_key'              => 'secret',
                 'regions'                 => ['us-west-1', 'us-west-2'],
                 'bucket_prefix'           => 'prefix',
-                'authorized_aws_accounts' => [ 'test1 @acct.com', 'test2@acct.com'] }
+                'authorized_aws_accounts' => [ 'test1 @acct.com', 'test2@acct.com' ] }
     @logger = 'logger'
   end
 
@@ -17,7 +17,8 @@ describe Heirloom do
                                       :logger => 'logger'
   end
 
-  it "should build the artifact" 
+  it "should build the artifact"
+
   it "should update the artifact"
 
 end

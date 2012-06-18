@@ -39,12 +39,18 @@ module Heirloom
 
         a = Array.new
 
+        # Add each account email as read access
         @accounts.each do |g|
           a << {
                  'Grantee' => { 'EmailAddress' => g } ,
                  'Permission' => 'READ'
                }
         end
+
+        # Grand owner full access
+        a << { 'Grantee' => { 'DisplayName' => name, 'ID' => id },
+               'Permission' => 'FULL_CONTROL'
+             }
 
         {
           'Owner' => {

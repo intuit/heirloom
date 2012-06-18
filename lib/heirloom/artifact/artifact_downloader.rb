@@ -8,38 +8,46 @@ module Heirloom
     end
 
     def download(args)
+      @id = args[:id]
+      @name = args[:name]
+      @output = args[:output]
+      @region = args[:region]
+
       s3_downloader = Downloader::S3.new :config => @config,
                                          :logger => @logger,
-                                         :region => args[:region]
+                                         :region => @region
 
-      file = s3_downloader.download_file :bucket => get_bucket(args),
-                                         :key    => get_key(args)
+      @logger.info "Downloading s3://#{get_bucket}/#{get_key} from #{@region}."
 
-      @logger = "Writing file to #{args[:output]}."
+      file = s3_downloader.download_file :bucket => get_bucket,
+                                         :key    => get_key
 
-      File.open(args[:output], 'w') do |local_file|
+      @logger.info "Writing file to #{@output}."
+
+      File.open(@output, 'w') do |local_file|
         local_file.write file
       end
     end
 
     private
 
-    def get_bucket(args)
-      artifact = artifact_reader.show :name   => args[:name],
-                                      :id     => args[:id]
+    def get_bucket
+      artifact = artifact_reader.show :name => @name,
+                                      :id   => @id
 
-      url = artifact["#{args[:region]}-s3-url"].first
+      url = artifact["#{@region}-s3-url"].first
 
       bucket = url.gsub('s3://', '').split('/').first
     end
 
-    def get_key(args)
-      artifact = artifact_reader.show :name   => args[:name],
-                                      :id     => args[:id]
+    def get_key
+      artifact = artifact_reader.show :name => @name,
+                                      :id   => @id
 
-      url = artifact["#{args[:region]}-s3-url"].first
+      url = artifact["#{@region}-s3-url"].first
 
-      bucket = url.gsub('s3://', '').gsub(get_bucket(args), '').slice!(0)
+      bucket = url.gsub('s3://', '').gsub(get_bucket, '')
+      bucket.slice!(0)
       bucket
     end
 

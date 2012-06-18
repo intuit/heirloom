@@ -16,7 +16,7 @@ module Heirloom
       self.access_key = c['aws']['access_key']
       self.secret_key = c['aws']['secret_key']
       self.regions = c['aws']['regions']
-      self.primary_region = regions.first
+      self.primary_region = regions ? regions.first : 'us-west-1'
       self.bucket_prefix = c['aws']['bucket_prefix']
       self.authorized_aws_accounts = c['aws']['authorized_aws_accounts']
     end

@@ -21,7 +21,7 @@ heirloom destroy -n NAME -i ID
 EOS
         opt :help, "Display Help"
         opt :attribute, "Attribute to update.", :type => :string
-        opt :directory, "Source directory of build.", :type => :string, 
+        opt :directory, "Source directory of build.", :type    => :string, 
                                                       :default => '.'
         opt :exclude, "Comma spereate list of files or directories to exclude.", :type => :string,
                                                                                  :default => '.git'
@@ -30,7 +30,8 @@ EOS
         opt :name, "Name of artifact.", :type => :string
         opt :output, "Output download to file.", :type => :string
         opt :public, "Set this artifact as public readable?"
-        opt :region, "Region to download artifact.", :type => :string
+        opt :region, "Region to download artifact.", :type    => :string,
+                                                     :default => 'us-west-1'
         opt :update, "Update value of attribute.", :type => :string
       end
 
@@ -41,6 +42,11 @@ EOS
       when 'names'
         puts a.names
       when 'list'
+        unless @opts[:name]
+          puts "Please specify an artifact name."
+          puts a.names
+          exit 1
+        end
         puts a.list :name => @opts[:name]
       when 'show'
         puts a.show(:name => @opts[:name],

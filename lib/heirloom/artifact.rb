@@ -13,12 +13,7 @@ module Heirloom
 
     def initialize(args)
       @config = Config.new :config => args[:config]
-      @logger = args[:logger] ||= Logger.new(STDOUT)
-
-      @logger.datetime_format = "%Y-%m-%d %H:%M:%S"
-      @logger.formatter = proc do |severity, datetime, progname, msg|
-          "#{datetime}: #{msg}\n"
-      end
+      @logger = HeirloomLogger.new :logger => args[:logger]
     end
 
     def build(args)

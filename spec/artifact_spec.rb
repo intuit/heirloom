@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe Heirloom do
 
-  context "with an artifact object" do
-
     before do
       Heirloom::Config.should_receive(:new).and_return('config')
       @artifact = Heirloom::Artifact.new :logger => 'logger',
@@ -41,7 +39,5 @@ describe Heirloom do
       @aa_mock.should_receive(:authorize).with(args)
       @artifact.authorize args
     end
-
-  end
 
 end

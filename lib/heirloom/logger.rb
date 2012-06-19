@@ -1,12 +1,14 @@
 module Heirloom
   class HeirloomLogger
     
-    def initialize(args)
+    def initialize(args = {})
       @logger = args[:logger] ||= Logger.new(STDOUT)
 
-      @logger.datetime_format = "%Y-%m-%d %H:%M:%S"
-      @logger.formatter = proc do |severity, datetime, progname, msg|
-          "#{datetime}: #{msg}\n"
+      unless args[:logger]
+        @logger.datetime_format = "%Y-%m-%d %H:%M:%S"
+        @logger.formatter = proc do |severity, datetime, progname, msg|
+            "#{datetime}: #{msg}\n"
+        end
       end
 
       @logger

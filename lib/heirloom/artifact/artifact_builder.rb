@@ -8,11 +8,11 @@ module Heirloom
     def initialize(args)
       @config = args[:config]
       @logger = args[:logger]
+      @name = args[:name]
+      @id = args[:id]
     end
 
     def build(args)
-      @name = args[:name]
-      @id = args[:id]
       @exclude = args[:exclude]
 
       directory = args[:directory] ||= '.'
@@ -32,6 +32,8 @@ module Heirloom
         @commit = git_directory.commit @id
         add_git_commit_to_artifact_record
       end
+
+      @logger.info "Build complete."
 
       @local_build
     end

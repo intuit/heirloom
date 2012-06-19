@@ -4,21 +4,23 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
+      @name = args[:name]
     end
 
-    def list(args)
-      domain = args[:name]
-      sdb.select("select * from #{domain}").keys.reverse
-    end
-
-    def names
-      sdb.domains
+    def list
+      sdb.select("select * from #{@name}").keys.reverse
     end
 
     private
 
     def sdb
       @sdb ||= AWS::SimpleDB.new :config => @config
+    end
+
+    def artifact_reader(id)
+      @artifact_reader ||= ArtifactReader.new :config => @config,
+                                              :name   => @name,
+                                              :id     => id
     end
 
   end

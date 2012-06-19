@@ -5,32 +5,30 @@ module Heirloom
     def initialize(args)
       @config = args[:config]
       @logger = args[:logger]
+      @name = args[:name]
+      @id = args[:id]
     end
 
-    def destroy(args)
-      id = args[:id]
-      name = args[:name]
-
-      @logger.info "Destroying #{args[:name]} - #{args[:id]}"
+    def destroy
+      @logger.info "Destroying #{@name} - #{@id}"
 
       @config.regions.each do |region|
-        puts "#{region}, #{name}, #{id}"
-        bucket = artifact_reader.get_bucket :region => region,
-                                            :name   => name,
-                                            :id     => id
-        key = "#{id}.tar.gz"
+        bucket = artifact_reader.get_bucket :region => region
 
-        @logger.info "Deleting s3://#{bucket}/#{name}/#{key}"
+        key = "#{@id}.tar.gz"
+
+        @logger.info "Deleting s3://#{bucket}/#{@name}/#{key}"
 
         s3_destroyer = Destroyer::S3.new :config => @config,
                                          :region => region
 
         s3_destroyer.destroy_file :key_name => key,
-                                  :key_folder => name,
+                                  :key_folder => @name,
                                   :bucket => bucket
 
       end
-      sdb.delete name, id
+      sdb.delete @name, @id
+      @logger.info "Destroy complete."
     end
 
     private
@@ -40,7 +38,9 @@ module Heirloom
     end
 
     def artifact_reader
-      @artifact_reader ||= ArtifactReader.new :config => @config
+      @artifact_reader ||= ArtifactReader.new :config => @config,
+                                              :name   => @name,
+                                              :id     => @id
     end
 
   end

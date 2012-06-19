@@ -13,12 +13,14 @@ module Heirloom
       config_file = "#{ENV['HOME']}/.heirloom.yml"
       c = @config ? @config : YAML::load( File.open( config_file ) )
 
-      self.access_key = c['aws']['access_key']
-      self.secret_key = c['aws']['secret_key']
-      self.regions = c['aws']['regions']
+      aws = c['aws']
+
+      self.access_key = aws['access_key']
+      self.secret_key = aws['secret_key']
+      self.regions = aws['regions']
+      self.bucket_prefix = aws['bucket_prefix']
+      self.authorized_aws_accounts = aws['authorized_aws_accounts']
       self.primary_region = regions ? regions.first : 'us-west-1'
-      self.bucket_prefix = c['aws']['bucket_prefix']
-      self.authorized_aws_accounts = c['aws']['authorized_aws_accounts']
     end
 
   end

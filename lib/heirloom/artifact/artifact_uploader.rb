@@ -5,14 +5,13 @@ module Heirloom
     def initialize(args)
       @config = args[:config]
       @logger = args[:logger]
+      @name = args[:name]
+      @id = args[:id]
     end
 
     def upload(args)
-      id = args[:id]
       file = args[:file]
-      key_folder = args[:name]
-      key_name = "#{id}.tar.gz"
-      name = args[:name]
+      key_name = "#{@id}.tar.gz"
       bucket_prefix = args[:bucket_prefix]
       public_readable = args[:public_readable]
 
@@ -25,12 +24,13 @@ module Heirloom
 
         s3_uploader.upload_file :bucket          => bucket,
                                 :file            => file,
-                                :id              => id,
-                                :key_folder      => key_folder,
+                                :id              => @id,
+                                :key_folder      => @name,
                                 :key_name        => key_name,
-                                :name            => name,
+                                :name            => @name,
                                 :public_readable => public_readable
       end
+      @logger.info "Upload complete."
     end
 
   end

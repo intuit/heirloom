@@ -1,5 +1,12 @@
 require 'trollop'
 
+require 'heirloom/cli/build'
+require 'heirloom/cli/list'
+require 'heirloom/cli/show'
+require 'heirloom/cli/update'
+require 'heirloom/cli/download'
+require 'heirloom/cli/destroy'
+
 module Heirloom
   module CLI
     def self.start
@@ -10,7 +17,6 @@ I build and manage artifacts
 
 Usage:
 
-heirloom names
 heirloom list -n NAME
 heirloom show -n NAME -i ID
 heirloom build -n NAME -i ID -b BUCKET_PREFIX [-d DIRECTORY] [-p] [-g]
@@ -37,43 +43,48 @@ EOS
       end
 
       cmd = ARGV.shift
-      a = Artifact.new :config => nil
+      logger = HeirloomLogger.new
 
       case cmd
-      when 'names'
-        puts a.names
       when 'list'
-        unless @opts[:name]
-          puts "Please specify an artifact name."
-          puts a.names
-          exit 1
-        end
-        puts a.list :name => @opts[:name]
+        cli_list = CLI::List.new :name   => @opts[:name],
+                                 :logger => logger
+        cli_list.list
       when 'show'
-        puts a.show(:name => @opts[:name],
-                    :id   => @opts[:id]).to_yaml
+        cli_show = CLI::Show.new :name   => @opts[:name],
+                                 :id     => @opts[:id],
+                                 :logger => logger
+        cli_show.show
       when 'build'
-        a.build :name           => @opts[:name],
-                :id             => @opts[:id],
-                :accounts       => @opts[:accounts],
-                :bucket_prefix  => @opts[:bucket_prefix],
-                :directory      => @opts[:directory],
-                :exclude        => @opts[:exclude].split(','),
-                :public         => @opts[:public],
-                :git            => @opts[:git]
+        cli_build = CLI::Build.new :name          => @opts[:name],
+                                   :id            => @opts[:id],
+                                   :accounts      => @opts[:accounts],
+                                   :bucket_prefix => @opts[:bucket_prefix],
+                                   :directory     => @opts[:directory],
+                                   :exclude       => @opts[:exclude],
+                                   :public        => @opts[:public],
+                                   :git           => @opts[:git],
+                                   :logger        => logger
+        cli_build.build
       when 'update'
-        a.update :name      => @opts[:name],
-                 :id        => @opts[:id],
-                 :attribute => @opts[:attribute],
-                 :update    => @opts[:update]
+        cli_update = CLI::Update.new :name      => @opts[:name],
+                                     :id        => @opts[:id],
+                                     :attribute => @opts[:attribute],
+                                     :update    => @opts[:update],
+                                     :logger    => logger
+        cli_update.update
       when 'download'
-        a.download :name   => @opts[:name],
-                   :id     => @opts[:id],
-                   :output => @opts[:output],
-                   :region => @opts[:region]
+        cli_download = CLI::Download.new :name   => @opts[:name],
+                                         :id     => @opts[:id],
+                                         :output => @opts[:output],
+                                         :region => @opts[:region],
+                                         :logger => logger
+        cli_download.download
       when 'destroy', 'delete'
-        a.destroy :name => @opts[:name],
-                  :id   => @opts[:id]
+        cli_destroy = CLI::Destroy.new :name   => @opts[:name],
+                                       :id     => @opts[:id],
+                                       :logger => logger
+        cli_destroy.destroy
       else
         puts "Unkown command: '#{cmd}'."
       end

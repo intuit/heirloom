@@ -13,97 +13,104 @@ module Heirloom
 
     def initialize(args)
       @config = Config.new :config => args[:config]
-      @logger = HeirloomLogger.new :logger => args[:logger]
+      @logger = args[:logger]
+      @name = args[:name]
+      @id = args[:id]
     end
 
     def build(args)
-      if artifact_reader.exists? args
-        @logger.info "Destroying existing artifact."
-        destroy(args)
-      end
+      artifact_builder.build args
+    end
 
-      file = artifact_builder.build args
+    def authorize(args)
+      artifact_authorizer.authorize args
+    end
 
-      artifact_uploader.upload :id              => args[:id],
-                               :name            => args[:name],
-                               :bucket_prefix   => args[:bucket_prefix],
-                               :public_readable => args[:public],
-                               :file            => file
-
-      artifact_authorizer.authorize :id               => args[:id],
-                                    :name             => args[:name],
-                                    :public_readable  => args[:public]
-      
-      artifact_builder.cleanup
-
-      @logger.info "Artifact build completed."
+    def upload(args)
+      artifact_uploader.upload args
     end
 
     def update(args)
-      artifact_updater.update(args)
-      @logger.info "Artifact update completed."
+      artifact_updater.update args
     end
 
     def download(args)
-      artifact_downloader.download(args)
-      @logger.info "Artifact download completed."
+      artifact_downloader.download args
     end
 
-    def destroy(args)
-      artifact_destroyer.destroy(args)
-      @logger.info "Artifact destroyed."
+    def exists?
+      artifact_reader.exists?
     end
 
-    def show(args)
-      artifact_reader.show(args)
+    def destroy
+      artifact_destroyer.destroy
     end
 
-    def list(args)
-      artifact_lister.list(args)
+    def show
+      artifact_reader.show
     end
 
-    def names
-      artifact_lister.names
+    def list
+      artifact_lister.list
+    end
+
+    def cleanup
+      artifact_builder.cleanup
     end
 
     private
 
     def artifact_lister
-      @artifact_lister ||= ArtifactLister.new :config => @config
+      @artifact_lister ||= ArtifactLister.new :config => @config,
+                                              :name   => @name
     end
 
     def artifact_reader
-      @artifact_reader ||= ArtifactReader.new :config => @config
+      @artifact_reader ||= ArtifactReader.new :config => @config,
+                                              :name   => @name,
+                                              :id     => @id
     end
 
     def artifact_builder
       @artifact_builder ||= ArtifactBuilder.new :config => @config,
-                                                :logger => @logger
+                                                :logger => @logger,
+                                                :name   => @name,
+                                                :id     => @id
     end
 
     def artifact_updater
       @artifact_updater ||= ArtifactUpdater.new :config => @config,
-                                                :logger => @logger
+                                                :logger => @logger,
+                                                :name   => @name,
+                                                :id     => @id
     end
 
     def artifact_uploader
       @artifact_uploader ||= ArtifactUploader.new :config => @config,
-                                                  :logger => @logger
+                                                  :logger => @logger,
+                                                  :name   => @name,
+                                                  :id     => @id
     end
 
     def artifact_downloader
       @artifact_downloader ||= ArtifactDownloader.new :config => @config,
-                                                      :logger => @logger
+                                                      :logger => @logger,
+                                                      :name   => @name,
+                                                      :id     => @id
     end
 
     def artifact_authorizer
       @artifact_authorizer ||= ArtifactAuthorizer.new :config => @config,
-                                                      :logger => @logger
+                                                      :logger => @logger,
+                                                      :name   => @name,
+                                                      :id     => @id
     end
 
     def artifact_destroyer
       @artifact_destroyer ||= ArtifactDestroyer.new :config => @config,
-                                                    :logger => @logger
+                                                    :logger => @logger,
+                                                    :name   => @name,
+                                                    :id     => @id
     end
 
   end

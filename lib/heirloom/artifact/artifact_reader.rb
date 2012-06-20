@@ -2,14 +2,16 @@ module Heirloom
 
   class ArtifactReader
 
+    attr_accessor :config, :id, :name
+
     def initialize(args)
-      @config = args[:config]
-      @name = args[:name]
-      @id = args[:id]
+      self.config = args[:config]
+      self.name = args[:name]
+      self.id = args[:id]
     end
 
     def show
-      items = sdb.select "select * from #{@name} where itemName() = '#{@id}'"
+      items = sdb.select "select * from #{name} where itemName() = '#{id}'"
       items[@id]
     end
 
@@ -18,18 +20,18 @@ module Heirloom
     end
 
     def get_bucket(args)
-      url = show["#{args[:region]}-s3-url"].first
-
-      bucket = url.gsub('s3://', '').split('/').first
+      get_url(args).gsub('s3://', '').split('/').first
     end
 
     def get_key(args)
-      url = show["#{args[:region]}-s3-url"].first
-
       bucket_path = get_bucket :region => args[:region]
-      bucket = url.gsub('s3://', '').gsub(bucket_path, '')
+      bucket = get_url(args).gsub('s3://', '').gsub(bucket_path, '')
       bucket.slice!(0)
       bucket
+    end
+
+    def get_url(args)
+      show["#{args[:region]}-s3-url"].first
     end
 
     private

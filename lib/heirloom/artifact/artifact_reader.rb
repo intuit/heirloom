@@ -26,7 +26,8 @@ module Heirloom
     def get_key(args)
       url = show["#{args[:region]}-s3-url"].first
 
-      bucket = url.gsub('s3://', '').gsub(get_bucket, '')
+      bucket_path = get_bucket :region => args[:region]
+      bucket = url.gsub('s3://', '').gsub(bucket_path, '')
       bucket.slice!(0)
       bucket
     end

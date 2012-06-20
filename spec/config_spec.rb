@@ -9,7 +9,8 @@ describe Heirloom do
                   'regions'                 => ['us-west-1', 'us-west-2'],
                   'bucket_prefix'           => 'prefix',
                   'authorized_aws_accounts' => [ 'test1 @acct.com', 'test2@acct.com' ]
-                }
+                },
+                'logger' => 'da-logger'
               }
   end
 
@@ -21,6 +22,7 @@ describe Heirloom do
     config.primary_region.should == 'us-west-1'
     config.bucket_prefix.should == @config['aws']['bucket_prefix']
     config.authorized_aws_accounts.should == @config['aws']['authorized_aws_accounts']
+    config.logger.should == @config['logger']
   end
 
   it "should create a new config object and read from ~/.heirloom.yml" do
@@ -34,4 +36,5 @@ describe Heirloom do
     config.bucket_prefix.should == @config['aws']['bucket_prefix']
     config.authorized_aws_accounts.should == @config['aws']['authorized_aws_accounts']
   end
+
 end

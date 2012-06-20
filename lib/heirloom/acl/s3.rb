@@ -9,7 +9,7 @@ module Heirloom
         @accounts = @config.authorized_aws_accounts
       end
 
-      def allow_read_acccess_from_accounts(args)
+      def allow_read_access_from_accounts(args)
         bucket = args[:bucket]
         key_name = args[:key_name]
         key_folder = args[:key_folder]

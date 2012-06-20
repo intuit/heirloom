@@ -9,35 +9,66 @@ describe Heirloom do
                                          :id     => '123'
     end
 
-    it "should build an artifact" do
-      args = { :accounts => ['acct@test.com', 'acct2@test.com'],
-               :directory => '.',
-               :exclude => ['.git'],
-               :git => true,
-               :bucket_prefix => 'prefix',
-               :public => true }
-      @ab_mock = double('Artifact Builder Mock')
-      Heirloom::ArtifactBuilder.should_receive(:new).
-                                with(:config => 'config',
-                                     :logger => 'logger',
-                                     :name   => 'tim',
-                                     :id     => '123').
-                                and_return(@ab_mock)
-      @ab_mock.should_receive(:build).with(@args)
-      @artifact.build @args
-    end
 
-    it "should authorize an artifact" do
-      args = { :public_readable => false }
-      @aa_mock = double('Artifact Authorizer Mock')
-      Heirloom::ArtifactAuthorizer.should_receive(:new).
-                                   with(:config => 'config',
-                                        :logger => 'logger',
-                                        :name   => 'tim',
-                                        :id     => '123').
-                                   and_return(@aa_mock)
-      @aa_mock.should_receive(:authorize).with(args)
-      @artifact.authorize args
+    context "test public methods" do
+      before do
+        @mock = double('Mock')
+      end
+
+      it "should call build method with given args" do
+        @artifact.should_receive(:artifact_builder).and_return(@mock)
+        @mock.should_receive(:build).with('args')
+        @artifact.build('args')
+      end
+
+      it "should call download method with given args" do
+        @artifact.should_receive(:artifact_downloader).and_return(@mock)
+        @mock.should_receive(:download).with('args')
+        @artifact.download('args')
+      end
+
+      it "should call update artifact method with given args" do
+        @artifact.should_receive(:artifact_updater).and_return(@mock)
+        @mock.should_receive(:update).with('args')
+        @artifact.update('args')
+      end
+
+      it "should call upload artifact method with given args" do
+        @artifact.should_receive(:artifact_uploader).and_return(@mock)
+        @mock.should_receive(:upload).with('args')
+        @artifact.upload('args')
+      end
+
+      it "should call authorize method" do
+        @artifact.should_receive(:artifact_authorizer).and_return(@mock)
+        @mock.should_receive(:authorize)
+        @artifact.authorize
+      end
+
+      it "should call artifact exists method" do
+        @artifact.should_receive(:artifact_reader).and_return(@mock)
+        @mock.should_receive(:exists?)
+        @artifact.exists?
+      end
+
+      it "should call show method" do
+        @artifact.should_receive(:artifact_reader).and_return(@mock)
+        @mock.should_receive(:show)
+        @artifact.show
+      end
+
+      it "should call list method" do
+        @artifact.should_receive(:artifact_lister).and_return(@mock)
+        @mock.should_receive(:list)
+        @artifact.list
+      end
+
+      it "should call cleanup method" do
+        @artifact.should_receive(:artifact_builder).and_return(@mock)
+        @mock.should_receive(:cleanup)
+        @artifact.cleanup
+      end
+
     end
 
 end

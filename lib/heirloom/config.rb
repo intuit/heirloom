@@ -2,7 +2,8 @@ module Heirloom
   class Config
 
     attr_accessor :access_key, :secret_key, :regions, 
-                  :primary_region, :bucket_prefix, :authorized_aws_accounts
+                  :primary_region, :bucket_prefix, :authorized_aws_accounts,
+                  :logger
 
     def initialize(args = {})
       @config = args[:config]
@@ -12,6 +13,8 @@ module Heirloom
     def load_config_file
       config_file = "#{ENV['HOME']}/.heirloom.yml"
       c = @config ? @config : YAML::load( File.open( config_file ) )
+
+      self.logger = c['logger'] ||= HeirloomLogger.new
 
       aws = c['aws']
 

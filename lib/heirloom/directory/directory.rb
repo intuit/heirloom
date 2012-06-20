@@ -8,32 +8,36 @@ module Heirloom
 
   class Directory
 
+    attr_accessor :config, :exclude, :local_build, :path, :logger
+
     def initialize(args)
-      @directory = args[:directory]
-      @exclude = args[:exclude]
-      @logger = args[:logger]
+      self.config = args[:config]
+      self.exclude = args[:exclude]
+      self.path = args[:path]
+      self.logger = config.logger
     end
 
     def build_artifact_from_directory
       random_text = (0...8).map{65.+(rand(25)).chr}.join
-      temp_file_name = File.join(Dir.tmpdir, random_text + ".tar.gz")
 
-      @logger.info "Building artifact '#{temp_file_name}' from '#{@directory}'."
-      @logger.info "Excluding #{@exclude.to_s}."
-      @logger.info "Adding #{files_to_pack.to_s}."
+      unless local_build
+        self.local_build = File.join(Dir.tmpdir, random_text + ".tar.gz")
+      end
 
-      tgz = Zlib::GzipWriter.new File.open(temp_file_name, 'wb')
+      logger.info "Building artifact '#{local_build}' from '#{path}'."
+      logger.info "Excluding #{exclude.to_s}."
+      logger.info "Adding #{files_to_pack.to_s}."
+
+      tgz = Zlib::GzipWriter.new File.open(local_build, 'wb')
 
       Minitar.pack(files_to_pack, tgz)
-      temp_file_name
     end
 
     private
       
     def files_to_pack
-      Dir.entries(@directory) - ['.', '..'] - @exclude
+      Dir.entries(path) - ['.', '..'] - exclude
     end
-
 
   end
 end

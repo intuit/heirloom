@@ -43,17 +43,14 @@ EOS
       end
 
       cmd = ARGV.shift
-      logger = HeirloomLogger.new
 
       case cmd
       when 'list'
-        cli_list = CLI::List.new :name   => @opts[:name],
-                                 :logger => logger
+        cli_list = CLI::List.new :name   => @opts[:name]
         cli_list.list
       when 'show'
         cli_show = CLI::Show.new :name   => @opts[:name],
-                                 :id     => @opts[:id],
-                                 :logger => logger
+                                 :id     => @opts[:id]
         cli_show.show
       when 'build'
         cli_build = CLI::Build.new :name          => @opts[:name],
@@ -63,27 +60,23 @@ EOS
                                    :directory     => @opts[:directory],
                                    :exclude       => @opts[:exclude],
                                    :public        => @opts[:public],
-                                   :git           => @opts[:git],
-                                   :logger        => logger
+                                   :git           => @opts[:git]
         cli_build.build
       when 'update'
         cli_update = CLI::Update.new :name      => @opts[:name],
                                      :id        => @opts[:id],
                                      :attribute => @opts[:attribute],
-                                     :update    => @opts[:update],
-                                     :logger    => logger
+                                     :update    => @opts[:update]
         cli_update.update
       when 'download'
         cli_download = CLI::Download.new :name   => @opts[:name],
                                          :id     => @opts[:id],
                                          :output => @opts[:output],
-                                         :region => @opts[:region],
-                                         :logger => logger
+                                         :region => @opts[:region]
         cli_download.download
       when 'destroy', 'delete'
         cli_destroy = CLI::Destroy.new :name   => @opts[:name],
-                                       :id     => @opts[:id],
-                                       :logger => logger
+                                       :id     => @opts[:id]
         cli_destroy.destroy
       else
         puts "Unkown command: '#{cmd}'."

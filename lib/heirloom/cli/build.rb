@@ -28,10 +28,9 @@ module Heirloom
                                :git            => @git
 
         @artifact.upload :bucket_prefix    => @bucket_prefix,
-                         :public_readable  => @public,
                          :file             => file
 
-        @artifact.authorize :public_readable  => @public
+        @artifact.authorize unless @public
 
         @artifact.cleanup
       end

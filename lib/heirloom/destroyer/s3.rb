@@ -2,9 +2,11 @@ module Heirloom
   module Destroyer
     class S3
 
+      attr_accessor :config, :region
+
       def initialize(args)
-        @config = args[:config]
-        @region = args[:region]
+        self.config = args[:config]
+        self.region = args[:region]
       end
 
       def destroy_file(args)
@@ -18,8 +20,8 @@ module Heirloom
       private
 
       def s3
-        @s3 ||= AWS::S3.new :config => @config,
-                            :region => @region
+        @s3 ||= AWS::S3.new :config => config,
+                            :region => region
       end
 
     end

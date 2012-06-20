@@ -5,7 +5,7 @@ module Heirloom
       def initialize(args)
         @config = args[:config]
         @region = args[:region]
-        @logger = args[:logger]
+        @logger = @config.logger
       end
 
       def download_file(args)

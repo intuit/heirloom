@@ -12,30 +12,30 @@ module Heirloom
   class Artifact
 
     def initialize(args)
-      @config = Config.new :config => args[:config]
-      @logger = args[:logger]
+      @config = Config.new :config => args[:config],
+                           :logger => args[:logger]
       @name = args[:name]
       @id = args[:id]
+    end
+
+    def authorize
+      artifact_authorizer.authorize
     end
 
     def build(args)
       artifact_builder.build args
     end
 
-    def authorize(args)
-      artifact_authorizer.authorize args
-    end
-
-    def upload(args)
-      artifact_uploader.upload args
+    def download(args)
+      artifact_downloader.download args
     end
 
     def update(args)
       artifact_updater.update args
     end
 
-    def download(args)
-      artifact_downloader.download args
+    def upload(args)
+      artifact_uploader.upload args
     end
 
     def exists?
@@ -73,42 +73,36 @@ module Heirloom
 
     def artifact_builder
       @artifact_builder ||= ArtifactBuilder.new :config => @config,
-                                                :logger => @logger,
                                                 :name   => @name,
                                                 :id     => @id
     end
 
     def artifact_updater
       @artifact_updater ||= ArtifactUpdater.new :config => @config,
-                                                :logger => @logger,
                                                 :name   => @name,
                                                 :id     => @id
     end
 
     def artifact_uploader
       @artifact_uploader ||= ArtifactUploader.new :config => @config,
-                                                  :logger => @logger,
                                                   :name   => @name,
                                                   :id     => @id
     end
 
     def artifact_downloader
       @artifact_downloader ||= ArtifactDownloader.new :config => @config,
-                                                      :logger => @logger,
                                                       :name   => @name,
                                                       :id     => @id
     end
 
     def artifact_authorizer
       @artifact_authorizer ||= ArtifactAuthorizer.new :config => @config,
-                                                      :logger => @logger,
                                                       :name   => @name,
                                                       :id     => @id
     end
 
     def artifact_destroyer
       @artifact_destroyer ||= ArtifactDestroyer.new :config => @config,
-                                                    :logger => @logger,
                                                     :name   => @name,
                                                     :id     => @id
     end

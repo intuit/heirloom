@@ -4,9 +4,10 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
-      @logger = args[:logger]
       @name = args[:name]
       @id = args[:id]
+
+      @logger = @config.logger
     end
 
     def update(args)

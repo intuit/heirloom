@@ -5,75 +5,77 @@ module Heirloom
 
   class ArtifactBuilder
 
+    attr_accessor :config, :id, :local_build, :logger, :name, :source
+
     def initialize(args)
-      @config = args[:config]
-      @logger = args[:logger]
-      @name = args[:name]
-      @id = args[:id]
+      self.config = args[:config]
+      self.name = args[:name]
+      self.id = args[:id]
+      self.logger = config.logger
     end
 
     def build(args)
-      @exclude = args[:exclude]
+      self.source = args[:directory] ||= '.'
 
-      directory = args[:directory] ||= '.'
+      directory = Directory.new :path      => source,
+                                :exclude   => args[:exclude],
+                                :config    => config
 
-      @directory = Directory.new :directory => directory,
-                                 :exclude   => @exclude,
-                                 :logger    => @logger
+      directory.build_artifact_from_directory
 
-      @local_build = @directory.build_artifact_from_directory
+      self.local_build = directory.local_build
 
       create_artifact_record
 
-      if args[:git]
-        git_directory = GitDirectory.new :directory => directory,
-                                         :logger    => @logger
-        @logger.info "Adding git commit to attributes."
-        @commit = git_directory.commit @id
-        add_git_commit_to_artifact_record
-      end
+      add_git_commit if args[:git]
 
-      @logger.info "Build complete."
+      logger.info "Build complete."
 
-      @local_build
+      local_build
     end
 
     def cleanup
-      @logger.info "Cleaning up local build #{@local_build}."
-      File.delete @local_build
+      logger.info "Cleaning up local build #{local_build}."
+      File.delete local_build
     end
 
     private
 
+    def add_git_commit
+      git_commit = GitDirectory.new(:path => source).commit
+      add_git_commit_to_artifact_record git_commit
+    end
+
     def create_artifact_domain
-      @logger.info "Verifying artifact domain #{@name} exists."
-      sdb.create_domain @name
+      logger.info "Verifying artifact domain #{name} exists."
+      sdb.create_domain name
     end
 
     def create_artifact_record
       create_artifact_domain
       attributes = { 'built_by'        => "#{user}@#{hostname}",
                      'built_at'        => Time.now.utc.iso8601,
-                     'id'              => @id }
-      @logger.info "Create artifact record #{@id}"
-      sdb.put_attributes @name, @id, attributes
+                     'id'              => id }
+      logger.info "Create artifact record #{id}."
+      sdb.put_attributes name, id, attributes
     end
 
-    def add_git_commit_to_artifact_record
-      attributes = { 'sha'             => @id,
-                     'abbreviated_sha' => @commit.id_abbrev,
-                     'message'         => @commit.message,
-                     'author'          => @commit.author.name }
-      @logger.info "Git sha: #{@id}"
-      @logger.info "Git abbreviated_sha: #{@commit.id_abbrev}"
-      @logger.info "Git message: #{@commit.message}"
-      @logger.info "Git author: #{@commit.author.name}"
+    def add_git_commit_to_artifact_record(commit)
+      attributes = { 'sha'             => id,
+                     'abbreviated_sha' => commit.id_abbrev,
+                     'message'         => commit.message,
+                     'author'          => commit.author.name }
 
-      sdb.put_attributes @name, @id, attributes
+      logger.info "Git sha: #{id}"
+      logger.info "Git abbreviated_sha: #{commit.id_abbrev}"
+      logger.info "Git message: #{commit.message}"
+      logger.info "Git author: #{commit.author.name}"
+
+      sdb.put_attributes name, id, attributes
     end
 
     def sdb
-      @sdb ||= AWS::SimpleDB.new :config => @config
+      @sdb ||= AWS::SimpleDB.new :config => config
     end
 
     def user

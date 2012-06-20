@@ -15,7 +15,7 @@ module Heirloom
       end
 
       def delete_object(bucket_name, object_name, options = {})
-        @s3.delete_object(bucket_name, object_name, options = {})
+        @s3.delete_object(bucket_name, object_name, options)
       end
 
       def get_bucket(bucket)

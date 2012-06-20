@@ -16,7 +16,6 @@ module Heirloom
         bucket = artifact_reader.get_bucket :region => region
 
         s3_acl = ACL::S3.new :config => @config,
-                             :logger => @logger,
                              :region => region
 
         s3_acl.allow_read_access_from_accounts :key_name => @id,

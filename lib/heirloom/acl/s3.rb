@@ -2,11 +2,13 @@ module Heirloom
   module ACL
     class S3
 
+      attr_accessor :accounts, :config, :logger, :region
+
       def initialize(args)
-        @config = args[:config]
-        @region = args[:region]
-        @logger = args[:logger]
-        @accounts = @config.authorized_aws_accounts
+        self.config = args[:config]
+        self.region = args[:region]
+        self.logger = config.logger
+        self.accounts = config.authorized_aws_accounts
       end
 
       def allow_read_access_from_accounts(args)
@@ -23,10 +25,10 @@ module Heirloom
 
         grants = build_bucket_grants :id => id,
                                      :name => name,
-                                     :accounts => @accounts
+                                     :accounts => accounts
 
-        @accounts.each do |a|
-          @logger.info "Authorizing #{a} to s3://#{bucket}/#{key}"
+        accounts.each do |a|
+          logger.info "Authorizing #{a} to s3://#{bucket}/#{key}."
         end
         s3.put_object_acl bucket, key, grants
       end

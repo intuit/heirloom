@@ -3,7 +3,6 @@ Heirloom
 
 I help building and deploying artifcts to cloud based storage services and tracking meta data about those artifacts for easy deployments.  
 
-
 How To Use Heirloom
 -------------------
 

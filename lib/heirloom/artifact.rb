@@ -50,8 +50,8 @@ module Heirloom
       artifact_reader.show
     end
 
-    def list
-      artifact_lister.list
+    def list(limit=10)
+      artifact_lister.list(limit)
     end
 
     def cleanup

@@ -7,9 +7,9 @@ module Heirloom
                                  :logger => args[:logger]
       end
       
-      def list
+      def list(limit)
         @logger = Logger
-        puts @artifact.list
+        puts @artifact.list(limit)
       end
 
     end

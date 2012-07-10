@@ -3,3 +3,4 @@
 * Limit list of artifact ids returned in list
 * Sort ids by date added
 * Show latest id as default
+* Setting deafult download path to local dir

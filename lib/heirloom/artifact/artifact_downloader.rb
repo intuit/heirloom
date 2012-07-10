@@ -12,7 +12,6 @@ module Heirloom
     end
 
     def download(args)
-      output = args[:output]
       region = args[:region]
 
       s3_downloader = Downloader::S3.new :config => config,
@@ -26,6 +25,8 @@ module Heirloom
 
       file = s3_downloader.download_file :bucket => bucket,
                                          :key    => key
+
+      output = args[:output] ||= "./#{key.split('/').last}"
 
       logger.info "Writing file to #{output}."
 

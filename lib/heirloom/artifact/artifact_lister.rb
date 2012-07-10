@@ -7,8 +7,9 @@ module Heirloom
       @name = args[:name]
     end
 
-    def list
-      sdb.select("select * from #{@name}").keys.reverse
+    def list(limit=10)
+      sdb.select("select * from #{@name} where built_at > '2000-01-01T00:00:00.000Z'\
+                  order by built_at desc limit #{limit}").keys
     end
 
     private

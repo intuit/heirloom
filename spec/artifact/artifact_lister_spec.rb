@@ -12,8 +12,9 @@ describe Heirloom do
     sdb_mock = mock 'sdb'
     @lister.should_receive(:sdb).and_return sdb_mock
     sdb_mock.should_receive(:select).
-             with("select * from test123").
-             and_return( {'3' => 'three', '2' => 'two', '1' => 'one'} )
+             with("select * from test123 where built_at > '2000-01-01T00:00:00.000Z' \
+                 order by built_at desc limit 10").
+             and_return( {'1' => 'one', '2' => 'two', '3' => 'three'} )
     @lister.list.should == ['1', '2', '3']
   end
 

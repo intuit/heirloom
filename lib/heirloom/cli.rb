@@ -11,6 +11,7 @@ module Heirloom
   module CLI
     def self.start
       @opts = Trollop::options do
+        version Heirloom::VERSION
         banner <<-EOS
 
 I build and manage artifacts
@@ -34,6 +35,8 @@ EOS
                                                                                  :default => '.git'
         opt :git, "Read git commit information from directory."
         opt :id, "Id of artifact.", :type => :string
+        opt :limit, "Limit the results returned by list.", :type    => :integer,
+                                                           :default => 10
         opt :name, "Name of artifact.", :type => :string
         opt :output, "Output download to file.", :type => :string
         opt :public, "Set this artifact as public readable?"
@@ -46,8 +49,8 @@ EOS
 
       case cmd
       when 'list'
-        cli_list = CLI::List.new :name   => @opts[:name]
-        cli_list.list
+        cli_list = CLI::List.new :name => @opts[:name]
+        cli_list.list @opts[:limit]
       when 'show'
         cli_show = CLI::Show.new :name   => @opts[:name],
                                  :id     => @opts[:id]

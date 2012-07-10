@@ -12,6 +12,7 @@ module Heirloom
       self.name = args[:name]
       self.id = args[:id]
       self.logger = config.logger
+      sdb.create_domain name
     end
 
     def build(args)
@@ -48,7 +49,6 @@ module Heirloom
 
     def create_artifact_domain
       logger.info "Verifying artifact domain #{name} exists."
-      sdb.create_domain name
     end
 
     def create_artifact_record

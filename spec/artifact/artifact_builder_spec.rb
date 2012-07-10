@@ -5,7 +5,11 @@ describe Heirloom do
     before do
       @config_mock = double 'config'
       @logger_mock = double 'logger'
+      @simpledb_mock = double 'simple db'
       @config_mock.should_receive(:logger).and_return(@logger_mock)
+      Heirloom::AWS::SimpleDB.should_receive(:new).with(:config => @config_mock).
+                              and_return(@simpledb_mock)
+      @simpledb_mock.should_receive(:create_domain).with 'tim'
       @builder = Heirloom::ArtifactBuilder.new :config => @config_mock,
                                                :name   => 'tim',
                                                :id     => '123'

@@ -1,6 +1,6 @@
 module Heirloom
 
-  class ArtifactUpdater
+  class Updater
 
     def initialize(args)
       @config = args[:config]

@@ -1,6 +1,6 @@
 module Heirloom
 
-  class ArtifactReader
+  class Reader
 
     attr_accessor :config, :id, :name
 

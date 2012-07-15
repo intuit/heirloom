@@ -1,6 +1,6 @@
 module Heirloom
 
-  class ArtifactUploader
+  class Uploader
 
     def initialize(args)
       @config = args[:config]

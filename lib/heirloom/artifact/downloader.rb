@@ -1,6 +1,6 @@
 module Heirloom
 
-  class ArtifactDownloader
+  class Downloader
 
     attr_accessor :config, :id, :name, :logger
 
@@ -18,8 +18,8 @@ module Heirloom
                                          :logger => logger,
                                          :region => region
 
-      bucket = artifact_reader.get_bucket :region => region
-      key = artifact_reader.get_key :region => region
+      bucket = reader.get_bucket :region => region
+      key = reader.get_key :region => region
 
       logger.info "Downloading s3://#{bucket}/#{key} from #{region}."
 
@@ -39,10 +39,10 @@ module Heirloom
 
     private
 
-    def artifact_reader
-      @artifact_reader ||= ArtifactReader.new :config => config,
-                                              :name   => name,
-                                              :id     => id
+    def reader
+      @reader ||= Reader.new :config => config,
+                             :name   => name,
+                             :id     => id
     end
 
   end

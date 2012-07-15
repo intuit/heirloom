@@ -14,7 +14,7 @@ module Heirloom
         version Heirloom::VERSION
         banner <<-EOS
 
-I build and manage artifacts
+I build and manage artifacts.
 
 Usage:
 

@@ -1,6 +1,6 @@
 module Heirloom
 
-  class ArtifactDestroyer
+  class Destroyer
 
     attr_accessor :config, :id, :logger, :name
 
@@ -15,7 +15,7 @@ module Heirloom
       logger.info "Destroying #{@name} - #{@id}"
 
       config.regions.each do |region|
-        bucket = artifact_reader.get_bucket :region => region
+        bucket = reader.get_bucket :region => region
 
         key = "#{id}.tar.gz"
 
@@ -39,10 +39,10 @@ module Heirloom
       @sdb ||= AWS::SimpleDB.new :config => @config
     end
 
-    def artifact_reader
-      @artifact_reader ||= ArtifactReader.new :config => config,
-                                              :name   => name,
-                                              :id     => id
+    def reader
+      @reader ||= Reader.new :config => config,
+                             :name   => name,
+                             :id     => id
     end
 
   end

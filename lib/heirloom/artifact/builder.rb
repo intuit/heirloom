@@ -3,7 +3,7 @@ require 'time'
 
 module Heirloom
 
-  class ArtifactBuilder
+  class Builder
 
     attr_accessor :config, :id, :local_build, :logger, :name, :source
 

@@ -1,11 +1,11 @@
-require 'heirloom/artifact/artifact_lister.rb'
-require 'heirloom/artifact/artifact_reader.rb'
-require 'heirloom/artifact/artifact_builder.rb'
-require 'heirloom/artifact/artifact_updater.rb'
-require 'heirloom/artifact/artifact_uploader.rb'
-require 'heirloom/artifact/artifact_downloader.rb'
-require 'heirloom/artifact/artifact_authorizer.rb'
-require 'heirloom/artifact/artifact_destroyer.rb'
+require 'heirloom/artifact/lister.rb'
+require 'heirloom/artifact/reader.rb'
+require 'heirloom/artifact/builder.rb'
+require 'heirloom/artifact/updater.rb'
+require 'heirloom/artifact/uploader.rb'
+require 'heirloom/artifact/downloader.rb'
+require 'heirloom/artifact/authorizer.rb'
+require 'heirloom/artifact/destroyer.rb'
 
 module Heirloom
 
@@ -19,90 +19,90 @@ module Heirloom
     end
 
     def authorize
-      artifact_authorizer.authorize
+      authorizer.authorize
     end
 
     def build(args)
-      artifact_builder.build args
+      builder.build args
     end
 
     def download(args)
-      artifact_downloader.download args
+      downloader.download args
     end
 
     def update(args)
-      artifact_updater.update args
+      updater.update args
     end
 
     def upload(args)
-      artifact_uploader.upload args
+      uploader.upload args
     end
 
     def exists?
-      artifact_reader.exists?
+      reader.exists?
     end
 
     def destroy
-      artifact_destroyer.destroy
+      destroyer.destroy
     end
 
     def show
-      artifact_reader.show
+      reader.show
     end
 
     def list(limit=10)
-      artifact_lister.list(limit)
+      lister.list(limit)
     end
 
     def cleanup
-      artifact_builder.cleanup
+      builder.cleanup
     end
 
     private
 
-    def artifact_lister
-      @artifact_lister ||= ArtifactLister.new :config => @config,
+    def lister
+      @lister ||= Lister.new :config => @config,
                                               :name   => @name
     end
 
-    def artifact_reader
-      @artifact_reader ||= ArtifactReader.new :config => @config,
+    def reader
+      @reader ||= Reader.new :config => @config,
                                               :name   => @name,
                                               :id     => @id
     end
 
-    def artifact_builder
-      @artifact_builder ||= ArtifactBuilder.new :config => @config,
+    def builder
+      @builder ||= Builder.new :config => @config,
                                                 :name   => @name,
                                                 :id     => @id
     end
 
-    def artifact_updater
-      @artifact_updater ||= ArtifactUpdater.new :config => @config,
+    def updater
+      @updater ||= Updater.new :config => @config,
                                                 :name   => @name,
                                                 :id     => @id
     end
 
-    def artifact_uploader
-      @artifact_uploader ||= ArtifactUploader.new :config => @config,
+    def uploader
+      @uploader ||= Uploader.new :config => @config,
                                                   :name   => @name,
                                                   :id     => @id
     end
 
-    def artifact_downloader
-      @artifact_downloader ||= ArtifactDownloader.new :config => @config,
+    def downloader
+      @downloader ||= Downloader.new :config => @config,
                                                       :name   => @name,
                                                       :id     => @id
     end
 
-    def artifact_authorizer
-      @artifact_authorizer ||= ArtifactAuthorizer.new :config => @config,
+    def authorizer
+      @authorizer ||= Authorizer.new :config => @config,
                                                       :name   => @name,
                                                       :id     => @id
     end
 
-    def artifact_destroyer
-      @artifact_destroyer ||= ArtifactDestroyer.new :config => @config,
+    def destroyer
+      @destroyer ||= Destroyer.new :config => @config,
                                                     :name   => @name,
                                                     :id     => @id
     end

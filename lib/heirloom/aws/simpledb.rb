@@ -15,8 +15,12 @@ module Heirloom
         @sdb.list_domains.body['Domains']
       end
 
+      def domain_exists?(domain)
+        domains.include? domain
+      end
+
       def create_domain(domain)
-        @sdb.create_domain(domain) unless domains.include? domain
+        @sdb.create_domain(domain) unless domain_exists?(domain)
       end
 
       def put_attributes(domain, key, attributes, options = {})

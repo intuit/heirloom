@@ -1,15 +1,15 @@
-require 'heirloom/artifact/lister.rb'
-require 'heirloom/artifact/reader.rb'
-require 'heirloom/artifact/builder.rb'
-require 'heirloom/artifact/updater.rb'
-require 'heirloom/artifact/uploader.rb'
-require 'heirloom/artifact/downloader.rb'
-require 'heirloom/artifact/authorizer.rb'
-require 'heirloom/artifact/destroyer.rb'
+require 'heirloom/heirloom/lister.rb'
+require 'heirloom/heirloom/reader.rb'
+require 'heirloom/heirloom/builder.rb'
+require 'heirloom/heirloom/updater.rb'
+require 'heirloom/heirloom/uploader.rb'
+require 'heirloom/heirloom/downloader.rb'
+require 'heirloom/heirloom/authorizer.rb'
+require 'heirloom/heirloom/destroyer.rb'
 
 module Heirloom
 
-  class Artifact
+  class Heirloom
 
     def initialize(args)
       @config = Config.new :config => args[:config],
@@ -62,49 +62,49 @@ module Heirloom
 
     def lister
       @lister ||= Lister.new :config => @config,
-                                              :name   => @name
+                             :name   => @name
     end
 
     def reader
       @reader ||= Reader.new :config => @config,
-                                              :name   => @name,
-                                              :id     => @id
+                             :name   => @name,
+                             :id     => @id
     end
 
     def builder
       @builder ||= Builder.new :config => @config,
-                                                :name   => @name,
-                                                :id     => @id
+                               :name   => @name,
+                               :id     => @id
     end
 
     def updater
       @updater ||= Updater.new :config => @config,
-                                                :name   => @name,
-                                                :id     => @id
+                               :name   => @name,
+                               :id     => @id
     end
 
     def uploader
       @uploader ||= Uploader.new :config => @config,
-                                                  :name   => @name,
-                                                  :id     => @id
+                                 :name   => @name,
+                                 :id     => @id
     end
 
     def downloader
       @downloader ||= Downloader.new :config => @config,
-                                                      :name   => @name,
-                                                      :id     => @id
+                                     :name   => @name,
+                                     :id     => @id
     end
 
     def authorizer
       @authorizer ||= Authorizer.new :config => @config,
-                                                      :name   => @name,
-                                                      :id     => @id
+                                     :name   => @name,
+                                     :id     => @id
     end
 
     def destroyer
       @destroyer ||= Destroyer.new :config => @config,
-                                                    :name   => @name,
-                                                    :id     => @id
+                                   :name   => @name,
+                                   :id     => @id
     end
 
   end

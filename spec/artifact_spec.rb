@@ -4,7 +4,7 @@ describe Heirloom do
 
     before do
       Heirloom::Config.should_receive(:new).and_return('config')
-      @artifact = Heirloom::Artifact.new :logger => 'logger',
+      @artifact = Heirloom::Heirloom.new :logger => 'logger',
                                          :name   => 'tim',
                                          :id     => '123'
     end

@@ -2,14 +2,34 @@ module Heirloom
   module CLI
     class List
 
-      def initialize(args)
-        @artifact = Artifact.new :name   => args[:name],
-                                 :logger => args[:logger]
+      def initialize
+        @opts = read_options
+        @artifact = Heirloom.new :name => @opts[:name]
       end
       
-      def list(limit)
-        @logger = Logger
+      def list(limit=@opts[:limit])
         puts @artifact.list(limit)
+      end
+
+      private
+
+      def read_options
+        Trollop::options do
+          version Heirloom::VERSION
+          banner <<-EOS
+
+List versions of heirloom.
+
+Usage:
+
+heirloom list -n NAME
+
+EOS
+          opt :help, "Display Help"
+          opt :name, "Name of artifact.", :type => :string
+          opt :limit, "Number of artifacts to return.", :type    => :integer,
+                                                        :default => 10
+        end
       end
 
     end

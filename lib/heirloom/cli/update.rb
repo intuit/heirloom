@@ -2,22 +2,40 @@ module Heirloom
   module CLI
     class Update
 
-      def initialize(args)
-        @name = args[:name]
-        @id = args[:id]
-        @logger = args[:logger]
-        @attribute = args[:attribute]
-        @update = args[:update]
-        @artifact = Artifact.new :name      => @name,
-                                 :id        => @id,
-                                 :logger    => @logger
+      def initialize
+        @opts = read_options
+        @heirloom = Heirloom.new :name => @opts[:name],
+                                 :id   => @opts[:id]
       end
       
       def update
-        @artifact.update :attribute => @attribute,
-                         :update    => @update
+        @heirloom.update :attribute => @opts[:attribute],
+                         :value     => @opts[:value]
       end
 
+      private
+
+      def read_options
+        Trollop::options do
+          version Heirloom::VERSION
+          banner <<-EOS
+
+Update an heirloom attribute.
+
+Usage:
+
+heirloom update -n NAME -i ID -a ATTRIBUTE_TO_UPDATE -v NEW_VALUE
+
+EOS
+          opt :attribute, "Attribute to update.", :type => :string
+          opt :help, "Display Help"
+          opt :id, "ID of the heirloom to display.", :type => :string
+          opt :level, "Log level.", :type    => :string,
+                                    :default => 'info'
+          opt :name, "Name of heirloom.", :type => :string
+          opt :value, "New value of attribute.", :type => :string
+        end
+      end
     end
   end
 end

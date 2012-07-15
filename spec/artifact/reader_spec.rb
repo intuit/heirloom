@@ -4,6 +4,7 @@ describe Heirloom do
 
   before do
     @config_mock = double 'config'
+    @config_mock.should_receive(:logger)
     @reader = Heirloom::Reader.new :config => @config_mock,
                                    :name   => 'tim',
                                    :id     => '123'
@@ -35,6 +36,13 @@ describe Heirloom do
     @reader.get_bucket(:region => 'us-west-1').should == 'bucket-us-west-1'
   end
 
+  it "should return nil if the bucket does not exist" do
+    @reader.should_receive(:get_url).
+            with(:region => 'us-west-1').
+            and_return nil
+    @reader.get_bucket(:region => 'us-west-1').should == nil
+  end
+
   it "should return the key" do
     @reader.should_receive(:show).
             and_return( { 'us-west-1-s3-url' => 
@@ -45,7 +53,13 @@ describe Heirloom do
     @reader.get_key(:region => 'us-west-1').should == 'tim/123.tar.gz'
   end
 
-  it "shoudl return the s3 url for the given region" do
+  it "should return nil if and end point for given region cannot be found" do
+    @reader.should_receive(:show).
+            and_return({})
+    @reader.get_url(:region => 'us-west-1').should == nil
+  end
+
+  it "should return the s3 url for the given region" do
     @reader.should_receive(:show).
             and_return( { 'us-west-1-s3-url' => 
                            [ 's3://bucket-us-west-1/tim/123.tar.gz' ] } )

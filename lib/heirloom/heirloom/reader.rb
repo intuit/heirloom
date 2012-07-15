@@ -8,19 +8,28 @@ module Heirloom
       self.config = args[:config]
       self.name = args[:name]
       self.id = args[:id]
+      @logger = config.logger
     end
 
     def show
       items = sdb.select "select * from #{name} where itemName() = '#{id}'"
-      items[@id]
+      items[id]
     end
 
     def exists?
-      show != nil
+      show ? true : false
     end
 
     def get_bucket(args)
-      get_url(args).gsub('s3://', '').split('/').first
+      url = get_url(args)
+      @logger.debug "Looking for bucket in #{args[:region]} for #{id}"
+      if url
+        bucket = get_url(args).gsub('s3://', '').split('/').first
+        @logger.debug "Found bucket #{bucket}."
+        bucket
+      else
+        nil
+      end
     end
 
     def get_key(args)
@@ -31,7 +40,15 @@ module Heirloom
     end
 
     def get_url(args)
-      show["#{args[:region]}-s3-url"].first
+      url = "#{args[:region]}-s3-url"
+      @logger.debug "Looking for #{args[:region]} endpoint for #{id}"
+      if show && show[url]
+        @logger.debug "Found #{url} for #{id}."
+        show[url].first
+      else
+        @logger.debug "#{args[:region]} endpoint for #{id} not found."
+        nil
+      end
     end
 
     private

@@ -6,7 +6,7 @@ describe Heirloom do
       @config_mock = double 'config'
       @logger_mock = double 'logger'
       @config_mock.should_receive(:logger).and_return(@logger_mock)
-      @destroyer = Heirloom::ArtifactDestroyer.new :config => @config_mock,
+      @destroyer = Heirloom::Destroyer.new :config => @config_mock,
                                                    :name   => 'tim',
                                                    :id     => '123'
     end
@@ -15,12 +15,12 @@ describe Heirloom do
       @logger_mock.should_receive(:info).
                    with "Destroying tim - 123"
       @config_mock.should_receive(:regions).and_return ['us-west-1']
-      artifact_reader_mock = mock 'artifact reader'
-      @destroyer.should_receive(:artifact_reader).and_return artifact_reader_mock
+      reader_mock = mock 'artifact reader'
+      @destroyer.should_receive(:reader).and_return reader_mock
       bucket_mock = mock 'bucket'
-      artifact_reader_mock.should_receive(:get_bucket).
-                           with(:region => 'us-west-1').
-                           and_return 'bucket-us-west-1'
+      reader_mock.should_receive(:get_bucket).
+                  with(:region => 'us-west-1').
+                  and_return 'bucket-us-west-1'
 
       @logger_mock.should_receive(:info).
                    with "Destroying 's3://bucket-us-west-1/tim/123.tar.gz'."

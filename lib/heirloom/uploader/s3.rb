@@ -1,5 +1,5 @@
 module Heirloom
-  module Uploader
+  class Uploader
     class S3
 
       def initialize(args)

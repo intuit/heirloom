@@ -10,7 +10,7 @@ describe Heirloom do
       Heirloom::AWS::SimpleDB.should_receive(:new).with(:config => @config_mock).
                               and_return(@simpledb_mock)
       @simpledb_mock.should_receive(:create_domain).with 'tim'
-      @builder = Heirloom::ArtifactBuilder.new :config => @config_mock,
+      @builder = Heirloom::Builder.new :config => @config_mock,
                                                :name   => 'tim',
                                                :id     => '123'
     end

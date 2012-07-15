@@ -1,5 +1,5 @@
 module Heirloom
-  module Destroyer
+  class Destroyer
     class S3
 
       attr_accessor :config, :region

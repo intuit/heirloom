@@ -4,9 +4,9 @@ describe Heirloom do
 
   before do
     @config_mock = double 'config'
-    @reader = Heirloom::ArtifactReader.new :config => @config_mock,
-                                           :name   => 'tim',
-                                           :id     => '123'
+    @reader = Heirloom::Reader.new :config => @config_mock,
+                                   :name   => 'tim',
+                                   :id     => '123'
   end
 
   it "should show the item record" do

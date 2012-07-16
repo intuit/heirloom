@@ -26,26 +26,20 @@ module Heirloom
                                :public => public_readable
 
         @logger.info "File is readable by the public internet." if public_readable
-
-        add_endpoint_attributes :bucket     => bucket,
-                                :id         => id,
-                                :key_folder => key_folder,
-                                :key_name   => key_name,
-                                :name       => name
       end
-
-      private
 
       def add_endpoint_attributes(args)
         bucket = args[:bucket]
         id = args[:id]
-        key_name = args[:key_name]
-        key_folder = args[:key_folder]
         name = args[:name]
+        key_folder = name
+        key_name = "#{id}.tar.gz"
+        metadata_key_name = "#{id}.json"
 
         s3_endpoint = "s3://#{bucket}/#{key_folder}/#{key_name}"
         http_endpoint = "http://#{endpoints[@region]}/#{bucket}/#{key_folder}/#{key_name}"
         https_endpoint = "https://#{endpoints[@region]}/#{bucket}/#{key_folder}/#{key_name}"
+        metadata_s3_endpoint = "s3://#{bucket}/#{key_folder}/#{metadata_key_name}"
 
         sdb.put_attributes name, id, { "#{@region}-s3-url" => s3_endpoint }
         @logger.info "Adding attribute #{s3_endpoint}."
@@ -55,7 +49,12 @@ module Heirloom
 
         sdb.put_attributes name, id, { "#{@region}-https-url" => https_endpoint }
         @logger.info "Adding attribute #{https_endpoint}."
+
+        sdb.put_attributes name, id, { "#{@region}-metadata-s3-url" => metadata_s3_endpoint }
+        @logger.info "Adding attribute #{metadata_s3_endpoint}."
       end
+
+      private
 
       def endpoints
         {

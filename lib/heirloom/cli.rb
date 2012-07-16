@@ -27,6 +27,8 @@ module Heirloom
         CLI::Destroy.new.destroy
       else
         puts "Unkown command: '#{cmd}'."
+        puts "heirloom [list|show|build|update|download|destroy] OPTIONS"
+        puts "Append -h for help on specific command."
       end
     end
   end

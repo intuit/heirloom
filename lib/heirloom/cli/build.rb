@@ -1,3 +1,5 @@
+require 'json'
+
 module Heirloom
   module CLI
     class Build
@@ -13,14 +15,14 @@ module Heirloom
       def build
         @heirloom.destroy if @heirloom.exists?
                           
-        file = @heirloom.build :bucket_prefix  => @opts[:bucket_prefix],
-                               :directory      => @opts[:directory],
-                               :exclude        => @opts[:exclude].split(','),
-                               :public         => @opts[:public],
-                               :git            => @opts[:git]
+        heirloom_file = @heirloom.build :bucket_prefix  => @opts[:bucket_prefix],
+                                        :directory      => @opts[:directory],
+                                        :exclude        => @opts[:exclude].split(','),
+                                        :public         => @opts[:public],
+                                        :git            => @opts[:git]
 
-        @heirloom.upload :bucket_prefix    => @opts[:bucket_prefix],
-                         :file             => file
+        @heirloom.upload :bucket_prefix => @opts[:bucket_prefix],
+                         :file          => heirloom_file
 
         @heirloom.authorize unless @public
 

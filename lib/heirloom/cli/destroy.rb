@@ -6,8 +6,10 @@ module Heirloom
         @opts = read_options
         @name = @opts[:name]
         @id = @opts[:id]
-        @heirloom = Heirloom.new :name => @name,
-                                 :id   => @id
+        @logger = HeirloomLogger.new :log_level => @opts[:level]
+        @heirloom = Heirloom.new :name   => @name,
+                                 :id     => @id,
+                                 :logger => @logger
       end
       
       def destroy

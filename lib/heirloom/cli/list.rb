@@ -4,7 +4,9 @@ module Heirloom
 
       def initialize
         @opts = read_options
-        @artifact = Heirloom.new :name => @opts[:name]
+        @logger = HeirloomLogger.new :log_level => @opts[:level]
+        @artifact = Heirloom.new :name   => @opts[:name],
+                                 :logger => @logger
       end
       
       def list(limit=@opts[:limit])

@@ -11,38 +11,53 @@ module Heirloom
       @logger = config.logger
     end
 
-    def show
-      items = sdb.select "select * from #{name} where itemName() = '#{id}'"
-      items[id]
-    end
-
     def exists?
-      show ? true : false
+      if show.any?
+        @logger.debug "Found entry for #{id}."
+        true
+      else
+        @logger.debug "Entry for #{id} not found."
+        false
+      end
     end
 
     def get_bucket(args)
-      url = get_url(args)
       @logger.debug "Looking for bucket in #{args[:region]} for #{id}"
+      url = get_url(args)
       if url
-        bucket = get_url(args).gsub('s3://', '').split('/').first
+        bucket = url.gsub('s3://', '').split('/').first
         @logger.debug "Found bucket #{bucket}."
+        bucket
+      else
+        @logger.debug "Entry #{url} not found."
+        nil
+      end
+    end
+
+    def get_key(args)
+      url = get_url(args)
+      if url
+        bucket_path = get_bucket :region => args[:region]
+        bucket = url.gsub('s3://', '').gsub(bucket_path, '')
+        bucket.slice!(0)
         bucket
       else
         nil
       end
     end
 
-    def get_key(args)
-      bucket_path = get_bucket :region => args[:region]
-      bucket = get_url(args).gsub('s3://', '').gsub(bucket_path, '')
-      bucket.slice!(0)
-      bucket
+    def show
+      items = sdb.select "select * from #{name} where itemName() = '#{id}'"
+      items[id] ? items[id] : {}
     end
 
+    private
+
     def get_url(args)
-      url = "#{args[:region]}-s3-url"
+      return nil unless exists?
       @logger.debug "Looking for #{args[:region]} endpoint for #{id}"
-      if show && show[url]
+      url = "#{args[:region]}-s3-url"
+      if show[url]
         @logger.debug "Found #{url} for #{id}."
         show[url].first
       else
@@ -50,8 +65,6 @@ module Heirloom
         nil
       end
     end
-
-    private
 
     def sdb
       @sdb ||= AWS::SimpleDB.new :config => @config

@@ -5,8 +5,10 @@ module Heirloom
       def initialize
         @opts = read_options
         id = @opts[:id] ? @opts[:id] : latest_id
-        @heirloom = Heirloom.new :name => @opts[:name],
-                                 :id   => id
+        @logger = HeirloomLogger.new :log_level => @opts[:level]
+        @heirloom = Heirloom.new :name   => @opts[:name],
+                                 :id     => id,
+                                 :logger => @logger
       end
       
       def show

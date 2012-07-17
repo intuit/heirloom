@@ -22,11 +22,11 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Update an heirloom attribute.
+Download an heirloom attribute.
 
 Usage:
 
-heirloom update -n NAME -i ID -a ATTRIBUTE_TO_UPDATE -v NEW_VALUE
+heirloom download -n NAME -i ID -r REGION -o OUTPUT_FILE
 
 EOS
           opt :help, "Display Help"

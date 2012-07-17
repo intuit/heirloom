@@ -13,10 +13,10 @@ module Heirloom
 
     def exists?
       if show.any?
-        @logger.debug "Found entry for #{id}."
+        @logger.debug "Found entry for #{id} in SimpleDB."
         true
       else
-        @logger.debug "Entry for #{id} not found."
+        @logger.debug "Entry for #{id} not found in SimpleDB."
         false
       end
     end

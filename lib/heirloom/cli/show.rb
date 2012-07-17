@@ -27,7 +27,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-List versions of heirloom.
+Show details about a version of an heirloom.
 
 Usage:
 
@@ -37,6 +37,8 @@ If -i is ommited, latest version is displayed.
 
 EOS
           opt :help, "Display Help"
+          opt :level, "Log level.", :type    => :string,
+                                    :default => 'info'
           opt :name, "Name of artifact.", :type => :string
           opt :id, "ID of the artifact to display.", :type => :string
         end

@@ -35,7 +35,7 @@ EOS
                                     :default => 'info'
           opt :name, "Name of heirloom.", :type => :string
           opt :output, "Location to download Heirloom.", :type => :string
-          opt :region, "Region to download artifact.", :type    => :string,
+          opt :region, "Region to download Heirloom.", :type    => :string,
                                                        :default => 'us-west-1'
         end
       end

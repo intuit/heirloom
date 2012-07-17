@@ -1,7 +1,7 @@
 Heirloom
 ========
 
-I help building and deploying artifcts to cloud based storage services and tracking meta data about those artifacts for easy deployments.  
+I help building and deploying .tar.gz files to cloud based storage services and tracking meta data about those 'Heirlooms' for easy deployments.  
 
 How To Use Heirloom
 -------------------
@@ -21,9 +21,9 @@ aws:
     - UPDATE@ME
 ```
 
-* **access_key / secret_key**: Account where you would like the artifacts storaged.
-* **regions**: AWS regions where the artifcat should be uploaded
-* **authorized_aws_accounts**: Heirloom expects you to deploy to seperate accounts from where the artifact is stored.  authorized_aws_accounts specifices the **email** address of other accounts to be authorized to access private artifacts.
+* **access_key / secret_key**: Account where you would like the Heirlooms storaged.
+* **regions**: AWS regions where the Heirlooms should be uploaded
+* **authorized_aws_accounts**: Heirloom expects you to deploy to seperate accounts from where the Heirloom is stored.  authorized_aws_accounts specifices the **email** address of other accounts to be authorized to access private Heirlooms.
 
 Platforms
 ---------

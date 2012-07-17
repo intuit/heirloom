@@ -39,8 +39,8 @@ EOS
           opt :help, "Display Help"
           opt :level, "Log level.", :type    => :string,
                                     :default => 'info'
-          opt :name, "Name of artifact.", :type => :string
-          opt :id, "ID of the artifact to display.", :type => :string
+          opt :name, "Name of Heirloom.", :type => :string
+          opt :id, "ID of the Heirloom to display.", :type => :string
         end
       end
 

@@ -6,6 +6,7 @@ require 'heirloom/heirloom/uploader.rb'
 require 'heirloom/heirloom/downloader.rb'
 require 'heirloom/heirloom/authorizer.rb'
 require 'heirloom/heirloom/destroyer.rb'
+require 'heirloom/heirloom/verifier.rb'
 
 module Heirloom
 
@@ -40,6 +41,10 @@ module Heirloom
 
     def exists?
       reader.exists?
+    end
+
+    def buckets_exist?(args)
+      verifier.buckets_exist? args
     end
 
     def destroy
@@ -105,6 +110,11 @@ module Heirloom
       @destroyer ||= Destroyer.new :config => @config,
                                    :name   => @name,
                                    :id     => @id
+    end
+
+    def verifier
+      @verifier ||= Verifier.new :config => @config,
+                                 :name   => @name
     end
 
   end

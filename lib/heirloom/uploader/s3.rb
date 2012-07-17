@@ -67,6 +67,7 @@ module Heirloom
       def sdb
         @sdb ||= AWS::SimpleDB.new :config => @config
       end
+
     end
   end
 end

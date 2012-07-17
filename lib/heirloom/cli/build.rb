@@ -13,6 +13,11 @@ module Heirloom
       end
 
       def build
+        unless @heirloom.buckets_exist? :bucket_prefix => @opts[:bucket_prefix]
+          @logger.error "Buckets do no exist in required regions."
+          exit 1
+        end
+
         @heirloom.destroy if @heirloom.exists?
                           
         heirloom_file = @heirloom.build :bucket_prefix  => @opts[:bucket_prefix],

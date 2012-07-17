@@ -29,7 +29,7 @@ module Heirloom
         @logger.debug "Found bucket #{bucket}."
         bucket
       else
-        @logger.debug "Entry #{url} not found."
+        @logger.debug "Bucket not found."
         nil
       end
     end

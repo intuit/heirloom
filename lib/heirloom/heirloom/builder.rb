@@ -47,12 +47,7 @@ module Heirloom
       add_git_commit_to_artifact_record git_commit
     end
 
-    def create_artifact_domain
-      logger.info "Verifying artifact domain #{name} exists."
-    end
-
     def create_artifact_record
-      create_artifact_domain
       attributes = { 'built_by'        => "#{user}@#{hostname}",
                      'built_at'        => Time.now.utc.iso8601,
                      'id'              => id }

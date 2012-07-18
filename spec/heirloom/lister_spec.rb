@@ -4,11 +4,11 @@ describe Heirloom do
 
   before do
     @config_mock = double 'config'
-    @lister = Heirloom::ArtifactLister.new :config => @config_mock,
-                                           :name     => 'test123'
+    @lister = Heirloom::Lister.new :config => @config_mock,
+                                   :name     => 'test123'
   end
 
-  it "should list the known artifacts" do
+  it "should list the known archive" do
     sdb_mock = mock 'sdb'
     @lister.should_receive(:sdb).and_return sdb_mock
     sdb_mock.should_receive(:select).

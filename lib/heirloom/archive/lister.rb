@@ -1,6 +1,6 @@
 module Heirloom
 
-  class ArtifactLister
+  class Lister
 
     def initialize(args)
       @config = args[:config]
@@ -16,12 +16,6 @@ module Heirloom
 
     def sdb
       @sdb ||= AWS::SimpleDB.new :config => @config
-    end
-
-    def artifact_reader(id)
-      @artifact_reader ||= ArtifactReader.new :config => @config,
-                                              :name   => @name,
-                                              :id     => id
     end
 
   end

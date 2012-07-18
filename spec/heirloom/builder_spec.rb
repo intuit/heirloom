@@ -10,12 +10,12 @@ describe Heirloom do
       Heirloom::AWS::SimpleDB.should_receive(:new).with(:config => @config_mock).
                               and_return(@simpledb_mock)
       @simpledb_mock.should_receive(:create_domain).with 'tim'
-      @builder = Heirloom::ArtifactBuilder.new :config => @config_mock,
+      @builder = Heirloom::Builder.new :config => @config_mock,
                                                :name   => 'tim',
                                                :id     => '123'
     end
 
-    it "should build an artifact" do
+    it "should build an archive" do
       directory_mock = double "directory"
       Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
                                                     :exclude => ['.dir_to_exclude'],
@@ -31,7 +31,7 @@ describe Heirloom do
                      :git       => 'true').should == '/tmp/file'
     end
 
-    it "should cleanup the local artifact" do
+    it "should cleanup the local archive" do
       @builder.local_build = '/tmp/file'
       @logger_mock.should_receive(:info).with("Cleaning up local build /tmp/file.")
       File.should_receive(:delete).with('/tmp/file')

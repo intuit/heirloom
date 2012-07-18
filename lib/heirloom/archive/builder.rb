@@ -3,7 +3,7 @@ require 'time'
 
 module Heirloom
 
-  class ArtifactBuilder
+  class Builder
 
     attr_accessor :config, :id, :local_build, :logger, :name, :source
 
@@ -47,12 +47,7 @@ module Heirloom
       add_git_commit_to_artifact_record git_commit
     end
 
-    def create_artifact_domain
-      logger.info "Verifying artifact domain #{name} exists."
-    end
-
     def create_artifact_record
-      create_artifact_domain
       attributes = { 'built_by'        => "#{user}@#{hostname}",
                      'built_at'        => Time.now.utc.iso8601,
                      'id'              => id }

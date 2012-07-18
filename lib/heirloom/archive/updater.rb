@@ -1,6 +1,6 @@
 module Heirloom
 
-  class ArtifactUpdater
+  class Updater
 
     def initialize(args)
       @config = args[:config]
@@ -12,10 +12,10 @@ module Heirloom
 
     def update(args)
       attribute = args[:attribute]
-      update = args[:update]
+      value = args[:value]
 
-      sdb.put_attributes @name, @id, { attribute => update }, { :replace => attribute }
-      @logger.info "Updated #{@name} (#{@id}): #{attribute} = #{update}."
+      sdb.put_attributes @name, @id, { attribute => value }, { :replace => attribute }
+      @logger.info "Updated #{@name} (#{@id}): #{attribute} = #{value}."
     end
 
     private

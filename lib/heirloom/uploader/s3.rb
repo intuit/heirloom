@@ -1,5 +1,5 @@
 module Heirloom
-  module Uploader
+  class Uploader
     class S3
 
       def initialize(args)
@@ -26,22 +26,14 @@ module Heirloom
                                :public => public_readable
 
         @logger.info "File is readable by the public internet." if public_readable
-
-        add_endpoint_attributes :bucket     => bucket,
-                                :id         => id,
-                                :key_folder => key_folder,
-                                :key_name   => key_name,
-                                :name       => name
       end
-
-      private
 
       def add_endpoint_attributes(args)
         bucket = args[:bucket]
         id = args[:id]
-        key_name = args[:key_name]
-        key_folder = args[:key_folder]
         name = args[:name]
+        key_folder = name
+        key_name = "#{id}.tar.gz"
 
         s3_endpoint = "s3://#{bucket}/#{key_folder}/#{key_name}"
         http_endpoint = "http://#{endpoints[@region]}/#{bucket}/#{key_folder}/#{key_name}"
@@ -56,6 +48,8 @@ module Heirloom
         sdb.put_attributes name, id, { "#{@region}-https-url" => https_endpoint }
         @logger.info "Adding attribute #{https_endpoint}."
       end
+
+      private
 
       def endpoints
         {
@@ -73,6 +67,7 @@ module Heirloom
       def sdb
         @sdb ||= AWS::SimpleDB.new :config => @config
       end
+
     end
   end
 end

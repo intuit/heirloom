@@ -1,6 +1,6 @@
 module Heirloom
 
-  class ArtifactUploader
+  class Uploader
 
     def initialize(args)
       @config = args[:config]
@@ -10,8 +10,7 @@ module Heirloom
     end
 
     def upload(args)
-      file = args[:file]
-      key_name = "#{@id}.tar.gz"
+      heirloom_file = args[:file]
       bucket_prefix = args[:bucket_prefix]
       public_readable = args[:public_readable]
 
@@ -23,12 +22,16 @@ module Heirloom
                                        :region => region
 
         s3_uploader.upload_file :bucket          => bucket,
-                                :file            => file,
+                                :file            => heirloom_file,
                                 :id              => @id,
                                 :key_folder      => @name,
-                                :key_name        => key_name,
+                                :key_name        => "#{@id}.tar.gz",
                                 :name            => @name,
                                 :public_readable => public_readable
+
+        s3_uploader.add_endpoint_attributes :bucket     => bucket,
+                                            :id         => @id,
+                                            :name       => @name
       end
       @logger.info "Upload complete."
     end

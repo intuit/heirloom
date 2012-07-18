@@ -2,24 +2,46 @@ module Heirloom
   module CLI
     class Show
 
-      def initialize(args)
-        id = args[:id] ? args[:id] : latest_id(args)
-        @artifact = Artifact.new :name   => args[:name],
-                                 :id     => id,
-                                 :logger => args[:logger]
+      def initialize
+        @opts = read_options
+        id = @opts[:id] ? @opts[:id] : latest_id
+        @logger = HeirloomLogger.new :log_level => @opts[:level]
+        @archive = Archive.new :name   => @opts[:name],
+                               :id     => id,
+                               :logger => @logger
       end
       
       def show
-        @logger = Logger
-        puts @artifact.show.to_yaml
+        puts @archive.show.to_yaml
       end
 
       private
 
-      def latest_id(args)
-        @artifact = Artifact.new :name   => args[:name],
-                                 :logger => args[:logger]
-        @artifact.list(1).first
+      def latest_id
+        @archive = Archive.new :name => @opts[:name]
+        @archive.list(1).first
+      end
+
+      def read_options
+        Trollop::options do
+          version Heirloom::VERSION
+          banner <<-EOS
+
+Show details about a version of an archive.
+
+Usage:
+
+heirloom show -n NAME -i ID
+
+If -i is ommited, latest version is displayed.
+
+EOS
+          opt :help, "Display Help"
+          opt :level, "Log level.", :type    => :string,
+                                    :default => 'info'
+          opt :name, "Name of archive.", :type => :string
+          opt :id, "ID of the archive to display.", :type => :string
+        end
       end
 
     end

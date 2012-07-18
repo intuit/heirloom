@@ -11,11 +11,11 @@ describe Heirloom do
                                                    :id     => '123'
     end
 
-    it "should destroy the given artifact" do
+    it "should destroy the given archive" do
       @logger_mock.should_receive(:info).
                    with "Destroying tim - 123"
       @config_mock.should_receive(:regions).and_return ['us-west-1']
-      reader_mock = mock 'artifact reader'
+      reader_mock = mock 'archive reader'
       @destroyer.should_receive(:reader).and_return reader_mock
       bucket_mock = mock 'bucket'
       reader_mock.should_receive(:get_bucket).

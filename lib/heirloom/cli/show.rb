@@ -18,7 +18,7 @@ module Heirloom
       private
 
       def latest_id
-        @archive = Heirloom.new :name => @opts[:name]
+        @archive = Archive.new :name => @opts[:name]
         @archive.list(1).first
       end
 

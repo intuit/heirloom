@@ -15,7 +15,7 @@ describe Heirloom do
                                                :id     => '123'
     end
 
-    it "should build an artifact" do
+    it "should build an archive" do
       directory_mock = double "directory"
       Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
                                                     :exclude => ['.dir_to_exclude'],
@@ -31,7 +31,7 @@ describe Heirloom do
                      :git       => 'true').should == '/tmp/file'
     end
 
-    it "should cleanup the local artifact" do
+    it "should cleanup the local archive" do
       @builder.local_build = '/tmp/file'
       @logger_mock.should_receive(:info).with("Cleaning up local build /tmp/file.")
       File.should_receive(:delete).with('/tmp/file')

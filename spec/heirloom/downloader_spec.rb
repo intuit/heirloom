@@ -11,7 +11,7 @@ describe Heirloom do
                                                      :id     => '123'
     end
 
-    it "should download an artifact" do
+    it "should download an archive" do
       s3_downloader_mock = mock 's3 downloader'
       Heirloom::Downloader::S3.should_receive(:new).
                                with(:config => @config_mock,
@@ -51,7 +51,7 @@ describe Heirloom do
                            :region => 'us-west-1')
     end
 
-    it "should download the artifact to the current path if output is unspecficief" do
+    it "should download the archive to the current path if output is unspecficief" do
       s3_downloader_mock = mock 's3 downloader'
       Heirloom::Downloader::S3.should_receive(:new).
                                with(:config => @config_mock,

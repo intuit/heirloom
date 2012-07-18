@@ -11,6 +11,6 @@ describe Heirloom do
                                     :id     => '123'
   end
 
-  it "should test the artifact updater methods"
+  it "should test the archive updater methods"
 
 end

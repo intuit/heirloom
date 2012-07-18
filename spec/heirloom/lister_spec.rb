@@ -8,7 +8,7 @@ describe Heirloom do
                                    :name     => 'test123'
   end
 
-  it "should list the known artifacts" do
+  it "should list the known archive" do
     sdb_mock = mock 'sdb'
     @lister.should_receive(:sdb).and_return sdb_mock
     sdb_mock.should_receive(:select).

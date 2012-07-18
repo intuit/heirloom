@@ -11,7 +11,7 @@ describe Heirloom do
                                            :path    => '/target/dir'
     end
 
-    it "should build an artifact from the latest commit in path" do
+    it "should build an archive from the latest commit in path" do
       @logger_mock.should_receive(:info).exactly(3).times
       file_mock = double 'file'
       File.should_receive(:open).and_return file_mock

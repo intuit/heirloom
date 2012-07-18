@@ -1,6 +1,6 @@
 module Heirloom
 
-  class ArtifactAuthorizer
+  class Authorizer
 
     def initialize(args)
       @config = args[:config]
@@ -13,7 +13,7 @@ module Heirloom
       @logger.info "Authorizing access to artifact."
 
       @config.regions.each do |region|
-        bucket = artifact_reader.get_bucket :region => region
+        bucket = reader.get_bucket :region => region
 
         s3_acl = ACL::S3.new :config => @config,
                              :region => region
@@ -28,10 +28,10 @@ module Heirloom
 
     private
 
-    def artifact_reader
-      @artifact_reader ||= ArtifactReader.new :config => @config,
-                                              :name   => @name,
-                                              :id     => @id
+    def reader
+      @reader ||= Reader.new :config => @config,
+                             :name   => @name,
+                             :id     => @id
     end
 
   end

@@ -1,5 +1,5 @@
 module Heirloom
-  module Downloader
+  class Downloader
     class S3
 
       def initialize(args)

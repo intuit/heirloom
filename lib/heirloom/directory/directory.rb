@@ -24,7 +24,7 @@ module Heirloom
         self.local_build = File.join(Dir.tmpdir, random_text + ".tar.gz")
       end
 
-      logger.info "Building artifact '#{local_build}' from '#{path}'."
+      logger.info "Building Heirloom '#{local_build}' from '#{path}'."
       logger.info "Excluding #{exclude.to_s}."
       logger.info "Adding #{files_to_pack.to_s}."
 

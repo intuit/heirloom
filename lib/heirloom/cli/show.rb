@@ -6,20 +6,20 @@ module Heirloom
         @opts = read_options
         id = @opts[:id] ? @opts[:id] : latest_id
         @logger = HeirloomLogger.new :log_level => @opts[:level]
-        @heirloom = Heirloom.new :name   => @opts[:name],
-                                 :id     => id,
-                                 :logger => @logger
+        @archive = Archive.new :name   => @opts[:name],
+                               :id     => id,
+                               :logger => @logger
       end
       
       def show
-        puts @heirloom.show.to_yaml
+        puts @archive.show.to_yaml
       end
 
       private
 
       def latest_id
-        @heirloom = Heirloom.new :name => @opts[:name]
-        @heirloom.list(1).first
+        @archive = Heirloom.new :name => @opts[:name]
+        @archive.list(1).first
       end
 
       def read_options
@@ -27,7 +27,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Show details about a version of an heirloom.
+Show details about a version of an archive.
 
 Usage:
 
@@ -39,8 +39,8 @@ EOS
           opt :help, "Display Help"
           opt :level, "Log level.", :type    => :string,
                                     :default => 'info'
-          opt :name, "Name of Heirloom.", :type => :string
-          opt :id, "ID of the Heirloom to display.", :type => :string
+          opt :name, "Name of archive.", :type => :string
+          opt :id, "ID of the archive to display.", :type => :string
         end
       end
 

@@ -7,31 +7,31 @@ module Heirloom
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
-        @heirloom = Heirloom.new :name   => @opts[:name],
-                                 :id     => @opts[:id],
-                                 :logger => @logger
+        @archive = Archive.new :name   => @opts[:name],
+                               :id     => @opts[:id],
+                               :logger => @logger
       end
 
       def build
-        unless @heirloom.buckets_exist? :bucket_prefix => @opts[:bucket_prefix]
+        unless @archive.buckets_exist? :bucket_prefix => @opts[:bucket_prefix]
           @logger.error "Buckets do no exist in required regions."
           exit 1
         end
 
-        @heirloom.destroy if @heirloom.exists?
+        @archive.destroy if @archive.exists?
                           
-        heirloom_file = @heirloom.build :bucket_prefix  => @opts[:bucket_prefix],
-                                        :directory      => @opts[:directory],
-                                        :exclude        => @opts[:exclude].split(','),
-                                        :public         => @opts[:public],
-                                        :git            => @opts[:git]
+        archive_file = @archive.build :bucket_prefix  => @opts[:bucket_prefix],
+                                      :directory      => @opts[:directory],
+                                      :exclude        => @opts[:exclude].split(','),
+                                      :public         => @opts[:public],
+                                      :git            => @opts[:git]
 
-        @heirloom.upload :bucket_prefix => @opts[:bucket_prefix],
-                         :file          => heirloom_file
+        @archive.upload :bucket_prefix => @opts[:bucket_prefix],
+                        :file          => archive_file
 
-        @heirloom.authorize unless @public
+        @archive.authorize unless @public
 
-        @heirloom.cleanup
+        @archive.cleanup
       end
 
       private
@@ -41,7 +41,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Build and upload a new Heirloom
+Build and upload a new archive.
 
 Usage:
 
@@ -55,11 +55,11 @@ EOS
                                                                                    :default => '.git'
           opt :git, "Read git commit information from directory."
           opt :help, "Display Help"
-          opt :id, "ID of the heirloom to display.", :type => :string
+          opt :id, "ID of the archive to display.", :type => :string
           opt :level, "Log level.", :type    => :string,
                                     :default => 'info'
-          opt :name, "Name of heirloom.", :type => :string
-          opt :public, "Set this heirloom as public readable?"
+          opt :name, "Name of archive.", :type => :string
+          opt :public, "Set this archive as public readable?"
         end
       end
 

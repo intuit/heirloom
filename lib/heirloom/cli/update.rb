@@ -5,14 +5,14 @@ module Heirloom
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
-        @heirloom = Heirloom.new :name   => @opts[:name],
-                                 :id     => @opts[:id],
-                                 :logger => @logger
+        @archive = Archive.new :name   => @opts[:name],
+                               :id     => @opts[:id],
+                               :logger => @logger
       end
       
       def update
-        @heirloom.update :attribute => @opts[:attribute],
-                         :value     => @opts[:value]
+        @archive.update :attribute => @opts[:attribute],
+                        :value     => @opts[:value]
       end
 
       private
@@ -22,7 +22,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Update an heirloom attribute.
+Update an archive's attribute.
 
 Usage:
 
@@ -31,10 +31,10 @@ heirloom update -n NAME -i ID -a ATTRIBUTE_TO_UPDATE -v NEW_VALUE
 EOS
           opt :attribute, "Attribute to update.", :type => :string
           opt :help, "Display Help"
-          opt :id, "ID of the heirloom to display.", :type => :string
+          opt :id, "ID of the archive to display.", :type => :string
           opt :level, "Log level.", :type    => :string,
                                     :default => 'info'
-          opt :name, "Name of heirloom.", :type => :string
+          opt :name, "Name of archive.", :type => :string
           opt :value, "New value of attribute.", :type => :string
         end
       end

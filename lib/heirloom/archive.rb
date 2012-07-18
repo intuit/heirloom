@@ -1,16 +1,16 @@
-require 'heirloom/heirloom/lister.rb'
-require 'heirloom/heirloom/reader.rb'
-require 'heirloom/heirloom/builder.rb'
-require 'heirloom/heirloom/updater.rb'
-require 'heirloom/heirloom/uploader.rb'
-require 'heirloom/heirloom/downloader.rb'
-require 'heirloom/heirloom/authorizer.rb'
-require 'heirloom/heirloom/destroyer.rb'
-require 'heirloom/heirloom/verifier.rb'
+require 'heirloom/archive/lister.rb'
+require 'heirloom/archive/reader.rb'
+require 'heirloom/archive/builder.rb'
+require 'heirloom/archive/updater.rb'
+require 'heirloom/archive/uploader.rb'
+require 'heirloom/archive/downloader.rb'
+require 'heirloom/archive/authorizer.rb'
+require 'heirloom/archive/destroyer.rb'
+require 'heirloom/archive/verifier.rb'
 
 module Heirloom
 
-  class Heirloom
+  class Archive
 
     def initialize(args)
       @config = Config.new :config => args[:config],

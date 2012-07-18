@@ -7,13 +7,13 @@ module Heirloom
         @name = @opts[:name]
         @id = @opts[:id]
         @logger = HeirloomLogger.new :log_level => @opts[:level]
-        @heirloom = Heirloom.new :name   => @name,
-                                 :id     => @id,
-                                 :logger => @logger
+        @archive = Archive.new :name   => @name,
+                               :id     => @id,
+                               :logger => @logger
       end
       
       def destroy
-        @heirloom.destroy
+        @archive.destroy
       end
 
       private
@@ -23,7 +23,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Destroy an Heirloom
+Destroy an archive.
 
 Usage:
 
@@ -31,10 +31,10 @@ heirloom destroy -n NAME -i ID [-l LOG_LEVEL]
 
 EOS
           opt :help, "Display Help"
-          opt :id, "ID of the heirloom to display.", :type => :string
+          opt :id, "ID of the archive to display.", :type => :string
           opt :level, "Log level.", :type    => :string,
                                     :default => 'info'
-          opt :name, "Name of heirloom.", :type => :string
+          opt :name, "Name of archive.", :type => :string
         end
       end
     end

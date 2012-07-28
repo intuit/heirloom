@@ -20,7 +20,8 @@ module Heirloom
     end
 
     def authorize(accounts)
-      authorizer.authorize(accounts)
+      authorizer.authorize :accounts => accounts,
+                           :regions  => regions
     end
 
     def build(args)
@@ -36,7 +37,7 @@ module Heirloom
     end
 
     def upload(args)
-      uploader.upload args
+      uploader.upload({ :regions => regions }).merge(args)
     end
 
     def exists?
@@ -48,7 +49,7 @@ module Heirloom
     end
 
     def destroy
-      destroyer.destroy
+      destroyer.destroy :regions => regions
     end
 
     def show
@@ -93,9 +94,9 @@ module Heirloom
     end
 
     def uploader
-      @uploader ||= Uploader.new :config => @config,
-                                 :name   => @name,
-                                 :id     => @id
+      @uploader ||= Uploader.new :config  => @config,
+                                 :name    => @name,
+                                 :id      => @id
     end
 
     def downloader
@@ -105,15 +106,15 @@ module Heirloom
     end
 
     def authorizer
-      @authorizer ||= Authorizer.new :config => @config,
-                                     :name   => @name,
-                                     :id     => @id
+      @authorizer ||= Authorizer.new :config  => @config,
+                                     :name    => @name,
+                                     :id      => @id
     end
 
     def destroyer
-      @destroyer ||= Destroyer.new :config => @config,
-                                   :name   => @name,
-                                   :id     => @id
+      @destroyer ||= Destroyer.new :config  => @config,
+                                   :name    => @name,
+                                   :id      => @id
     end
 
     def verifier

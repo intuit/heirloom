@@ -9,10 +9,13 @@ module Heirloom
       @logger = @config.logger
     end
 
-    def authorize(accounts)
+    def authorize(args)
+      regions = args[:regions]
+      accounts = args[:accounts]
+
       @logger.info "Authorizing access to artifact."
 
-      @config.regions.each do |region|
+      regions.each do |region|
         bucket = reader.get_bucket :region => region
 
         s3_acl = ACL::S3.new :config => @config,

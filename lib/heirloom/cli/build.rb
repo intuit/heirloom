@@ -6,10 +6,12 @@ module Heirloom
 
       def initialize
         @opts = read_options
-        CLI::Shared.valid_options? :provided => @opts, 
-                                   :required => [:name, :id, :regions
-                                                 :bucket_prefix, :directory]
         @logger = HeirloomLogger.new :log_level => @opts[:level]
+        exit 1 unless CLI::Shared.valid_options? :provided => @opts, 
+                                                 :required => [:name, :id, :regions, 
+                                                               :bucket_prefix, 
+                                                               :directory],
+                                                 :logger   => @logger
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :logger => @logger
@@ -24,17 +26,15 @@ module Heirloom
 
         @archive.destroy if @archive.exists?
                           
-        archive_file = @archive.build :bucket_prefix  => @opts[:bucket_prefix],
-                                      :directory      => @opts[:directory],
-                                      :exclude        => @opts[:exclude].split(','),
-                                      :public         => @opts[:public],
-                                      :git            => @opts[:git]
+        archive_file = @archive.build :bucket_prefix   => @opts[:bucket_prefix],
+                                      :directory       => @opts[:directory],
+                                      :exclude         => @opts[:exclude].split(','),
+                                      :git             => @opts[:git]
 
-        @archive.upload :bucket_prefix => @opts[:bucket_prefix],
-                        :regions       => @opts[:regions],
-                        :file          => archive_file,
-
-        @archive.authorize unless @public
+        @archive.upload :bucket_prefix   => @opts[:bucket_prefix],
+                        :regions         => @opts[:regions],
+                        :public_readable => @opts[:public],
+                        :file            => archive_file
 
         @archive.cleanup
       end

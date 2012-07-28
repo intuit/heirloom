@@ -94,6 +94,8 @@ describe Heirloom do
               and_return( { '123' => 
                             { 'us-west-1-s3-url' => 
                               ['s3://the-url-us-west-1/the-bucket/the-key'],
+                              'build_by' => 
+                              ['user'], 
                               'us-east-1-s3-url' => 
                               ['s3://the-url-us-east-1/the-bucket/the-key'] 
                             }

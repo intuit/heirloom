@@ -4,9 +4,10 @@ module Heirloom
 
       def initialize
         @opts = read_options
-        CLI::Shared.valid_options? :provided => @opts,
-                                   :required => [:name]
         @logger = HeirloomLogger.new :log_level => @opts[:level]
+        exit 1 unless CLI::Shared.valid_options? :provided => @opts,
+                                                 :required => [:name],
+                                                 :logger   => @logger
         @archive = Archive.new :name   => @opts[:name],
                                :logger => @logger
       end

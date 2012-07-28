@@ -22,9 +22,10 @@ module Heirloom
     end
 
     def regions
-      show.keys.map do |key|
+      data = show.keys.map do |key|
         key.gsub('-s3-url', '') if key =~ /-s3-url$/
       end
+      data.compact
     end
 
     def get_bucket(args)

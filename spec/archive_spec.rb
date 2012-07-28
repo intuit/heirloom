@@ -49,23 +49,38 @@ describe Heirloom do
 
     it "should call upload archive method with given args" do
       mock = double('Mock')
+      reader_mock = double('reader mock')
+      Heirloom::Reader.should_receive(:new).
+                          with(:config => @config_mock,
+                               :name   => 'chef',
+                               :id     => '123').
+                          and_return reader_mock
+      reader_mock.should_receive(:regions).and_return ['us-west-1', 'us-west-2']
       Heirloom::Uploader.should_receive(:new).
                          with(:config => @config_mock,
                               :name   => 'chef',
                               :id     => '123').
                          and_return mock
-      mock.should_receive(:upload).with('args')
-      @archive.upload('args')
+      mock.should_receive(:upload).with('arg' => 'val', :regions => ['us-west-1', 'us-west-2'])
+      @archive.upload('arg' => 'val')
     end
 
     it "should call authorize method" do
       mock = double('Mock')
+      reader_mock = double('reader mock')
+      Heirloom::Reader.should_receive(:new).
+                          with(:config => @config_mock,
+                               :name   => 'chef',
+                               :id     => '123').
+                          and_return reader_mock
+      reader_mock.should_receive(:regions).and_return ['us-west-1', 'us-west-2']
       Heirloom::Authorizer.should_receive(:new).
                            with(:config => @config_mock,
                                 :name   => 'chef',
                                 :id     => '123').
                            and_return mock
-      mock.should_receive(:authorize).with ['acct1', 'acct2']
+      mock.should_receive(:authorize).with :regions  => ['us-west-1', 'us-west-2'],
+                                           :accounts => ['acct1', 'acct2']
       @archive.authorize ['acct1', 'acct2']
     end
 
@@ -148,13 +163,21 @@ describe Heirloom do
     end
 
     it "should call the destroy method" do
-      mock = double('Mock')
-      Heirloom::Destroyer.should_receive(:new).
+      destroyer_mock = double('destroyer mock')
+      reader_mock = double('reader mock')
+      Heirloom::Reader.should_receive(:new).
                           with(:config => @config_mock,
                                :name   => 'chef',
                                :id     => '123').
-                          and_return mock
-      mock.should_receive(:destroy)
+                          and_return reader_mock
+      reader_mock.should_receive(:regions).and_return ['us-west-1', 'us-west-2']
+      Heirloom::Destroyer.should_receive(:new).
+                          with(:config  => @config_mock,
+                               :name    => 'chef',
+                               :id      => '123').
+                          and_return destroyer_mock
+      destroyer_mock.should_receive(:destroy).
+                     with(:regions => ['us-west-1', 'us-west-2'])
       @archive.destroy
     end
 

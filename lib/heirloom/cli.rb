@@ -32,11 +32,8 @@ module Heirloom
         CLI::Destroy.new.destroy
       when '-v'
         puts Heirloom::VERSION
-      when '-h'
-        puts "heirloom [list|show|build|authorize|update|download|destroy] OPTIONS"
-        puts "Append -h for help on specific command."
       else
-        puts "Unkown command: '#{cmd}'."
+        puts "Unkown command: '#{cmd}'." unless cmd == '-h'
         puts "heirloom [list|show|build|authorize|update|download|destroy] OPTIONS"
         puts "Append -h for help on specific command."
       end

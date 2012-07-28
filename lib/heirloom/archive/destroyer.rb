@@ -11,7 +11,7 @@ module Heirloom
       self.logger = config.logger
     end
 
-    def destroy
+    def destroy(args)
       regions = args[:regions]
 
       logger.info "Destroying #{@name} - #{@id}"

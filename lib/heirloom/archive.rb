@@ -37,7 +37,7 @@ module Heirloom
     end
 
     def upload(args)
-      uploader.upload({ :regions => regions }).merge(args)
+      uploader.upload({ :regions => regions }.merge(args))
     end
 
     def exists?

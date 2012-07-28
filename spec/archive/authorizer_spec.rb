@@ -15,8 +15,6 @@ describe Heirloom do
       reader = double
       s3_acl = double
       @logger_mock.should_receive(:info).exactly(2).times
-      @config_mock.should_receive(:regions).
-                   and_return(['us-west-1', 'us-west-2'])
       @authorizer.should_receive(:reader).exactly(2).times.
                   and_return(reader)
       reader.should_receive(:get_bucket).exactly(2).times.
@@ -29,7 +27,8 @@ describe Heirloom do
                   :key_folder => 'tim',
                   :bucket     => 'the-bucket',
                   :accounts   => ["acct1", "acct2"])
-      @authorizer.authorize ['acct1', 'acct2']
+      @authorizer.authorize :accounts => ['acct1', 'acct2'],
+                            :regions  => ['us-west-1', 'us-west-2']
     end
 
 end

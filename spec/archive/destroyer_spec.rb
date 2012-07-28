@@ -14,7 +14,6 @@ describe Heirloom do
     it "should destroy the given archive" do
       @logger_mock.should_receive(:info).
                    with "Destroying tim - 123"
-      @config_mock.should_receive(:regions).and_return ['us-west-1']
       reader_mock = mock 'archive reader'
       @destroyer.should_receive(:reader).and_return reader_mock
       bucket_mock = mock 'bucket'
@@ -39,7 +38,7 @@ describe Heirloom do
       sdb_mock.should_receive(:delete).with 'tim', '123'
       @logger_mock.should_receive(:info).
                    with "Destroy complete."
-      @destroyer.destroy
+      @destroyer.destroy :regions => ['us-west-1']
     end
 
 end

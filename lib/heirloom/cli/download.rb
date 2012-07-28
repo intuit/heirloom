@@ -4,6 +4,8 @@ module Heirloom
 
       def initialize
         @opts = read_options
+        CLI::Shared.valid_options? :provided => @opts,
+                                   :required => [:name, :id, :output]
         @logger = HeirloomLogger.new :log_level => @opts[:level]
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
@@ -36,7 +38,7 @@ EOS
           opt :name, "Name of archive.", :type => :string
           opt :output, "Location to download archive.", :type => :string
           opt :region, "Region to download archive.", :type    => :string,
-                                                       :default => 'us-west-1'
+                                                      :default => 'us-west-1'
         end
       end
     end

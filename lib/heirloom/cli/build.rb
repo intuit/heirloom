@@ -6,6 +6,9 @@ module Heirloom
 
       def initialize
         @opts = read_options
+        CLI::Shared.valid_options? :provided => @opts, 
+                                   :required => [:name, :id, :regions
+                                                 :bucket_prefix, :directory]
         @logger = HeirloomLogger.new :log_level => @opts[:level]
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
@@ -13,7 +16,8 @@ module Heirloom
       end
 
       def build
-        unless @archive.buckets_exist? :bucket_prefix => @opts[:bucket_prefix]
+        unless @archive.buckets_exist? :bucket_prefix => @opts[:bucket_prefix],
+                                       :regions       => @opts[:regions]
           @logger.error "Buckets do no exist in required regions."
           exit 1
         end
@@ -27,7 +31,8 @@ module Heirloom
                                       :git            => @opts[:git]
 
         @archive.upload :bucket_prefix => @opts[:bucket_prefix],
-                        :file          => archive_file
+                        :regions       => @opts[:regions],
+                        :file          => archive_file,
 
         @archive.authorize unless @public
 
@@ -51,7 +56,7 @@ EOS
           opt :bucket_prefix, "Bucket prefix which will be combined with region.", :type => :string
           opt :directory, "Source directory of build.", :type    => :string, 
                                                         :default => '.'
-          opt :exclude, "Comma spereate list of files or directories to exclude.", :type => :string,
+          opt :exclude, "Comma spereate list of files or directories to exclude.", :type    => :string,
                                                                                    :default => '.git'
           opt :git, "Read git commit information from directory."
           opt :help, "Display Help"
@@ -60,6 +65,8 @@ EOS
                                     :default => 'info'
           opt :name, "Name of archive.", :type => :string
           opt :public, "Set this archive as public readable?"
+          opt :regions, "Region(s) to upload archive.  Can be set multiple times.", :type  => :string,
+                                                                                    :multi => true
         end
       end
 

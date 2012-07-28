@@ -21,6 +21,12 @@ module Heirloom
       end
     end
 
+    def regions
+      show.keys.map do |key|
+        key.gsub('-s3-url', '') if key =~ /-s3-url$/
+      end
+    end
+
     def get_bucket(args)
       @logger.debug "Looking for bucket in #{args[:region]} for #{id}"
       url = get_url(args)

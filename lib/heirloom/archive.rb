@@ -19,8 +19,8 @@ module Heirloom
       @id = args[:id]
     end
 
-    def authorize
-      authorizer.authorize
+    def authorize(accounts)
+      authorizer.authorize(accounts)
     end
 
     def build(args)
@@ -61,6 +61,10 @@ module Heirloom
 
     def cleanup
       builder.cleanup
+    end
+
+    def regions
+      reader.regions
     end
 
     private

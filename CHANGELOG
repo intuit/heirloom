@@ -1,3 +1,10 @@
+## v0.3.0:
+
+* Move account authorization out of config to cli
+* Updated obtions for update to use -u (not -v) for update
+* Cleaned up archive specs
+* Added authorize cli class
+
 ## v0.2.0:
 
 * Command line options updates for each sub command.

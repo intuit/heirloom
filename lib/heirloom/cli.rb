@@ -1,11 +1,14 @@
 require 'trollop'
 
+require 'heirloom/cli/authorize'
 require 'heirloom/cli/build'
 require 'heirloom/cli/list'
 require 'heirloom/cli/show'
 require 'heirloom/cli/update'
 require 'heirloom/cli/download'
 require 'heirloom/cli/destroy'
+
+require 'heirloom/cli/shared'
 
 module Heirloom
   module CLI
@@ -19,15 +22,22 @@ module Heirloom
         CLI::Show.new.show
       when 'build'
         CLI::Build.new.build
+      when 'authorize'
+        CLI::Authorize.new.authorize
       when 'update'
         CLI::Update.new.update
       when 'download'
         CLI::Download.new.download
       when 'destroy', 'delete'
         CLI::Destroy.new.destroy
+      when '-v'
+        puts Heirloom::VERSION
+      when '-h'
+        puts "heirloom [list|show|build|authorize|update|download|destroy] OPTIONS"
+        puts "Append -h for help on specific command."
       else
         puts "Unkown command: '#{cmd}'."
-        puts "heirloom [list|show|build|update|download|destroy] OPTIONS"
+        puts "heirloom [list|show|build|authorize|update|download|destroy] OPTIONS"
         puts "Append -h for help on specific command."
       end
     end

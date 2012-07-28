@@ -8,13 +8,13 @@ module Heirloom
         self.config = args[:config]
         self.region = args[:region]
         self.logger = config.logger
-        self.accounts = config.authorized_aws_accounts
       end
 
       def allow_read_access_from_accounts(args)
         bucket = args[:bucket]
         key_name = args[:key_name]
         key_folder = args[:key_folder]
+        accounts = args[:accounts]
 
         key = "#{key_folder}/#{key_name}.tar.gz"
 
@@ -38,11 +38,12 @@ module Heirloom
       def build_bucket_grants(args)
         id = args[:id]
         name = args[:name]
+        accounts = args[:accounts]
 
         a = Array.new
 
         # Add each account email as read access
-        @accounts.each do |g|
+        accounts.each do |g|
           a << {
                  'Grantee' => { 'EmailAddress' => g } ,
                  'Permission' => 'READ'

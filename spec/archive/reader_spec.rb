@@ -87,4 +87,18 @@ describe Heirloom do
     @reader.get_key(:region => 'us-west-1').should == nil
   end
 
+  it "should return the regions the archive has been uploaded to" do
+    @sdb_mock.should_receive(:select).
+              exactly(1).times.
+              with("select * from tim where itemName() = '123'").
+              and_return( { '123' => 
+                            { 'us-west-1-s3-url' => 
+                              ['s3://the-url-us-west-1/the-bucket/the-key'],
+                              'us-east-1-s3-url' => 
+                              ['s3://the-url-us-east-1/the-bucket/the-key'] 
+                            }
+                          } )
+    @reader.regions.should == ['us-west-1', 'us-east-1']
+  end
+
 end

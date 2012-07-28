@@ -12,7 +12,7 @@ module Heirloom
 
     def update(args)
       attribute = args[:attribute]
-      value = args[:value]
+      value = args[:updated_value]
 
       sdb.put_attributes @name, @id, { attribute => value }, { :replace => attribute }
       @logger.info "Updated #{@name} (#{@id}): #{attribute} = #{value}."

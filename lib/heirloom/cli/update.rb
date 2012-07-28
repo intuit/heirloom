@@ -1,9 +1,11 @@
-module Heirloom
+module Heirloom 
   module CLI
     class Update
 
       def initialize
         @opts = read_options
+        CLI::Shared.valid_options? :provided => @opts,
+                                   :required => [:name, :id, :attribute, :update]
         @logger = HeirloomLogger.new :log_level => @opts[:level]
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
@@ -11,8 +13,8 @@ module Heirloom
       end
       
       def update
-        @archive.update :attribute => @opts[:attribute],
-                        :value     => @opts[:value]
+        @archive.update :attribute  => @opts[:attribute],
+                        :value      => @opts[:updated_value]
       end
 
       private
@@ -26,7 +28,7 @@ Update an archive's attribute.
 
 Usage:
 
-heirloom update -n NAME -i ID -a ATTRIBUTE_TO_UPDATE -v NEW_VALUE
+heirloom update -n NAME -i ID -a ATTRIBUTE_TO_UPDATE -u UPDATED_VALUE
 
 EOS
           opt :attribute, "Attribute to update.", :type => :string
@@ -35,7 +37,7 @@ EOS
           opt :level, "Log level.", :type    => :string,
                                     :default => 'info'
           opt :name, "Name of archive.", :type => :string
-          opt :value, "New value of attribute.", :type => :string
+          opt :updated_value, "Updated value of attribute.", :type => :string
         end
       end
     end

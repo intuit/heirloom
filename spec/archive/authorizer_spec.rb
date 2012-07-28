@@ -11,7 +11,7 @@ describe Heirloom do
                                              :id     => '123'
     end
 
-    it "should authorize access to an acl across all regions" do
+    it "should authorize access to an archive in all regions" do
       reader = double
       s3_acl = double
       @logger_mock.should_receive(:info).exactly(2).times
@@ -27,8 +27,9 @@ describe Heirloom do
              exactly(2).times.
              with(:key_name   => '123',
                   :key_folder => 'tim',
-                  :bucket     => 'the-bucket')
-      @authorizer.authorize
+                  :bucket     => 'the-bucket',
+                  :accounts   => ["acct1", "acct2"])
+      @authorizer.authorize ['acct1', 'acct2']
     end
 
 end

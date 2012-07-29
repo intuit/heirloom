@@ -10,12 +10,12 @@ module Heirloom
                                                  :logger   => @logger
         id = @opts[:id] ? @opts[:id] : latest_id
         @archive = Archive.new :name   => @opts[:name],
-                               :id     => id,
-                               :logger => @logger
+                               :logger => @logger,
+                               :id     => id
       end
       
       def show
-        puts @archive.show.to_yaml
+        jj @archive.show
       end
 
       private

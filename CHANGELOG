@@ -5,6 +5,8 @@
 * Updated obtions for update to use -u (not -v) for update
 * Cleaned up archive specs
 * Added authorize cli class
+* Changed output of show / list to JSON
+* Updated readme
 
 ## v0.2.0:
 

@@ -13,8 +13,8 @@ module Heirloom
     end
 
     def commit(sha = nil)
-      r = Repo.new path
-      sha ? r.commits(sha).first : r.commits.first
+      repo = Repo.new path
+      sha ? repo.commits(sha).first : repo.commits.first
     end
 
   end

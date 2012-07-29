@@ -13,7 +13,7 @@ module Heirloom
       end
       
       def list(count = @opts[:count])
-        puts @archive.list(count)
+        jj @archive.list(count)
       end
 
       private

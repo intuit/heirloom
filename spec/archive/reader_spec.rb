@@ -16,7 +16,7 @@ describe Heirloom do
   it "should show the item record" do
     @sdb_mock.should_receive(:select).
              with("select * from tim where itemName() = '123'").
-             and_return( { '123' => { 'value' => 'details' } } )
+             and_return( { '123' => { 'value' => [ 'details' ] } } )
     @reader.show.should == { 'value' => 'details' }
   end
 
@@ -30,7 +30,7 @@ describe Heirloom do
   it "should return true if the record exists" do
     @sdb_mock.should_receive(:select).
               with("select * from tim where itemName() = '123'").
-              and_return( { '123' => { 'value' => 'details' } } )
+              and_return( { '123' => { 'value' => [ 'details' ] } } )
     @logger_mock.should_receive(:debug).exactly(1).times
     @reader.exists?.should == true
   end
@@ -50,10 +50,10 @@ describe Heirloom do
               with("select * from tim where itemName() = '123'").
               and_return( { '123' => 
                             { 'us-west-1-s3-url' => 
-                              ['s3://the-url/the-buck/the-key'] 
+                              [ 's3://the-bucket/the-buck/the-key' ]  
                             }
                           } )
-    @reader.get_bucket(:region => 'us-west-1').should == 'the-url'
+    @reader.get_bucket(:region => 'us-west-1').should == 'the-bucket'
   end
 
   it "should return nil if the bucket does not exist" do

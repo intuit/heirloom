@@ -54,8 +54,13 @@ module Heirloom
     end
 
     def show
-      items = sdb.select "select * from #{name} where itemName() = '#{id}'"
-      items[id] ? items[id] : {}
+      query = sdb.select "select * from #{name} where itemName() = '#{id}'"
+      items = query[id] ? query[id] : {}
+      r = {}
+      items.each_pair.map do |key,value|
+        r[key] = value.first
+      end
+      r
     end
 
     private
@@ -66,7 +71,7 @@ module Heirloom
       url = "#{args[:region]}-s3-url"
       if show[url]
         @logger.debug "Found #{url} for #{id}."
-        show[url].first
+        show[url]
       else
         @logger.debug "#{args[:region]} endpoint for #{id} not found."
         nil

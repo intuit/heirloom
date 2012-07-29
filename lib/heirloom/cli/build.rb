@@ -58,7 +58,7 @@ EOS
                                                         :default => '.'
           opt :exclude, "Comma spereate list of files or directories to exclude.", :type    => :string,
                                                                                    :default => '.git'
-          opt :git, "Read git commit information from directory."
+          opt :git, "Read git commit information from directory and set as archive attributes."
           opt :help, "Display Help"
           opt :id, "ID of the archive to display.", :type => :string
           opt :level, "Log level.", :type    => :string,

@@ -47,14 +47,6 @@ module Heirloom
       add_git_commit_to_artifact_record git_commit
     end
 
-    def create_artifact_record
-      attributes = { 'built_by'        => "#{user}@#{hostname}",
-                     'built_at'        => Time.now.utc.iso8601,
-                     'id'              => id }
-      logger.info "Create artifact record #{id}."
-      sdb.put_attributes name, id, attributes
-    end
-
     def add_git_commit_to_artifact_record(commit)
       attributes = { 'sha'             => id,
                      'abbreviated_sha' => commit.id_abbrev,
@@ -66,6 +58,14 @@ module Heirloom
       logger.info "Git message: #{commit.message}"
       logger.info "Git author: #{commit.author.name}"
 
+      sdb.put_attributes name, id, attributes
+    end
+
+    def create_artifact_record
+      attributes = { 'built_by'        => "#{user}@#{hostname}",
+                     'built_at'        => Time.now.utc.iso8601,
+                     'id'              => id }
+      logger.info "Create artifact record #{id}."
       sdb.put_attributes name, id, attributes
     end
 

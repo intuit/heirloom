@@ -50,19 +50,20 @@ Build and upload a new archive.
 
 Usage:
 
-heirloom build -n NAME -i ID -b BUCKET_PREFIX [-d DIRECTORY] [-p] [-g] [-e DIRECTORIES_TO_EXCLUDE]
+heirloom build -n NAME -i ID -b BUCKET_PREFIX -r REGION [-d DIRECTORY_TO_BUILD] [-p] [-g] [-e DIRECTORIES_TO_EXCLUDE] [-l LOG_LEVEL]
 
 EOS
-          opt :bucket_prefix, "Bucket prefix which will be combined with region.", :type => :string
+          opt :bucket_prefix, "Bucket prefix which will be combined with region.\
+For example: -b 'test' -r 'us-west-1'  will expect bucket 'test-us-west-1' to be present", :type => :string
           opt :directory, "Source directory of build.", :type    => :string, 
                                                         :default => '.'
           opt :exclude, "Comma spereate list of files or directories to exclude.", :type    => :string,
                                                                                    :default => '.git'
           opt :git, "Read git commit information from directory and set as archive attributes."
           opt :help, "Display Help"
-          opt :id, "ID of the archive to display.", :type => :string
-          opt :level, "Log level.", :type    => :string,
-                                    :default => 'info'
+          opt :id, "id for archive (when -g specified, assumed to be GIT sha).", :type => :string
+          opt :level, "Log level [debug|info|warn|error].", :type    => :string,
+                                                            :default => 'info'
           opt :name, "Name of archive.", :type => :string
           opt :public, "Set this archive as public readable?"
           opt :regions, "Region(s) to upload archive.  Can be set multiple times.", :type  => :string,

@@ -32,7 +32,9 @@ Authorize access from another AWS account to an archive.
 
 Usage:
 
-heirloom authorize -n NAME -i ID -a ACCOUNT_TO_AUTHORIZE -p
+heirloom authorize -n NAME -i ID -a AWS_ACCOUNT1-a AWS_ACCOUNT2
+
+Note: This will replace all current authorizations with those specified and make the archive private.
 
 EOS
           opt :accounts, "AWS Account(s) email to authorize. Can be specified multiple times.", :type  => :string,

@@ -12,9 +12,10 @@ module Heirloom
     def upload(args)
       heirloom_file = args[:file]
       bucket_prefix = args[:bucket_prefix]
+      regions = args[:regions]
       public_readable = args[:public_readable]
 
-      @config.regions.each do |region|
+      regions.each do |region|
         bucket = "#{bucket_prefix}-#{region}"
 
         s3_uploader = Uploader::S3.new :config => @config,

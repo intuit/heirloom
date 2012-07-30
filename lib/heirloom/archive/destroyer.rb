@@ -11,10 +11,12 @@ module Heirloom
       self.logger = config.logger
     end
 
-    def destroy
+    def destroy(args)
+      regions = args[:regions]
+
       logger.info "Destroying #{@name} - #{@id}"
 
-      config.regions.each do |region|
+      regions.each do |region|
         bucket = reader.get_bucket :region => region
 
         key = "#{id}.tar.gz"

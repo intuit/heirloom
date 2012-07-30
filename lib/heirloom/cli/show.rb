@@ -4,15 +4,18 @@ module Heirloom
 
       def initialize
         @opts = read_options
-        id = @opts[:id] ? @opts[:id] : latest_id
         @logger = HeirloomLogger.new :log_level => @opts[:level]
+        exit 1 unless CLI::Shared.valid_options? :provided => @opts,
+                                                 :required => [:name],
+                                                 :logger   => @logger
+        id = @opts[:id] ? @opts[:id] : latest_id
         @archive = Archive.new :name   => @opts[:name],
-                               :id     => id,
-                               :logger => @logger
+                               :logger => @logger,
+                               :id     => id
       end
       
       def show
-        puts @archive.show.to_yaml
+        jj @archive.show
       end
 
       private
@@ -37,10 +40,10 @@ If -i is ommited, latest version is displayed.
 
 EOS
           opt :help, "Display Help"
-          opt :level, "Log level.", :type    => :string,
-                                    :default => 'info'
+          opt :level, "Log level [debug|info|warn|error].", :type    => :string,
+                                                            :default => 'info'
           opt :name, "Name of archive.", :type => :string
-          opt :id, "ID of the archive to display.", :type => :string
+          opt :id, "id of the archive to display.", :type => :string
         end
       end
 

@@ -2,13 +2,13 @@
 
 # Source RVM profile and set ruby / gemset
 . /etc/profile
-rvm use "1.9.3-p125@heirloom" --create
+
+# Exit with error if any command returns non zero
+set -e
 
 # Bundle gems
+rvm use "1.9.3-p125@heirloom" --create
 bundle
-
-# Create blank deployment config
-touch $HOME/.heirloom.yml
 
 # Run spec tests
 rspec spec

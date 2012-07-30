@@ -10,9 +10,10 @@ module Heirloom
 
     def buckets_exist?(args)
       bucket_prefix = args[:bucket_prefix]
+      regions = args[:regions]
       result = true
 
-      @config.regions.each do |region|
+      regions.each do |region|
         bucket = "#{bucket_prefix}-#{region}"
         
         s3 ||= AWS::S3.new :config => @config,

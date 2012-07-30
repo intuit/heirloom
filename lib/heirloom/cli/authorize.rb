@@ -28,19 +28,19 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Build and upload a new archive.
+Authorize access from another AWS account to an archive.
 
 Usage:
 
-heirloom build -n NAME -i ID -a ACCOUNT_TO_AUTHORIZE -p
+heirloom authorize -n NAME -i ID -a ACCOUNT_TO_AUTHORIZE -p
 
 EOS
           opt :accounts, "AWS Account(s) email to authorize. Can be specified multiple times.", :type  => :string,
                                                                                                 :multi => true
           opt :help, "Display Help"
-          opt :id, "ID of the archive to display.", :type => :string
-          opt :level, "Log level.", :type    => :string,
-                                    :default => 'info'
+          opt :id, "id of the archive to authorize.", :type => :string
+          opt :level, "Log level [debug|info|warn|error].", :type    => :string,
+                                                            :default => 'info'
           opt :name, "Name of archive.", :type => :string
         end
       end

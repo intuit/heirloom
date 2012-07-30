@@ -35,8 +35,8 @@ heirloom destroy -n NAME -i ID [-l LOG_LEVEL]
 EOS
           opt :help, "Display Help"
           opt :id, "ID of the archive to display.", :type => :string
-          opt :level, "Log level.", :type    => :string,
-                                    :default => 'info'
+          opt :level, "Log level [debug|info|warn|error].", :type    => :string,
+                                                            :default => 'info'
           opt :name, "Name of archive.", :type => :string
         end
       end

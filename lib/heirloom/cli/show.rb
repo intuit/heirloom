@@ -40,10 +40,10 @@ If -i is ommited, latest version is displayed.
 
 EOS
           opt :help, "Display Help"
-          opt :level, "Log level.", :type    => :string,
-                                    :default => 'info'
+          opt :level, "Log level [debug|info|warn|error].", :type    => :string,
+                                                            :default => 'info'
           opt :name, "Name of archive.", :type => :string
-          opt :id, "ID of the archive to display.", :type => :string
+          opt :id, "id of the archive to display.", :type => :string
         end
       end
 

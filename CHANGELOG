@@ -6,7 +6,7 @@
 * Cleaned up archive specs
 * Added authorize cli class
 * Changed output of show / list to JSON
-* Updated readme
+* Updated readme & cli help
 
 ## v0.2.0:
 

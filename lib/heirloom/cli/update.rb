@@ -37,8 +37,8 @@ EOS
           opt :attribute, "Attribute to update.", :type => :string
           opt :help, "Display Help"
           opt :id, "ID of the archive to display.", :type => :string
-          opt :level, "Log level.", :type    => :string,
-                                    :default => 'info'
+          opt :level, "Log level [debug|info|warn|error].", :type    => :string,
+                                                            :default => 'info'
           opt :name, "Name of archive.", :type => :string
           opt :updated_value, "Updated value of attribute.", :type => :string
         end

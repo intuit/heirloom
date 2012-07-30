@@ -31,8 +31,8 @@ heirloom list -n NAME
 
 EOS
           opt :help, "Display Help"
-          opt :level, "Log level.", :type    => :string,
-                                    :default => 'info'
+          opt :level, "Log level [debug|info|warn|error].", :type    => :string,
+                                                            :default => 'info'
           opt :name, "Name of archive.", :type => :string
           opt :count, "Number of versions to return.", :type    => :integer,
                                                        :default => 10

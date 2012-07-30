@@ -34,10 +34,10 @@ heirloom download -n NAME -i ID -r REGION -o OUTPUT_FILE
 
 EOS
           opt :help, "Display Help"
-          opt :id, "ID of the archive to display.", :type => :string
-          opt :level, "Log level.", :type    => :string,
-                                    :default => 'info'
+          opt :id, "id of the archive to download.", :type => :string
           opt :name, "Name of archive.", :type => :string
+          opt :level, "Log level [debug|info|warn|error].", :type    => :string,
+                                                            :default => 'info'
           opt :output, "Location to download archive.", :type => :string
           opt :region, "Region to download archive.", :type    => :string,
                                                       :default => 'us-west-1'

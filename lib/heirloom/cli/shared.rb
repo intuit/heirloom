@@ -18,12 +18,9 @@ module Heirloom
 
         missing_opts.compact!
 
-        if missing_opts.any?
-          missing_opts.each {|missing_opt| logger.error missing_opt}
-        end
+        missing_opts.each {|missing_opt| logger.error missing_opt}
 
-        missing_opts.any? ? false : true
-
+        missing_opts.empty?
       end
 
     end

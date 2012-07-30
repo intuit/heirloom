@@ -106,15 +106,15 @@ module Heirloom
     end
 
     def authorizer
-      @authorizer ||= Authorizer.new :config  => @config,
-                                     :name    => @name,
-                                     :id      => @id
+      @authorizer ||= Authorizer.new :config => @config,
+                                     :name   => @name,
+                                     :id     => @id
     end
 
     def destroyer
-      @destroyer ||= Destroyer.new :config  => @config,
-                                   :name    => @name,
-                                   :id      => @id
+      @destroyer ||= Destroyer.new :config => @config,
+                                   :name   => @name,
+                                   :id     => @id
     end
 
     def verifier

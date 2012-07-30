@@ -94,9 +94,9 @@ module Heirloom
     end
 
     def uploader
-      @uploader ||= Uploader.new :config  => @config,
-                                 :name    => @name,
-                                 :id      => @id
+      @uploader ||= Uploader.new :config => @config,
+                                 :name   => @name,
+                                 :id     => @id
     end
 
     def downloader

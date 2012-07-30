@@ -1,19 +1,24 @@
+require 'json'
+
 module Heirloom
   module CLI
-    class List
+    class Authorize
 
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
+
         exit 1 unless CLI::Shared.valid_options? :provided => @opts,
-                                                 :required => [:name],
+                                                 :required => [:accounts, 
+                                                               :name, :id],
                                                  :logger   => @logger
         @archive = Archive.new :name   => @opts[:name],
+                               :id     => @opts[:id],
                                :logger => @logger
       end
-      
-      def list(count = @opts[:count])
-        jj @archive.list(count)
+
+      def authorize
+        @archive.authorize @opts[:accounts]
       end
 
       private
@@ -23,19 +28,22 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-List versions of archive.
+Authorize access from another AWS account to an archive.
 
 Usage:
 
-heirloom list -n NAME
+heirloom authorize -n NAME -i ID -a AWS_ACCOUNT1-a AWS_ACCOUNT2
+
+Note: This will replace all current authorizations with those specified and make the archive private.
 
 EOS
+          opt :accounts, "AWS Account(s) email to authorize. Can be specified multiple times.", :type  => :string,
+                                                                                                :multi => true
           opt :help, "Display Help"
+          opt :id, "id of the archive to authorize.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
-          opt :count, "Number of versions to return.", :type    => :integer,
-                                                       :default => 10
         end
       end
 

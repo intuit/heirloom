@@ -19,8 +19,9 @@ module Heirloom
       @id = args[:id]
     end
 
-    def authorize
-      authorizer.authorize
+    def authorize(accounts)
+      authorizer.authorize :accounts => accounts,
+                           :regions  => regions
     end
 
     def build(args)
@@ -36,7 +37,7 @@ module Heirloom
     end
 
     def upload(args)
-      uploader.upload args
+      uploader.upload({ :regions => regions }.merge(args))
     end
 
     def exists?
@@ -48,7 +49,7 @@ module Heirloom
     end
 
     def destroy
-      destroyer.destroy
+      destroyer.destroy :regions => regions
     end
 
     def show
@@ -61,6 +62,10 @@ module Heirloom
 
     def cleanup
       builder.cleanup
+    end
+
+    def regions
+      reader.regions
     end
 
     private

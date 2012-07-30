@@ -21,6 +21,13 @@ module Heirloom
       end
     end
 
+    def regions
+      data = show.keys.map do |key|
+        key.gsub('-s3-url', '') if key =~ /-s3-url$/
+      end
+      data.compact
+    end
+
     def get_bucket(args)
       @logger.debug "Looking for bucket in #{args[:region]} for #{id}"
       url = get_url(args)
@@ -47,8 +54,13 @@ module Heirloom
     end
 
     def show
-      items = sdb.select "select * from #{name} where itemName() = '#{id}'"
-      items[id] ? items[id] : {}
+      query = sdb.select "select * from #{name} where itemName() = '#{id}'"
+      items = query[id] ? query[id] : {}
+      Hash.new.tap do |hash|
+        items.each_pair.map do |key,value|
+          hash[key] = value.first
+        end
+      end
     end
 
     private
@@ -59,7 +71,7 @@ module Heirloom
       url = "#{args[:region]}-s3-url"
       if show[url]
         @logger.debug "Found #{url} for #{id}."
-        show[url].first
+        show[url]
       else
         @logger.debug "#{args[:region]} endpoint for #{id} not found."
         nil

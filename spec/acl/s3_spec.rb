@@ -5,8 +5,6 @@ describe Heirloom do
     @config_mock = double 'config'
     @logger_mock = double 'logger'
     @config_mock.should_receive(:logger).and_return(@logger_mock)
-    @config_mock.should_receive(:authorized_aws_accounts).
-                 and_return ['acct1@test.com', 'acct2@test.com']
 
     @s3 = Heirloom::ACL::S3.new :config  => @config_mock,
                                 :region  => 'us-west-1'
@@ -37,7 +35,8 @@ describe Heirloom do
 
     @s3.allow_read_access_from_accounts :bucket     => 'bucket', 
                                         :key_name   => 'key',
-                                        :key_folder => 'key-folder'
+                                        :key_folder => 'key-folder',
+                                        :accounts   => ['acct1@test.com', 'acct2@test.com']
   end
 
 end

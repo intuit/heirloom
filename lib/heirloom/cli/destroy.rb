@@ -4,9 +4,12 @@ module Heirloom
 
       def initialize
         @opts = read_options
+        @logger = HeirloomLogger.new :log_level => @opts[:level]
+        exit 1 unless CLI::Shared.valid_options? :provided => @opts,
+                                                 :required => [:name, :id],
+                                                 :logger   => @logger
         @name = @opts[:name]
         @id = @opts[:id]
-        @logger = HeirloomLogger.new :log_level => @opts[:level]
         @archive = Archive.new :name   => @name,
                                :id     => @id,
                                :logger => @logger
@@ -32,8 +35,8 @@ heirloom destroy -n NAME -i ID [-l LOG_LEVEL]
 EOS
           opt :help, "Display Help"
           opt :id, "ID of the archive to display.", :type => :string
-          opt :level, "Log level.", :type    => :string,
-                                    :default => 'info'
+          opt :level, "Log level [debug|info|warn|error].", :type    => :string,
+                                                            :default => 'info'
           opt :name, "Name of archive.", :type => :string
         end
       end

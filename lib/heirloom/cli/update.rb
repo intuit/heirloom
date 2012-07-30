@@ -1,4 +1,4 @@
-module Heirloom 
+module Heirloom
   module CLI
     class Update
 

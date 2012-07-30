@@ -88,9 +88,9 @@ describe Heirloom do
       mock = double('Mock')
       Heirloom::Reader.should_receive(:new).
                        with(:config => @config_mock,
-                                 :name   => 'chef',
-                                 :id     => '123').
-                            and_return mock
+                            :name   => 'chef',
+                            :id     => '123').
+                       and_return mock
       mock.should_receive(:exists?).and_return true
       @archive.exists?.should be_true
     end

@@ -56,11 +56,11 @@ module Heirloom
     def show
       query = sdb.select "select * from #{name} where itemName() = '#{id}'"
       items = query[id] ? query[id] : {}
-      r = {}
-      items.each_pair.map do |key,value|
-        r[key] = value.first
+      Hash.new.tap do |hash|
+        items.each_pair.map do |key,value|
+          hash[key] = value.first
+        end
       end
-      r
     end
 
     private

@@ -22,7 +22,7 @@ module Heirloom
                                 :exclude   => args[:exclude],
                                 :config    => config
 
-      directory.build_artifact_from_directory
+      return false unless directory.build_artifact_from_directory
 
       self.local_build = directory.local_build
 
@@ -43,8 +43,13 @@ module Heirloom
     private
 
     def add_git_commit
-      git_commit = GitDirectory.new(:path => source).commit
-      add_git_commit_to_artifact_record git_commit
+      git = GitDirectory.new(:path => source)
+      commit = git.commit id
+      if commit
+        add_git_commit_to_artifact_record commit
+      else
+        logger.warn "Could not find Git sha: #{id}."
+      end
     end
 
     def add_git_commit_to_artifact_record(commit)

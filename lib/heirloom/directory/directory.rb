@@ -1,8 +1,4 @@
-require 'zlib'
-require 'archive/tar/minitar'
 require 'tmpdir'
-
-include Archive::Tar
 
 module Heirloom
 
@@ -18,7 +14,7 @@ module Heirloom
     end
 
     def build_artifact_from_directory
-      random_text = (0...8).map{65.+(rand(25)).chr}.join
+      random_text = (0...8).map{65.+(Kernel.rand(25)).chr}.join
 
       unless local_build
         self.local_build = File.join(Dir.tmpdir, random_text + ".tar.gz")
@@ -28,12 +24,18 @@ module Heirloom
       logger.info "Excluding #{exclude.to_s}."
       logger.info "Adding #{files_to_pack.to_s}."
 
-      tgz = Zlib::GzipWriter.new File.open(local_build, 'wb')
-
-      Minitar.pack(files_to_pack, tgz)
+      build_archive local_build, files_to_pack
     end
 
     private
+
+    def build_archive(local_build, files_to_pack)
+      command = "tar czf #{local_build} #{files_to_pack.join(' ')}"
+      logger.info "Archiving with: `#{command}`"
+      output = `#{command}`
+      logger.debug "Exited with status: '#{$?.exitstatus}' ouput: '#{output}'"
+      $?.success?
+    end
       
     def files_to_pack
       Dir.entries(path) - ['.', '..'] - exclude

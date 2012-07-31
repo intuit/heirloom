@@ -16,31 +16,23 @@ describe Heirloom do
     end
 
     it "should build an archive" do
-      directory_mock = double "directory"
+      directory_stub = stub :build_artifact_from_directory => '/tmp/build_dir',
+                            :local_build                   => '/var/tmp/file.tar.gz'
       git_dir_mock = double "git directory mock"
-      git_commit_mock = double "git commit mock"
+      author_stub = stub :name => 'weaver'
+      git_commit_stub = stub :id_abbrev => 'abc123',
+                             :message   => 'yoyo',
+                             :author    => author_stub
       Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
                                                     :exclude => ['.dir_to_exclude'],
                                                     :config  => @config_mock).
-                                               and_return(directory_mock)
-      directory_mock.should_receive(:build_artifact_from_directory).
-                     and_return '/tmp/file'
-      directory_mock.should_receive(:local_build).and_return('/tmp/file')
+                                               and_return directory_stub
       @builder.should_receive(:create_artifact_record)
       Heirloom::GitDirectory.should_receive(:new).
                              with(:path => 'path_to_build').
                              and_return git_dir_mock
       git_dir_mock.should_receive(:commit).
-                   with('123').and_return git_commit_mock
-      git_commit_mock.should_receive(:id_abbrev).exactly(2).times.
-                      and_return 'abc123'
-      git_commit_mock.should_receive(:message).exactly(2).times.
-                      and_return 'yoyo'
-      author_mock = double "git commit author mock"
-      git_commit_mock.should_receive(:author).exactly(2).times.
-                     and_return author_mock
-      author_mock.should_receive(:name).exactly(2).times.
-                  and_return 'weaver'
+                   with('123').and_return git_commit_stub
       commit_attributes = { 'sha'             => '123',
                             'abbreviated_sha' => 'abc123',
                             'message'         => 'yoyo',
@@ -50,40 +42,36 @@ describe Heirloom do
 
       @builder.build(:exclude   => ['.dir_to_exclude'],
                      :directory => 'path_to_build',
-                     :git       => 'true').should == '/tmp/file'
+                     :git       => 'true').should == '/var/tmp/file.tar.gz'
     end
 
     it "should build an archive and log a warning if the git sha is not found" do
-      directory_mock = double "directory"
+      directory_stub = stub :build_artifact_from_directory => '/tmp/build_dir',
+                            :local_build                   => '/var/tmp/file.tar.gz'
       git_dir_mock = double "git directory mock"
-      git_commit_mock = double "git commit mock"
       Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
                                                     :exclude => ['.dir_to_exclude'],
                                                     :config  => @config_mock).
-                                               and_return(directory_mock)
-      directory_mock.should_receive(:build_artifact_from_directory).
-                     and_return '/tmp/file'
-      directory_mock.should_receive(:local_build).and_return('/tmp/file')
+                                               and_return directory_stub
       @builder.should_receive(:create_artifact_record)
       Heirloom::GitDirectory.should_receive(:new).
                              with(:path => 'path_to_build').
                              and_return git_dir_mock
+      @logger_stub.should_receive(:warn).with "Could not find Git sha: 123."
       git_dir_mock.should_receive(:commit).
                    with('123').and_return false
       @builder.build(:exclude   => ['.dir_to_exclude'],
                      :directory => 'path_to_build',
-                     :git       => 'true').should == '/tmp/file'
+                     :git       => 'true').should == '/var/tmp/file.tar.gz'
     end
 
 
     it "should return false if the build fails" do
-      directory_mock = double "directory"
+      directory_stub = stub :build_artifact_from_directory => false
       Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
                                                     :exclude => ['.dir_to_exclude'],
                                                     :config  => @config_mock).
-                                               and_return(directory_mock)
-      directory_mock.should_receive(:build_artifact_from_directory).
-                     and_return false
+                                               and_return directory_stub
       @builder.build(:exclude   => ['.dir_to_exclude'],
                      :directory => 'path_to_build',
                      :git       => 'true').should be_false

@@ -6,15 +6,18 @@ module Heirloom
 
   class GitDirectory
 
-    attr_accessor :path
-
     def initialize(args)
-      self.path = args[:path]
+      @path = args[:path]
     end
 
     def commit(sha = nil)
-      repo = Repo.new path
-      sha ? repo.commits(sha).first : repo.commits.first
+      repo = Repo.new @path
+      if sha 
+        commit = repo.commits(sha)
+        commit ? commit.first : false
+      else
+        repo.commits.first
+      end
     end
 
   end

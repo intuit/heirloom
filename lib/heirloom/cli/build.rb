@@ -26,17 +26,21 @@ module Heirloom
 
         @archive.destroy if @archive.exists?
                           
-        archive_file = @archive.build :bucket_prefix   => @opts[:bucket_prefix],
-                                      :directory       => @opts[:directory],
-                                      :exclude         => @opts[:exclude].split(','),
-                                      :git             => @opts[:git]
+        build = @archive.build :bucket_prefix   => @opts[:bucket_prefix],
+                               :directory       => @opts[:directory],
+                               :exclude         => @opts[:exclude].split(','),
+                               :git             => @opts[:git]
 
-        @archive.upload :bucket_prefix   => @opts[:bucket_prefix],
-                        :regions         => @opts[:regions],
-                        :public_readable => @opts[:public],
-                        :file            => archive_file
-
-        @archive.cleanup
+        if build
+          @archive.upload :bucket_prefix   => @opts[:bucket_prefix],
+                          :regions         => @opts[:regions],
+                          :public_readable => @opts[:public],
+                          :file            => build
+          @archive.cleanup
+        else
+          @logger.error "Build failed."
+          exit 1
+        end
       end
 
       private

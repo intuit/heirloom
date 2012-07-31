@@ -4,36 +4,81 @@ describe Heirloom do
 
     before do
       @config_mock = double 'config'
-      @logger_mock = double 'logger'
+      @logger_stub = stub :debug => 'true', :info => 'true', :warn => 'true'
       @simpledb_mock = double 'simple db'
-      @config_mock.should_receive(:logger).and_return(@logger_mock)
+      @config_mock.should_receive(:logger).and_return(@logger_stub)
       Heirloom::AWS::SimpleDB.should_receive(:new).with(:config => @config_mock).
                               and_return(@simpledb_mock)
       @simpledb_mock.should_receive(:create_domain).with 'tim'
       @builder = Heirloom::Builder.new :config => @config_mock,
-                                               :name   => 'tim',
-                                               :id     => '123'
+                                       :name   => 'tim',
+                                       :id     => '123'
     end
 
     it "should build an archive" do
-      directory_mock = double "directory"
+      directory_stub = stub :build_artifact_from_directory => '/tmp/build_dir',
+                            :local_build                   => '/var/tmp/file.tar.gz'
+      git_dir_mock = double "git directory mock"
+      author_stub = stub :name => 'weaver'
+      git_commit_stub = stub :id_abbrev => 'abc123',
+                             :message   => 'yoyo',
+                             :author    => author_stub
       Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
                                                     :exclude => ['.dir_to_exclude'],
                                                     :config  => @config_mock).
-                                               and_return(directory_mock)
-      directory_mock.should_receive :build_artifact_from_directory
-      directory_mock.should_receive(:local_build).and_return('/tmp/file')
+                                               and_return directory_stub
       @builder.should_receive(:create_artifact_record)
-      @builder.should_receive(:add_git_commit)
-      @logger_mock.should_receive(:info).with("Build complete.")
+      Heirloom::GitDirectory.should_receive(:new).
+                             with(:path => 'path_to_build').
+                             and_return git_dir_mock
+      git_dir_mock.should_receive(:commit).
+                   with('123').and_return git_commit_stub
+      commit_attributes = { 'sha'             => '123',
+                            'abbreviated_sha' => 'abc123',
+                            'message'         => 'yoyo',
+                            'author'          => 'weaver' }
+      @simpledb_mock.should_receive(:put_attributes).
+                     with('tim', '123', commit_attributes)
+
       @builder.build(:exclude   => ['.dir_to_exclude'],
                      :directory => 'path_to_build',
-                     :git       => 'true').should == '/tmp/file'
+                     :git       => 'true').should == '/var/tmp/file.tar.gz'
+    end
+
+    it "should build an archive and log a warning if the git sha is not found" do
+      directory_stub = stub :build_artifact_from_directory => '/tmp/build_dir',
+                            :local_build                   => '/var/tmp/file.tar.gz'
+      git_dir_mock = double "git directory mock"
+      Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
+                                                    :exclude => ['.dir_to_exclude'],
+                                                    :config  => @config_mock).
+                                               and_return directory_stub
+      @builder.should_receive(:create_artifact_record)
+      Heirloom::GitDirectory.should_receive(:new).
+                             with(:path => 'path_to_build').
+                             and_return git_dir_mock
+      @logger_stub.should_receive(:warn).with "Could not find Git sha: 123."
+      git_dir_mock.should_receive(:commit).
+                   with('123').and_return false
+      @builder.build(:exclude   => ['.dir_to_exclude'],
+                     :directory => 'path_to_build',
+                     :git       => 'true').should == '/var/tmp/file.tar.gz'
+    end
+
+
+    it "should return false if the build fails" do
+      directory_stub = stub :build_artifact_from_directory => false
+      Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
+                                                    :exclude => ['.dir_to_exclude'],
+                                                    :config  => @config_mock).
+                                               and_return directory_stub
+      @builder.build(:exclude   => ['.dir_to_exclude'],
+                     :directory => 'path_to_build',
+                     :git       => 'true').should be_false
     end
 
     it "should cleanup the local archive" do
       @builder.local_build = '/tmp/file'
-      @logger_mock.should_receive(:info).with("Cleaning up local build /tmp/file.")
       File.should_receive(:delete).with('/tmp/file')
       @builder.cleanup
     end

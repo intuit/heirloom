@@ -7,11 +7,10 @@ describe Heirloom::Directory do
     before do
       @config_mock = double 'config'
       @logger_stub = stub :debug => 'true', :info => 'true', :warn => 'true'
-      @config_mock.should_receive(:logger).and_return(@logger_stub)
+      @config_mock.stub(:logger).and_return(@logger_stub)
       @directory = Heirloom::Directory.new :config  => @config_mock,
                                            :exclude => ['.', '..', 'dont_pack_me'],
                                            :path    => '/target/dir'
-      file_mock = double 'file'
       output_mock = double 'output mock'
       Dir.stub :tmpdir => '/tmp/dir'
       Kernel.stub :rand => 0

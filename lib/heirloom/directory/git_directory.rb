@@ -12,7 +12,7 @@ module Heirloom
 
     def commit(sha = nil)
       repo = Repo.new @path
-      if sha 
+      if sha
         commit = repo.commits(sha)
         commit ? commit.first : false
       else

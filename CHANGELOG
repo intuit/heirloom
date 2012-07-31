@@ -2,6 +2,7 @@
 
 * Switched from Minitar to shell
 * Removed Minitar gem
+* Fixed git commit flag
 * Updated specs
 * Updated gems
 

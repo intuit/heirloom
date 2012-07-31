@@ -4,9 +4,9 @@ describe Heirloom do
 
     before do
       @config_mock = double 'config'
-      @logger_mock = double 'logger'
+      @logger_stub = stub :debug => 'true', :info => 'true', :warn => 'true'
       @simpledb_mock = double 'simple db'
-      @config_mock.should_receive(:logger).and_return(@logger_mock)
+      @config_mock.should_receive(:logger).and_return(@logger_stub)
       Heirloom::AWS::SimpleDB.should_receive(:new).with(:config => @config_mock).
                               and_return(@simpledb_mock)
       @simpledb_mock.should_receive(:create_domain).with 'tim'
@@ -19,7 +19,6 @@ describe Heirloom do
       directory_mock = double "directory"
       git_dir_mock = double "git directory mock"
       git_commit_mock = double "git commit mock"
-      @logger_mock.should_receive(:info).exactly(5).times
       Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
                                                     :exclude => ['.dir_to_exclude'],
                                                     :config  => @config_mock).
@@ -58,8 +57,6 @@ describe Heirloom do
       directory_mock = double "directory"
       git_dir_mock = double "git directory mock"
       git_commit_mock = double "git commit mock"
-      @logger_mock.should_receive(:info).exactly(1).times
-      @logger_mock.should_receive(:warn).exactly(1).times
       Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
                                                     :exclude => ['.dir_to_exclude'],
                                                     :config  => @config_mock).
@@ -94,7 +91,6 @@ describe Heirloom do
 
     it "should cleanup the local archive" do
       @builder.local_build = '/tmp/file'
-      @logger_mock.should_receive(:info).with("Cleaning up local build /tmp/file.")
       File.should_receive(:delete).with('/tmp/file')
       @builder.cleanup
     end

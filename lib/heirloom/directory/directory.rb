@@ -30,7 +30,7 @@ module Heirloom
     private
 
     def build_archive(local_build, files_to_pack)
-      command = "tar czpf #{local_build} #{files_to_pack.join(' ')}"
+      command = "tar czf #{local_build} #{files_to_pack.join(' ')}"
       logger.info "Archiving with: `#{command}`"
       output = `#{command}`
       logger.debug "Exited with status: '#{$?.exitstatus}' ouput: '#{output}'"

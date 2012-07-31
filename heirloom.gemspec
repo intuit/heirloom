@@ -24,6 +24,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'fog'
   s.add_runtime_dependency 'grit'
   s.add_runtime_dependency 'logger'
-  s.add_runtime_dependency 'minitar'
   s.add_runtime_dependency 'trollop'
 end

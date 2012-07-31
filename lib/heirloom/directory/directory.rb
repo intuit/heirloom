@@ -1,8 +1,4 @@
-require 'zlib'
-require 'archive/tar/minitar'
 require 'tmpdir'
-
-include Archive::Tar
 
 module Heirloom
 
@@ -28,12 +24,18 @@ module Heirloom
       logger.info "Excluding #{exclude.to_s}."
       logger.info "Adding #{files_to_pack.to_s}."
 
-      tgz = Zlib::GzipWriter.new File.open(local_build, 'wb')
-
-      Minitar.pack(files_to_pack, tgz)
+      build_archive local_build, files_to_pack
     end
 
     private
+
+    def build_archive(local_build, files_to_pack)
+      command = "tar czpf #{local_build} #{files_to_pack.join(' ')}"
+      logger.info "Archiving with: `#{command}`"
+      output = `#{command}`
+      logger.debug "Exited with status: '#{$?.exitstatus}' ouput: '#{output}'"
+      $?.success?
+    end
       
     def files_to_pack
       Dir.entries(path) - ['.', '..'] - exclude

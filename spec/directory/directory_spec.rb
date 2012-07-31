@@ -3,15 +3,14 @@ require 'spec_helper'
 describe Heirloom::Directory do
 
   describe 'build_artifact_from_directory' do
-
     before do
       @config_mock = double 'config'
       @logger_stub = stub :debug => 'true', :info => 'true', :warn => 'true'
       @config_mock.stub(:logger).and_return(@logger_stub)
-      @directory = Heirloom::Directory.new :config  => @config_mock,
+      @directory   = Heirloom::Directory.new :config  => @config_mock,
                                            :exclude => ['.', '..', 'dont_pack_me'],
                                            :path    => '/target/dir'
-      output_mock = double 'output mock'
+      output_mock  = double 'output mock'
       Dir.stub :tmpdir => '/tmp/dir'
       Kernel.stub :rand => 0
       Dir.should_receive(:entries).with('/target/dir').

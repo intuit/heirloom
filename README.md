@@ -1,7 +1,7 @@
 Heirloom
 ========
 
-Heirloom is packages and distributes files to cloud storage services.  Heirloom tracks metadata about those deployments, both about the file locations, as well as arbitrary metadata which can be set by an engineer or build process.
+Heirloom packages and distributes files to cloud storage services for deployment.  Heirloom tracks metadata about those deployments, both about the file locations, as well as arbitrary metadata which can be set by an engineer or build process.
 
 Installation
 ------------

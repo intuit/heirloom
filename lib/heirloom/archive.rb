@@ -27,6 +27,10 @@ module Heirloom
       builder.build args
     end
 
+    def count
+      reader.count
+    end
+
     def download(args)
       downloader.download args
     end

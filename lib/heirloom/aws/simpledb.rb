@@ -23,6 +23,14 @@ module Heirloom
         @sdb.create_domain(domain) unless domain_exists?(domain)
       end
 
+      def delete_domain(domain)
+        @sdb.delete_domain(domain)
+      end
+
+      def domain_empty?(domain)
+        count(domain).zero?
+      end
+
       def put_attributes(domain, key, attributes, options = {})
         @sdb.put_attributes domain, key, attributes, options
       end
@@ -33,6 +41,11 @@ module Heirloom
 
       def delete(domain, key)
         @sdb.delete_attributes domain, key
+      end
+
+      def count(domain)
+        body = @sdb.select("SELECT count(*) FROM #{domain}").body
+        body['Items']['Domain']['Count'].first.to_i
       end
 
     end

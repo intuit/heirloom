@@ -4,7 +4,7 @@ module Heirloom
 
   class Directory
 
-    attr_writer :local_build
+    attr_reader :local_build
 
     def initialize(args)
       @config = args[:config]
@@ -16,9 +16,7 @@ module Heirloom
     def build_artifact_from_directory
       random_text = (0...8).map{65.+(Kernel.rand(25)).chr}.join
 
-      unless @local_build
-        @local_build = File.join(Dir.tmpdir, random_text + ".tar.gz")
-      end
+      @local_build = File.join(Dir.tmpdir, random_text + ".tar.gz")
 
       @logger.info "Building Heirloom '#{@local_build}' from '#{@path}'."
       @logger.info "Excluding #{@exclude.to_s}."

@@ -10,9 +10,10 @@ module Heirloom
     def initialize(args)
       @config = args[:config]
       @name = args[:name]
+      @domain = "heirloom_#{@name}"
       @id = args[:id]
       @logger = @config.logger
-      sdb.create_domain @name
+      sdb.create_domain @domain
     end
 
     def build(args)
@@ -62,7 +63,7 @@ module Heirloom
         @logger.info "Git #{k}: #{v}"
       end
 
-      sdb.put_attributes @name, @id, attributes
+      sdb.put_attributes @domain, @id, attributes
     end
 
     def create_artifact_record
@@ -70,7 +71,7 @@ module Heirloom
                      'built_at' => Time.now.utc.iso8601,
                      'id'       => @id }
       @logger.info "Create artifact record #{@id}."
-      sdb.put_attributes @name, @id, attributes
+      sdb.put_attributes @domain, @id, attributes
     end
 
     def sdb

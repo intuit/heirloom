@@ -6,9 +6,9 @@ module Heirloom
 
       def initialize(args)
         @config = args[:config]
-        @sdb = Fog::AWS::SimpleDB.new :aws_access_key_id => @config.access_key,
+        @sdb = Fog::AWS::SimpleDB.new :aws_access_key_id     => @config.access_key,
                                       :aws_secret_access_key => @config.secret_key,
-                                      :region => @config.primary_region
+                                      :region                => @config.primary_region
       end
 
       def domains

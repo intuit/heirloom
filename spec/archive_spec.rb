@@ -3,12 +3,10 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-      @config_mock = mock 'config'
-      @logger_mock = mock 'logger'
-      Heirloom::Config.should_receive(:new).and_return @config_mock
-      @archive = Heirloom::Archive.new :logger => @logger_mock,
-                                       :name   => 'chef',
-                                       :id     => '123'
+    @config_mock = mock 'config'
+    @archive = Heirloom::Archive.new :config => @config_mock,
+                                     :name   => 'chef',
+                                     :id     => '123'
   end
 
 

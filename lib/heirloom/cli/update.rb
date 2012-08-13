@@ -2,16 +2,20 @@ module Heirloom
   module CLI
     class Update
 
+      include Heirloom::CLI::Shared
+
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
-        @config = CLI::Shared.load_config :logger => @logger,
-                                          :opts   => @opts
-        exit 1 unless CLI::Shared.valid_options? :provided => @opts,
-                                                 :required => [:name, :id, 
-                                                               :attribute, 
-                                                               :updated_value],
-                                                 :logger   => @logger
+        @config = load_config :logger => @logger,
+                              :opts   => @opts
+
+        exit 1 unless valid_options? :provided => @opts,
+                                     :required => [:name, :id, 
+                                                   :attribute, 
+                                                   :updated_value],
+                                     :logger   => @logger
+
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config

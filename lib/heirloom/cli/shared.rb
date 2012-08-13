@@ -2,7 +2,7 @@ module Heirloom
   module CLI
     module Shared
 
-      def self.valid_options?(args)
+      def valid_options?(args)
         provided = args[:provided]
         required = args[:required]
         logger = args[:logger]
@@ -23,7 +23,7 @@ module Heirloom
         missing_opts.empty?
       end
 
-      def self.load_config(args)
+      def load_config(args)
         opts = args[:opts]
         logger = args[:logger]
         config = Config.new :logger => logger

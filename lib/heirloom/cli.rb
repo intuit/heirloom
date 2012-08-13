@@ -1,5 +1,6 @@
 require 'trollop'
 
+require 'heirloom/cli/shared'
 require 'heirloom/cli/authorize'
 require 'heirloom/cli/build'
 require 'heirloom/cli/list'
@@ -7,8 +8,6 @@ require 'heirloom/cli/show'
 require 'heirloom/cli/update'
 require 'heirloom/cli/download'
 require 'heirloom/cli/destroy'
-
-require 'heirloom/cli/shared'
 
 module Heirloom
   module CLI

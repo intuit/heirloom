@@ -5,12 +5,14 @@ module Heirloom
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
+        @config = CLI::Shared.load_config :logger => @logger,
+                                          :opts   => @opts
         exit 1 unless CLI::Shared.valid_options? :provided => @opts,
                                                  :required => [:name],
                                                  :logger   => @logger
         id = @opts[:id] ? @opts[:id] : latest_id
         @archive = Archive.new :name   => @opts[:name],
-                               :logger => @logger,
+                               :config => @config,
                                :id     => id
       end
       
@@ -40,10 +42,12 @@ If -i is ommited, latest version is displayed.
 
 EOS
           opt :help, "Display Help"
+          opt :key, "AWS Access Key ID", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
           opt :id, "id of the archive to display.", :type => :string
+          opt :secret, "AWS Secret Access Key", :type => :string
         end
       end
 

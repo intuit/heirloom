@@ -23,6 +23,15 @@ module Heirloom
         missing_opts.empty?
       end
 
+      def self.load_config(args)
+        opts = args[:opts]
+        logger = args[:logger]
+        config = Config.new :logger => logger
+        config.access_key = opts[:key] if opts[:key_given]
+        config.secret_key = opts[:secret] if opts[:secret_given]
+        config
+      end
+
     end
   end
 end

@@ -13,8 +13,7 @@ module Heirloom
   class Archive
 
     def initialize(args)
-      @config = Config.new :config => args[:config],
-                           :logger => args[:logger]
+      @config = args[:config]
       @name = args[:name]
       @id = args[:id]
     end

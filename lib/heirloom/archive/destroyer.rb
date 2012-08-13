@@ -31,7 +31,17 @@ module Heirloom
                                     :key_folder => @name
         end
       end
+
       sdb.delete @domain, @id
+
+      # Simple DB is eventually consisten
+      # Sleep for 3 sec for changes to reflect
+      Kernel.sleep 3
+
+      if sdb.domain_empty? @domain
+        @logger.info "Domain #{@domain} empty. Destroying."
+        sdb.delete_domain @domain
+      end
       @logger.info "Destroy complete."
     end
 

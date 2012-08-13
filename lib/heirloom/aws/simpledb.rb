@@ -23,6 +23,14 @@ module Heirloom
         @sdb.create_domain(domain) unless domain_exists?(domain)
       end
 
+      def delete_domain(domain)
+        @sdb.delete_domain(domain)
+      end
+
+      def domain_empty?(domain)
+        count(domain) == 0
+      end
+
       def put_attributes(domain, key, attributes, options = {})
         @sdb.put_attributes domain, key, attributes, options
       end

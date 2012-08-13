@@ -189,5 +189,16 @@ describe Heirloom do
       mock.should_receive(:regions)
       @archive.regions
     end
+
+    it "should call the count method for an archive" do
+      mock = double('Mock')
+      Heirloom::Reader.should_receive(:new).
+                          with(:config => @config_mock,
+                               :name   => 'chef',
+                               :id     => '123').
+                          and_return mock
+      mock.should_receive(:count)
+      @archive.count
+    end
   end
 end

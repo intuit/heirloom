@@ -11,7 +11,7 @@ describe Heirloom do
     @logger_mock = mock 'logger'
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'
-    Trollop.should_receive(:options).and_return options
+    Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_mock
     Heirloom::CLI::Authorize.any_instance.should_receive(:load_config).

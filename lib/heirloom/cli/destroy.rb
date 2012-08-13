@@ -5,6 +5,8 @@ module Heirloom
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
+        @config = CLI::Shared.load_config :logger => @logger,
+                                          :opts   => @opts
         exit 1 unless CLI::Shared.valid_options? :provided => @opts,
                                                  :required => [:name, :id],
                                                  :logger   => @logger
@@ -12,7 +14,7 @@ module Heirloom
         @id = @opts[:id]
         @archive = Archive.new :name   => @name,
                                :id     => @id,
-                               :logger => @logger
+                               :config => @config
       end
       
       def destroy
@@ -35,9 +37,11 @@ heirloom destroy -n NAME -i ID [-l LOG_LEVEL]
 EOS
           opt :help, "Display Help"
           opt :id, "ID of the archive to display.", :type => :string
+          opt :key, "AWS Access Key ID", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
+          opt :secret, "AWS Secret Access Key", :type => :string
         end
       end
     end

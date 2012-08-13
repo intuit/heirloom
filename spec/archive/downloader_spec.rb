@@ -7,8 +7,8 @@ describe Heirloom do
       @logger_mock = double 'logger'
       @config_mock.should_receive(:logger).and_return(@logger_mock)
       @downloader = Heirloom::Downloader.new :config => @config_mock,
-                                                     :name   => 'tim',
-                                                     :id     => '123'
+                                             :name   => 'tim',
+                                             :id     => '123'
     end
 
     it "should download an archive" do

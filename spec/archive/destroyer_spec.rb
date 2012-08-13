@@ -7,8 +7,8 @@ describe Heirloom do
       @logger_mock = double 'logger'
       @config_mock.should_receive(:logger).and_return(@logger_mock)
       @destroyer = Heirloom::Destroyer.new :config => @config_mock,
-                                                   :name   => 'tim',
-                                                   :id     => '123'
+                                           :name   => 'tim',
+                                           :id     => '123'
     end
 
     it "should destroy the given archive" do
@@ -35,7 +35,7 @@ describe Heirloom do
                              :bucket     => 'bucket-us-west-1'
       sdb_mock = mock 'sdb'
       @destroyer.should_receive(:sdb).and_return sdb_mock
-      sdb_mock.should_receive(:delete).with 'tim', '123'
+      sdb_mock.should_receive(:delete).with 'heirloom_tim', '123'
       @logger_mock.should_receive(:info).
                    with "Destroy complete."
       @destroyer.destroy :regions => ['us-west-1']

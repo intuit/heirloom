@@ -23,7 +23,8 @@ module Heirloom
       private
 
       def latest_id
-        @archive = Archive.new :name => @opts[:name]
+        @archive = Archive.new :name   => @opts[:name],
+                               :config => @config
         @archive.list(1).first
       end
 

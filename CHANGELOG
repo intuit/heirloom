@@ -3,6 +3,7 @@
 * Prefixing domain name with heirloom_
 * Adding CLI support for specific AWS creds
 * Added specs
+* Added support to delete domain when no records exist
 
 ## v0.3.1:
 

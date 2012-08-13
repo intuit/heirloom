@@ -27,9 +27,7 @@ describe Heirloom do
 
   it "should list ids for given archive" do
     @archive_mock.should_receive(:list).with(100).and_return(['1','2'])
-    JSON.should_receive(:pretty_generate).with ['1','2'], 
-                                               { :allow_nan   => true, 
-                                                 :max_nesting => false }
+    @cli_list.should_receive(:jj).with ['1','2']
     @cli_list.list
   end
 

@@ -27,9 +27,7 @@ describe Heirloom do
 
   it "should show a given id" do
     @archive_mock.should_receive(:show).and_return( { 'id' => '1.0.0' } )
-    JSON.should_receive(:pretty_generate).with({ 'id' => '1.0.0' },
-                                               { :allow_nan   => true, 
-                                                 :max_nesting => false })
+    @cli_show.should_receive(:jj).with 'id' => '1.0.0'
     @cli_show.show
   end
 

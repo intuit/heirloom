@@ -7,6 +7,8 @@ module Heirloom
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
+        @config = CLI::Shared.load_config :logger => @logger,
+                                          :opts   => @opts
         exit 1 unless CLI::Shared.valid_options? :provided => @opts, 
                                                  :required => [:name, :id, :regions, 
                                                                :bucket_prefix, 
@@ -14,7 +16,7 @@ module Heirloom
                                                  :logger   => @logger
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
-                               :logger => @logger
+                               :config => @config
       end
 
       def build
@@ -63,6 +65,7 @@ For example: -b 'test' -r 'us-west-1'  will expect bucket 'test-us-west-1' to be
                                                         :default => '.'
           opt :exclude, "Comma spereate list of files or directories to exclude.", :type    => :string,
                                                                                    :default => '.git'
+          opt :key, "AWS Access Key ID", :type => :string
           opt :git, "Read git commit information from directory and set as archive attributes."
           opt :help, "Display Help"
           opt :id, "id for archive (when -g specified, assumed to be GIT sha).", :type => :string
@@ -72,6 +75,7 @@ For example: -b 'test' -r 'us-west-1'  will expect bucket 'test-us-west-1' to be
           opt :public, "Set this archive as public readable?"
           opt :regions, "Region(s) to upload archive.  Can be set multiple times.", :type  => :string,
                                                                                     :multi => true
+          opt :secret, "AWS Secret Access Key", :type => :string
         end
       end
 

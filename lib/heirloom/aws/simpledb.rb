@@ -28,7 +28,7 @@ module Heirloom
       end
 
       def domain_empty?(domain)
-        count(domain) == 0
+        count(domain).zero?
       end
 
       def put_attributes(domain, key, attributes, options = {})

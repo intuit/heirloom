@@ -37,7 +37,7 @@ describe Heirloom do
                   with(:bucket_prefix => 'base',
                        :regions       => ["us-west-1", "us-west-2"]).
                   and_return true
-    @archive_mock.should_receive(:exists?).and_return false
+    @archive_mock.stub :exists? => false
     @archive_mock.should_receive(:build).
                   with(:bucket_prefix => 'base',
                        :directory     => '/buildme',

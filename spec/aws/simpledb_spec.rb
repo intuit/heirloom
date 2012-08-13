@@ -47,4 +47,14 @@ describe Heirloom do
     @sdb.delete('domain', 'key')
   end
 
+  it "should count the number of entries in the domain" do
+    body_mock = mock 'return body'
+    data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
+    @fog_mock.should_receive(:select).
+              with('SELECT count(*) FROM heirloom_domain').
+              and_return body_mock
+    body_mock.should_receive(:body).and_return data
+    @sdb.count('heirloom_domain').should == 1
+  end
+
 end

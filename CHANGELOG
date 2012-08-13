@@ -1,3 +1,9 @@
+## v0.4.0:
+
+* Prefixing domain name with heirloom_
+* Adding CLI support for specific AWS creds
+* Added specs
+
 ## v0.3.1:
 
 * Switched from Minitar to shell

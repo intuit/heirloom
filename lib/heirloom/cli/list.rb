@@ -15,6 +15,7 @@ module Heirloom
       end
       
       def list(count = @opts[:count])
+        @logger.debug "#{@archive.count} archives found."
         jj @archive.list(count)
       end
 

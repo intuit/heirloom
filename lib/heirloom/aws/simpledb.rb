@@ -35,6 +35,11 @@ module Heirloom
         @sdb.delete_attributes domain, key
       end
 
+      def count(domain)
+        body = @sdb.select("SELECT count(*) FROM #{domain}").body
+        body['Items']['Domain']['Count'].first.to_i
+      end
+
     end
   end
 

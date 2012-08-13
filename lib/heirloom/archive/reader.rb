@@ -52,6 +52,10 @@ module Heirloom
       end
     end
 
+    def count
+      sdb.count @domain
+    end
+
     def show
       query = sdb.select "select * from #{@domain} where itemName() = '#{@id}'"
       items = query[@id] ? query[@id] : {}

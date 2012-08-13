@@ -8,7 +8,7 @@ describe Heirloom::Builder do
     @simpledb_mock = double 'simple db'
     Heirloom::AWS::SimpleDB.should_receive(:new).with(:config => @config_mock).
                             and_return(@simpledb_mock)
-    @simpledb_mock.should_receive(:create_domain).with 'tim'
+    @simpledb_mock.should_receive(:create_domain).with 'heirloom_tim'
     @builder       = Heirloom::Builder.new :config => @config_mock,
                                            :name   => 'tim',
                                            :id     => '123'
@@ -46,7 +46,7 @@ describe Heirloom::Builder do
                               'message'         => 'yoyo',
                               'author'          => 'weaver' }
         @simpledb_mock.should_receive(:put_attributes).
-                       with('tim', '123', commit_attributes)
+                       with('heirloom_tim', '123', commit_attributes)
 
         @builder.build(:exclude   => ['.dir_to_exclude'],
                        :directory => 'path_to_build',

@@ -7,6 +7,7 @@ module Heirloom
       @name = args[:name]
       @id = args[:id]
 
+      @domain = "heirloom_#{@name}"
       @logger = @config.logger
     end
 
@@ -14,7 +15,7 @@ module Heirloom
       attribute = args[:attribute]
       value = args[:value]
 
-      sdb.put_attributes @name, @id, { attribute => value }, { :replace => attribute }
+      sdb.put_attributes @domain, @id, { attribute => value }, { :replace => attribute }
       @logger.info "Updated #{@name} (#{@id}): #{attribute} = #{value}."
     end
 

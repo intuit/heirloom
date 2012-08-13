@@ -32,6 +32,7 @@ module Heirloom
         bucket = args[:bucket]
         id = args[:id]
         name = args[:name]
+        domain = "heirloom_#{name}"
         key_folder = name
         key_name = "#{id}.tar.gz"
 
@@ -39,13 +40,13 @@ module Heirloom
         http_endpoint = "http://#{endpoints[@region]}/#{bucket}/#{key_folder}/#{key_name}"
         https_endpoint = "https://#{endpoints[@region]}/#{bucket}/#{key_folder}/#{key_name}"
 
-        sdb.put_attributes name, id, { "#{@region}-s3-url" => s3_endpoint }
+        sdb.put_attributes domain, id, { "#{@region}-s3-url" => s3_endpoint }
         @logger.info "Adding attribute #{s3_endpoint}."
 
-        sdb.put_attributes name, id, { "#{@region}-http-url" => http_endpoint }
+        sdb.put_attributes domain, id, { "#{@region}-http-url" => http_endpoint }
         @logger.info "Adding attribute #{http_endpoint}."
 
-        sdb.put_attributes name, id, { "#{@region}-https-url" => https_endpoint }
+        sdb.put_attributes domain, id, { "#{@region}-https-url" => https_endpoint }
         @logger.info "Adding attribute #{https_endpoint}."
       end
 

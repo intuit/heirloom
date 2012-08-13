@@ -18,7 +18,7 @@ describe Heirloom do
                             with(:config => @config_mock).
                             and_return sdb_mock
     sdb_mock.should_receive(:put_attributes).
-             with('tim', '123', { 'attr' => 'val' }, { :replace => 'attr' })
+             with('heirloom_tim', '123', { 'attr' => 'val' }, { :replace => 'attr' })
     @updater.update :attribute => 'attr',
                     :value     => 'val'
   end

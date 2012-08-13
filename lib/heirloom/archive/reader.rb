@@ -2,21 +2,20 @@ module Heirloom
 
   class Reader
 
-    attr_accessor :config, :id, :name
-
     def initialize(args)
-      self.config = args[:config]
-      self.name = args[:name]
-      self.id = args[:id]
-      @logger = config.logger
+      @config = args[:config]
+      @name = args[:name]
+      @domain = "heirloom_#{@name}"
+      @id = args[:id]
+      @logger = @config.logger
     end
 
     def exists?
-      if show.any?
-        @logger.debug "Found entry for #{id} in SimpleDB."
+      if domain_exists? && show.any?
+        @logger.debug "Found entry for #{@id} in SimpleDB."
         true
       else
-        @logger.debug "Entry for #{id} not found in SimpleDB."
+        @logger.debug "Entry for #{@id} not found in SimpleDB."
         false
       end
     end
@@ -29,7 +28,7 @@ module Heirloom
     end
 
     def get_bucket(args)
-      @logger.debug "Looking for bucket in #{args[:region]} for #{id}"
+      @logger.debug "Looking for bucket in #{args[:region]} for #{@id}"
       url = get_url(args)
       if url
         bucket = url.gsub('s3://', '').split('/').first
@@ -53,9 +52,13 @@ module Heirloom
       end
     end
 
+    def count
+      sdb.count @domain
+    end
+
     def show
-      query = sdb.select "select * from #{name} where itemName() = '#{id}'"
-      items = query[id] ? query[id] : {}
+      query = sdb.select "select * from #{@domain} where itemName() = '#{@id}'"
+      items = query[@id] ? query[@id] : {}
       Hash.new.tap do |hash|
         items.each_pair.map do |key,value|
           hash[key] = value.first
@@ -65,15 +68,19 @@ module Heirloom
 
     private
 
+    def domain_exists?
+      sdb.domain_exists? @domain
+    end
+
     def get_url(args)
       return nil unless exists?
-      @logger.debug "Looking for #{args[:region]} endpoint for #{id}"
+      @logger.debug "Looking for #{args[:region]} endpoint for #{@id}"
       url = "#{args[:region]}-s3-url"
       if show[url]
-        @logger.debug "Found #{url} for #{id}."
+        @logger.debug "Found #{url} for #{@id}."
         show[url]
       else
-        @logger.debug "#{args[:region]} endpoint for #{id} not found."
+        @logger.debug "#{args[:region]} endpoint for #{@id} not found."
         nil
       end
     end

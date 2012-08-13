@@ -4,17 +4,16 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    options = { :level    => 'info',
-                :accounts => ['test@test.com'],
-                :name     => 'archive_name',
-                :id       => '1.0.0' }
+    options = { :name  => 'archive_name',
+                :id    => '1.0.0',
+                :level => 'info' }
     @logger_mock = mock 'logger'
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_mock
-    Heirloom::CLI::Authorize.any_instance.should_receive(:load_config).
+    Heirloom::CLI::Destroy.any_instance.should_receive(:load_config).
                              with(:logger => @logger_mock,
                                   :opts   => options).
                              and_return @config_mock
@@ -23,12 +22,12 @@ describe Heirloom do
                            :name => 'archive_name',
                            :config => @config_mock).
                       and_return @archive_mock
-    @cli_authorize = Heirloom::CLI::Authorize.new
+    @cli_destroy = Heirloom::CLI::Destroy.new
   end
 
-  it "should authorize an account" do
-    @archive_mock.should_receive(:authorize).with ['test@test.com']
-    @cli_authorize.authorize
+  it "should destroy an archive" do
+    @archive_mock.should_receive(:destroy)
+    @cli_destroy.destroy
   end
 
 end

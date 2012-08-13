@@ -8,7 +8,7 @@ describe Heirloom do
                 :base_prefix => 'base',
                 :git         => false,
                 :exclude     => ['exclude1', 'exclude2'],
-                :regions     => ['us-west-1', 'us-west-2'],
+                :region      => ['us-west-1', 'us-west-2'],
                 :directory   => '/buildme',
                 :public      => false,
                 :name        => 'archive_name',

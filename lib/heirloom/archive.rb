@@ -51,6 +51,10 @@ module Heirloom
       verifier.buckets_exist? args
     end
 
+    def domain_exists?
+      verifier.domain_exists?
+    end
+
     def destroy
       destroyer.destroy :regions => regions
     end

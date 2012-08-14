@@ -20,6 +20,7 @@ module Heirloom
       end
       
       def download
+        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.download :output => @opts[:output],
                           :region => @opts[:region]
       end

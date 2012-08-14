@@ -74,6 +74,29 @@ describe Heirloom do
       @config_mock.should_receive(:secret_key=).with 'the_secret'
       @object.load_config :logger => @logger_mock, :opts => opts
     end
+
+  end
+
+  context "testing ensure domain" do
+    before do
+      @archive_mock = mock 'archive'
+      @logger_stub = stub 'logger', :error => true
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should ensure the domain for a given archive exists" do
+      @archive_mock.should_receive(:domain_exists?).and_return true
+      @object.ensure_domain_exists :logger  => @logger_mock, 
+                                   :archive => @archive_mock
+    end
+
+    it "should exit if the domain does not exist" do
+      @archive_mock.should_receive(:domain_exists?).and_return false
+      lambda { @object.ensure_domain_exists :logger  => @logger_stub,
+                                            :archive => @archive_mock}.
+                       should raise_error SystemExit
+    end
   end
 
 end

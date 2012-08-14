@@ -21,6 +21,7 @@ module Heirloom
       end
 
       def authorize
+        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.authorize @opts[:accounts]
       end
 

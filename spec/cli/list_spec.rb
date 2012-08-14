@@ -21,6 +21,7 @@ describe Heirloom do
                       with(:name   => 'archive_name',
                            :config => @config_mock).
                       and_return @archive_mock
+    @archive_mock.should_receive(:domain_exists?).and_return true
     @archive_mock.should_receive(:count)
     @cli_list = Heirloom::CLI::List.new
   end

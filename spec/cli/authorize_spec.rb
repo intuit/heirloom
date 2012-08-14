@@ -23,6 +23,7 @@ describe Heirloom do
                            :name => 'archive_name',
                            :config => @config_mock).
                       and_return @archive_mock
+    @archive_mock.should_receive(:domain_exists?).and_return true
     @cli_authorize = Heirloom::CLI::Authorize.new
   end
 

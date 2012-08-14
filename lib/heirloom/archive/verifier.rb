@@ -31,5 +31,16 @@ module Heirloom
       result
     end
 
+    def domain_exists?
+      domain = "heirloom_#{@name}"
+      sdb.domain_exists? domain
+    end
+
+    private
+
+    def sdb
+      @sdb ||= AWS::SimpleDB.new :config => @config
+    end
+
   end
 end

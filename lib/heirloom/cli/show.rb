@@ -21,6 +21,7 @@ module Heirloom
       end
       
       def show
+        ensure_domain_exists :archive => @archive, :logger => @logger
         jj @archive.show
       end
 

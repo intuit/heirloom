@@ -52,7 +52,7 @@ EOS
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
-          opt :id, "id of the archive to display.", :type => :string
+          opt :id, "ID of the archive to display.", :type => :string
           opt :secret, "AWS Secret Access Key", :type => :string
         end
       end

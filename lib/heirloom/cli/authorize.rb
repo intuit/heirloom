@@ -1,5 +1,3 @@
-require 'json'
-
 module Heirloom
   module CLI
     class Authorize
@@ -44,7 +42,7 @@ EOS
           opt :accounts, "AWS Account(s) email to authorize. Can be specified multiple times.", :type  => :string,
                                                                                                 :multi => true
           opt :help, "Display Help"
-          opt :id, "id of the archive to authorize.", :type => :string
+          opt :id, "ID of the archive to authorize.", :type => :string
           opt :key, "AWS Access Key", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'

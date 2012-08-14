@@ -1,4 +1,5 @@
 require 'trollop'
+require 'json'
 
 require 'heirloom/cli/shared'
 require 'heirloom/cli/authorize'

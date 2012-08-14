@@ -20,6 +20,7 @@ module Heirloom
       end
       
       def download
+        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.download :output => @opts[:output],
                           :region => @opts[:region]
       end
@@ -39,7 +40,8 @@ heirloom download -n NAME -i ID -r REGION -o OUTPUT_FILE
 
 EOS
           opt :help, "Display Help"
-          opt :id, "id of the archive to download.", :type => :string
+          opt :base, "Base name of the archive to download. If base is provided, Heirloom will download the archive without consulting simpledb.", :type => :string
+          opt :id, "ID of the archive to download.", :type => :string
           opt :key, "AWS Access Key ID", :type => :string
           opt :name, "Name of archive.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,

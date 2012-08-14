@@ -1,5 +1,3 @@
-require 'json'
-
 module Heirloom
   module CLI
     class Build
@@ -73,7 +71,7 @@ Can be specified multiple times.", :type  => :string,
           opt :key, "AWS Access Key ID", :type => :string
           opt :git, "Read git commit information from directory and set as archive attributes."
           opt :help, "Display Help"
-          opt :id, "id for archive (when -g specified, assumed to be GIT sha).", :type => :string
+          opt :id, "ID for archive (when -g specified, assumed to be GIT sha).", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string

@@ -22,6 +22,7 @@ module Heirloom
       end
       
       def update
+        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.update :attribute  => @opts[:attribute],
                         :value      => @opts[:updated_value]
       end

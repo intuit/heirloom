@@ -19,6 +19,7 @@ module Heirloom
       end
       
       def list(count = @opts[:count])
+        ensure_domain_exists :archive => @archive, :logger => @logger
         @logger.debug "#{@archive.count} archives found."
         jj @archive.list(count)
       end

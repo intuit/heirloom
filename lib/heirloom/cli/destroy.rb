@@ -21,6 +21,7 @@ module Heirloom
       end
       
       def destroy
+        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.destroy
       end
 

@@ -14,6 +14,8 @@ module Heirloom
                                      :required => [:name],
                                      :logger   => @logger
 
+        ensure_domain_exists :name => @opts[:name], :config => @config
+
         id = @opts[:id] ? @opts[:id] : latest_id
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config,
@@ -21,7 +23,6 @@ module Heirloom
       end
       
       def show
-        ensure_domain_exists :archive => @archive, :logger => @logger
         jj @archive.show
       end
 

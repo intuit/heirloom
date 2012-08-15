@@ -14,12 +14,13 @@ module Heirloom
                                      :required => [:name],
                                      :logger   => @logger
 
+        ensure_domain_exists :name => @opts[:name], :config => @config
+
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
       end
       
       def list(count = @opts[:count])
-        ensure_domain_exists :archive => @archive, :logger => @logger
         @logger.debug "#{@archive.count} archives found."
         jj @archive.list(count)
       end

@@ -14,13 +14,14 @@ module Heirloom
                                      :required => [:name, :id, :output],
                                      :logger   => @logger
 
+        ensure_domain_exists :name => @opts[:name], :config => @config
+
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config
       end
       
       def download
-        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.download :output => @opts[:output],
                           :region => @opts[:region]
       end

@@ -13,6 +13,9 @@ module Heirloom
         exit 1 unless valid_options? :provided => @opts,
                                      :required => [:name, :id],
                                      :logger   => @logger
+
+        ensure_domain_exists :name => @opts[:name], :config => @config
+
         @name = @opts[:name]
         @id = @opts[:id]
         @archive = Archive.new :name   => @name,
@@ -21,7 +24,6 @@ module Heirloom
       end
       
       def destroy
-        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.destroy
       end
 

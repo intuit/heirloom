@@ -81,20 +81,24 @@ describe Heirloom do
     before do
       @archive_mock = mock 'archive'
       @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger => @logger_stub
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
+      Heirloom::Archive.should_receive(:new).
+                        with(:name => 'test', :config => @config_stub).
+                        and_return @archive_mock
     end
 
     it "should ensure the domain for a given archive exists" do
       @archive_mock.should_receive(:domain_exists?).and_return true
-      @object.ensure_domain_exists :logger  => @logger_mock, 
-                                   :archive => @archive_mock
+      @object.ensure_domain_exists :config => @config_stub, 
+                                   :name   => 'test'
     end
 
     it "should exit if the domain does not exist" do
       @archive_mock.should_receive(:domain_exists?).and_return false
-      lambda { @object.ensure_domain_exists :logger  => @logger_stub,
-                                            :archive => @archive_mock}.
+      lambda { @object.ensure_domain_exists :config => @config_stub,
+                                            :name   => 'test'}.
                        should raise_error SystemExit
     end
   end

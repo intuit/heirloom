@@ -9,17 +9,20 @@ module Heirloom
         @logger = HeirloomLogger.new :log_level => @opts[:level]
         @config = load_config :logger => @logger,
                               :opts   => @opts
+
         exit 1 unless valid_options? :provided => @opts,
                                      :required => [:accounts, 
                                                    :name, :id],
                                      :logger   => @logger
+
+        ensure_domain_exists :name => @opts[:name], :config => @config
+
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config
       end
 
       def authorize
-        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.authorize @opts[:accounts]
       end
 

@@ -16,13 +16,14 @@ module Heirloom
                                                    :updated_value],
                                      :logger   => @logger
 
+        ensure_domain_exists :name => @opts[:name], :config => @config
+
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config
       end
       
       def update
-        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.update :attribute  => @opts[:attribute],
                         :value      => @opts[:updated_value]
       end

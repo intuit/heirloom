@@ -33,8 +33,13 @@ module Heirloom
       end
 
       def ensure_domain_exists(args)
-        archive = args[:archive]
-        logger = args[:logger]
+        config = args[:config]
+        name = args[:name]
+        logger = config.logger
+
+        archive = Archive.new :name   => name,
+                              :config => config
+
         unless archive.domain_exists?
           logger.error "Heirloom domain does not exist."
           exit 1

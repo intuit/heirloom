@@ -15,6 +15,7 @@ describe Heirloom do
                 :id          => '1.0.0' }
 
     @logger_stub = stub :error => true, :info => true
+    @config_mock = mock 'config'
     @config_mock.stub :logger     => @logger_stub,
                       :access_key => 'key',
                       :secret_key => 'secret'
@@ -34,7 +35,7 @@ describe Heirloom do
     @build = Heirloom::CLI::Build.new
   end
 
-  it "should build an account" do
+  it "should build an archive" do
     @archive_mock.should_receive(:buckets_exist?).
                   with(:bucket_prefix => 'base',
                        :regions       => ["us-west-1", "us-west-2"]).

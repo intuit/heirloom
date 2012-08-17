@@ -90,6 +90,31 @@ describe Heirloom do
 
   end
 
+  context "test ensure directory" do
+    before do
+      @logger_stub = mock 'logger', :error => true
+      @config_mock = mock 'config'
+      @config_mock.stub :logger => @logger_stub
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should exit when path is not a directory" do
+      File.should_receive(:directory?).with('/tmp/test').
+                                       and_return false
+      lambda { @object.ensure_directory(:path => '/tmp/test', 
+                                        :config => @config_mock) }.
+                       should raise_error SystemExit
+    end
+
+    it "should not exit when path is a directory" do
+      File.should_receive(:directory?).with('/tmp/test').
+                                       and_return true
+      @object.ensure_directory :path => '/tmp/test', :config => @config_mock
+    end
+
+  end
+
   context "testing ensure domain" do
     before do
       @archive_mock = mock 'archive'

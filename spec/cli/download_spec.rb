@@ -38,6 +38,10 @@ describe Heirloom do
                                                  :region      => 'us-east-1',
                                                  :base_prefix => 'base',
                                                  :extract     => false
+    @cli_download.should_receive(:ensure_directory).
+                  with(:config => @config_mock, 
+                       :path => '/tmp/test123').
+                  and_return true
     @cli_download.download
   end
 

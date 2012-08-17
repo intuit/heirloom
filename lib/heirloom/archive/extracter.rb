@@ -3,32 +3,30 @@ module Heirloom
 
     include Heirloom::Misc::Tmp
 
-    def intialize(args)
+    def initialize(args)
       @config = args[:config]
       @logger = @config.logger
-      @tmp_archive = random_archive
     end
 
     def extract(args)
-      archive = args[:archive]
-      output = args[:output]
+      @tmp_archive = random_archive
 
-      create_tmp_archive archive
-      extract_tmp_archive output
+      create_tmp_archive args[:archive]
+      extract_tmp_archive args[:output]
       delete_tmp_archive
     end
 
     private
+
+    def create_tmp_archive(archive)
+      File.open(@tmp_archive, 'w') { |local_file| local_file.write archive }
+    end
 
     def extract_tmp_archive(output)
       @logger.info "Extracting archive to #{output}."
       cmd = "tar xzf #{@tmp_archive} -C #{output}"
       @logger.debug "Executing '#{cmd}'."
       `#{cmd}`
-    end
-
-    def create_tmp_archive(archive)
-      File.open(@tmp_archive, 'w') { |local_file| local_file.write archive }
     end
   
     def delete_tmp_archive

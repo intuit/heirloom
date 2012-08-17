@@ -4,7 +4,7 @@ module Heirloom
     attr_accessor :access_key, :secret_key, :primary_region, :logger
 
     def initialize(args = {})
-      @config = args[:config] ? args[:config] : load_config_file
+      @config = args.fetch :config, load_config_file
       self.logger = args[:logger] ||= HeirloomLogger.new
       load_config
     end

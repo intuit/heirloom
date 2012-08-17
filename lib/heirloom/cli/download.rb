@@ -11,7 +11,7 @@ module Heirloom
                               :opts   => @opts
 
         exit 1 unless valid_options? :provided => @opts,
-                                     :required => [:base, :name,
+                                     :required => [:base_prefix, :name,
                                                    :id, :output],
                                      :logger   => @logger
 
@@ -21,9 +21,9 @@ module Heirloom
       end
       
       def download
-        @archive.download :output => @opts[:output],
-                          :region => @opts[:region],
-                          :base   => @opts[:base]
+        @archive.download :output      => @opts[:output],
+                          :region      => @opts[:region],
+                          :base_prefix => @opts[:base_prefix]
       end
 
       private
@@ -41,7 +41,7 @@ heirloom download -n NAME -i ID -r REGION -o OUTPUT_FILE
 
 EOS
           opt :help, "Display Help"
-          opt :base, "Base name of the archive to download.", :type => :string
+          opt :base_prefix, "Base prefix of the archive to download.", :type => :string
           opt :id, "ID of the archive to download.", :type => :string
           opt :key, "AWS Access Key ID", :type => :string
           opt :name, "Name of archive.", :type => :string

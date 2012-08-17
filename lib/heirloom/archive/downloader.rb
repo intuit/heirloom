@@ -11,13 +11,13 @@ module Heirloom
 
     def download(args)
       region = args[:region]
-      base = args[:base]
+      base_prefix = args[:base_prefix]
 
       s3_downloader = Downloader::S3.new :config => @config,
                                          :logger => @logger,
                                          :region => region
 
-      bucket = get_bucket :region => region, :base => base
+      bucket = get_bucket :region => region, :base_prefix => base_prefix
 
       @logger.info "Downloading s3://#{bucket}/#{key} from #{region}."
 
@@ -38,7 +38,7 @@ module Heirloom
     private
 
     def get_bucket(args)
-      "#{args[:base]}-#{args[:region]}"
+      "#{args[:base_prefix]}-#{args[:region]}"
     end
 
     def key

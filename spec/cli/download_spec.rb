@@ -4,12 +4,12 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    options = { :name   => 'archive_name',
-                :id     => '1.0.0',
-                :level  => 'info',
-                :output => '/tmp/test123',
-                :region => 'us-east-1',
-                :base   => 'base' }
+    options = { :name        => 'archive_name',
+                :id          => '1.0.0',
+                :level       => 'info',
+                :output      => '/tmp/test123',
+                :region      => 'us-east-1',
+                :base_prefix => 'base' }
     @logger_mock = mock 'logger'
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'
@@ -31,9 +31,9 @@ describe Heirloom do
   end
 
   it "should download an archive" do
-    @archive_mock.should_receive(:download).with :output => '/tmp/test123',
-                                                 :region => 'us-east-1',
-                                                 :base   => 'base'
+    @archive_mock.should_receive(:download).with :output      => '/tmp/test123',
+                                                 :region      => 'us-east-1',
+                                                 :base_prefix => 'base'
     @cli_download.download
   end
 

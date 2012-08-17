@@ -22,22 +22,22 @@ describe Heirloom do
     @file_mock = mock 'file'
   end
 
-  context "with base specified" do
+  context "with base_prefix specified" do
     it "should download to the current path if output is not specified" do
       File.should_receive(:open).with('./123.tar.gz', 'w').
                                  and_return @file_mock
 
-      @downloader.download :region => 'us-west-1',
-                           :base   => 'bucket'
+      @downloader.download :region      => 'us-west-1',
+                           :base_prefix => 'bucket'
     end
 
     it "should download arhcive to specified output" do
       File.should_receive(:open).with('/tmp/file', 'w').
                                  and_return @file_mock
 
-      @downloader.download :output => '/tmp/file',
-                           :region => 'us-west-1',
-                           :base   => 'bucket'
+      @downloader.download :output      => '/tmp/file',
+                           :region      => 'us-west-1',
+                           :base_prefix => 'bucket'
     end
   end
 

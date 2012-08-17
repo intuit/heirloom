@@ -6,6 +6,8 @@
 * Fix error when .heirloom.yml does not exist.
 * Refactor cli option validation
 * Refactor cli specs
+* Add -x to download to extract heirloom to given output path
+* Verify -o specified in download is a directory
 
 ## v0.4.0:
 

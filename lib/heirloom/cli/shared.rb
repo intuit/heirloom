@@ -36,6 +36,17 @@ module Heirloom
         exit 1 unless missing_opts.empty?
       end
 
+      def ensure_directory(args)
+        config = args[:config]
+        path = args[:path]
+        logger = config.logger
+
+        unless File.directory? path
+          logger.error "#{path} is not a directory."
+          exit 1
+        end
+      end
+
       def ensure_domain_exists(args)
         config = args[:config]
         name = args[:name]

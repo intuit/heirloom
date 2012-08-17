@@ -11,10 +11,9 @@ module Heirloom
                               :opts   => @opts
 
         exit 1 unless valid_options? :provided => @opts,
-                                     :required => [:name, :id, :output],
+                                     :required => [:base, :name,
+                                                   :id, :output],
                                      :logger   => @logger
-
-        ensure_domain_exists :name => @opts[:name], :config => @config
 
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
@@ -23,7 +22,8 @@ module Heirloom
       
       def download
         @archive.download :output => @opts[:output],
-                          :region => @opts[:region]
+                          :region => @opts[:region],
+                          :base   => @opts[:base]
       end
 
       private
@@ -41,7 +41,7 @@ heirloom download -n NAME -i ID -r REGION -o OUTPUT_FILE
 
 EOS
           opt :help, "Display Help"
-          opt :base, "Base name of the archive to download. If base is provided, Heirloom will download the archive without consulting simpledb.", :type => :string
+          opt :base, "Base name of the archive to download.", :type => :string
           opt :id, "ID of the archive to download.", :type => :string
           opt :key, "AWS Access Key ID", :type => :string
           opt :name, "Name of archive.", :type => :string

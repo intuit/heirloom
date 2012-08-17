@@ -22,35 +22,6 @@ describe Heirloom do
     @file_mock = mock 'file'
   end
 
-  context "without base specified" do
-    before do
-      @reader_mock = mock 'reader'
-      @downloader.should_receive(:reader).
-                  exactly(2).times.
-                  and_return @reader_mock
-      @reader_mock.should_receive(:get_bucket).
-                  with(:region => 'us-west-1').
-                  and_return 'bucket-us-west-1'
-      @reader_mock.should_receive(:get_key).
-                  with(:region => 'us-west-1').
-                  and_return 'tim/123.tar.gz'
-    end
-    it "should download an archive to the output specified" do
-      File.should_receive(:open).with('/tmp/file', 'w').
-                                 and_return @file_mock
-
-      @downloader.download :output => '/tmp/file',
-                           :region => 'us-west-1'
-    end
-
-    it "should download the archive to the current path if output is not specified" do
-      File.should_receive(:open).with('./123.tar.gz', 'w').
-                                 and_return @file_mock
-
-      @downloader.download :region => 'us-west-1'
-    end
-  end
-
   context "with base specified" do
     it "should download to the current path if output is not specified" do
       File.should_receive(:open).with('./123.tar.gz', 'w').

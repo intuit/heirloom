@@ -10,7 +10,7 @@ describe Heirloom do
     @logger_stub = stub :debug => true
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'
-    @config_mock.stub :logger     => @logger_mock, 
+    @config_mock.stub :logger     => @logger_stub, 
                       :access_key => 'key',
                       :secret_key => 'secret'
     Trollop.stub(:options).and_return options

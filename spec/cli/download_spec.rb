@@ -10,18 +10,18 @@ describe Heirloom do
                 :output      => '/tmp/test123',
                 :region      => 'us-east-1',
                 :base_prefix => 'base' }
-    @logger_mock = mock 'logger'
+    @logger_stub = stub 'logger'
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'
-    @config_mock.stub :logger     => @logger_mock,
+    @config_mock.stub :logger     => @logger_stub,
                       :access_key => 'key',
                       :secret_key => 'secret'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).
                              with(:log_level => 'info').
-                             and_return @logger_mock
+                             and_return @logger_stub
     Heirloom::CLI::Download.any_instance.should_receive(:load_config).
-                            with(:logger => @logger_mock,
+                            with(:logger => @logger_stub,
                                  :opts   => options).
                             and_return @config_mock
     Heirloom::Archive.should_receive(:new).

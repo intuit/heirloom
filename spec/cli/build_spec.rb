@@ -15,7 +15,7 @@ describe Heirloom do
                 :id          => '1.0.0' }
 
     @logger_stub = stub :error => true, :info => true
-    @config_mock.stub :logger     => @logger_mock,
+    @config_mock.stub :logger     => @logger_stub,
                       :access_key => 'key',
                       :secret_key => 'secret'
     @archive_mock = mock 'archive'

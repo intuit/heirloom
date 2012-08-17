@@ -92,7 +92,7 @@ describe Heirloom do
 
   context "test ensure directory" do
     before do
-      @logger_stub = mock 'logger', :error => true
+      @logger_stub = stub 'logger', :error => true
       @config_mock = mock 'config'
       @config_mock.stub :logger => @logger_stub
       @object = Object.new

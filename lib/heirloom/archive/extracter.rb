@@ -23,13 +23,14 @@ module Heirloom
     end
 
     def extract_tmp_archive(output)
-      @logger.info "Extracting archive to #{output}."
+      @logger.info "Extracting archive to '#{output}'."
       cmd = "tar xzf #{@tmp_archive} -C #{output}"
       @logger.debug "Executing '#{cmd}'."
       `#{cmd}`
     end
   
     def delete_tmp_archive
+      @logger.debug "Deleting '#{@tmp_archive}'."
       File.delete @tmp_archive
     end
 

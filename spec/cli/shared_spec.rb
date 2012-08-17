@@ -4,44 +4,57 @@ require 'heirloom/cli'
 
 describe Heirloom do
 
-  context "testing valid_options?" do
+  context "testing ensure_valid_options" do
 
     before do
+      @config_mock = mock 'config'
       @logger_mock = mock 'logger' 
+      @config_mock.stub :logger     => @logger_mock, 
+                        :access_key => 'key',
+                        :secret_key => 'secret'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
     end
 
     it "should return false if a required array is emtpy" do
       @logger_mock.should_receive(:error)
-      @object.valid_options?(:provided => { :array  => [],
-                                            :string => 'present' },
-                             :required => [:array, :string],
-                             :logger   => @logger_mock).should be_false
+      lambda { @object.ensure_valid_options(:provided => { 
+                                              :array  => [],
+                                              :string => 'present' 
+                                            },
+                                            :required => [:array, :string],
+                                            :config   => @config_mock) }.
+                       should raise_error SystemExit
     end
 
     it "should return false if a required string is nil" do
       @logger_mock.should_receive(:error)
-      @object.valid_options?(:provided => { :array  => ['present'],
-                                            :string => nil },
-                             :required => [:array, :string],
-                             :logger   => @logger_mock).should be_false
+      lambda { @object.ensure_valid_options(:provided => { 
+                                              :array  => ['present'],
+                                              :string => nil 
+                                            },
+                                            :required => [:array, :string],
+                                            :config   => @config_mock) }.
+                       should raise_error SystemExit
     end
 
     it "should return false if a require string is nil & array is empty" do
       @logger_mock.should_receive(:error).exactly(2).times
-      @object.valid_options?(:provided => { :array  => [],
-                                            :string => nil },
-                             :required => [:array, :string],
-                             :logger   => @logger_mock).should be_false
+      lambda { @object.ensure_valid_options(:provided => { 
+                                              :array  => [],
+                                              :string => nil 
+                                            },
+                                            :required => [:array, :string],
+                                            :config   => @config_mock) }.
+                       should raise_error SystemExit
     end
 
     it "should return true if all options are present" do
       @logger_mock.should_receive(:error).exactly(0).times
-      @object.valid_options?(:provided => { :array  => ['present'],
+      @object.ensure_valid_options(:provided => { :array  => ['present'],
                                             :string => 'present' },
                              :required => [:array, :string],
-                             :logger   => @logger_mock).should be_true
+                             :config   => @config_mock)
     end
   end
 

@@ -10,10 +10,9 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        exit 1 unless valid_options? :provided => @opts,
-                                     :required => [:accounts, 
-                                                   :name, :id],
-                                     :logger   => @logger
+        ensure_valid_options :provided => @opts,
+                             :required => [:accounts, :name, :id],
+                             :config   => @config
 
         ensure_domain_exists :name => @opts[:name], :config => @config
 

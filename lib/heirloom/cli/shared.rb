@@ -2,10 +2,23 @@ module Heirloom
   module CLI
     module Shared
 
-      def valid_options?(args)
+      def load_config(args)
+        opts = args[:opts]
+        logger = args[:logger]
+        config = Config.new :logger => logger
+        config.access_key = opts[:key] if opts[:key_given]
+        config.secret_key = opts[:secret] if opts[:secret_given]
+        config
+      end
+
+      def ensure_valid_options(args)
         provided = args[:provided]
         required = args[:required]
-        logger = args[:logger]
+        config   = args[:config]
+        logger   = config.logger
+
+        required << :key unless config.access_key
+        required << :secret unless config.secret_key
 
         missing_opts = required.map do |opt|
           case provided[opt]
@@ -20,16 +33,7 @@ module Heirloom
 
         missing_opts.each {|missing_opt| logger.error missing_opt}
 
-        missing_opts.empty?
-      end
-
-      def load_config(args)
-        opts = args[:opts]
-        logger = args[:logger]
-        config = Config.new :logger => logger
-        config.access_key = opts[:key] if opts[:key_given]
-        config.secret_key = opts[:secret] if opts[:secret_given]
-        config
+        exit 1 unless missing_opts.empty?
       end
 
       def ensure_domain_exists(args)

@@ -10,11 +10,10 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        exit 1 unless valid_options? :provided => @opts, 
-                                     :required => [:name, :id, :region, 
-                                                   :base_prefix, 
-                                                   :directory],
-                                     :logger   => @logger
+        ensure_valid_options :provided => @opts, 
+                             :required => [:name, :id, :region, 
+                                           :base_prefix, :directory],
+                             :config   => @config
 
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],

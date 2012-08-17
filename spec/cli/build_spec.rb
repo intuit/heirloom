@@ -15,7 +15,9 @@ describe Heirloom do
                 :id          => '1.0.0' }
 
     @logger_stub = stub :error => true, :info => true
-    @config_mock = mock 'config'
+    @config_mock.stub :logger     => @logger_mock,
+                      :access_key => 'key',
+                      :secret_key => 'secret'
     @archive_mock = mock 'archive'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').

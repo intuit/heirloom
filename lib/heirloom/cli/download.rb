@@ -22,6 +22,7 @@ module Heirloom
       def download
         @archive.download :output      => @opts[:output],
                           :region      => @opts[:region],
+                          :extract     => @opts[:extract],
                           :base_prefix => @opts[:base_prefix]
       end
 
@@ -46,7 +47,8 @@ EOS
           opt :name, "Name of archive.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :output, "Location to download archive.", :type => :string
+          opt :output, "Path to download archive.", :type => :string
+          opt :extract, "Extract the archive in the given output path.", :short => "-x"
           opt :region, "Region to download archive.", :type    => :string,
                                                       :default => 'us-west-1'
           opt :secret, "AWS Secret Access Key", :type => :string

@@ -14,7 +14,7 @@ module Heirloom
     end
 
     def build_artifact_from_directory
-      @local_build = temp_archive
+      @local_build = random_archive
 
       @logger.info "Building Heirloom '#{@local_build}' from '#{@path}'."
       @logger.info "Excluding #{@exclude.to_s}."

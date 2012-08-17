@@ -9,6 +9,7 @@ describe Heirloom do
                 :level       => 'info',
                 :output      => '/tmp/test123',
                 :region      => 'us-east-1',
+                :extract     => false,
                 :base_prefix => 'base' }
     @logger_stub = stub 'logger'
     @config_mock = mock 'config'
@@ -35,7 +36,8 @@ describe Heirloom do
   it "should download an archive" do
     @archive_mock.should_receive(:download).with :output      => '/tmp/test123',
                                                  :region      => 'us-east-1',
-                                                 :base_prefix => 'base'
+                                                 :base_prefix => 'base',
+                                                 :extract     => false
     @cli_download.download
   end
 

@@ -10,14 +10,14 @@ describe Heirloom::Directory do
       @directory = Heirloom::Directory.new :config  => @config_mock,
                                            :exclude => ['.', '..', 'dont_pack_me'],
                                            :path    => '/target/dir'
+      @directory.stub :random_archive => '/tmp/dir/file.tar.gz'
       output_mock  = double 'output mock'
       Dir.stub :tmpdir => '/tmp/dir'
-      Kernel.stub :rand => 0
       Dir.should_receive(:entries).with('/target/dir').
                                    exactly(2).times.
                                    and_return(['pack_me', '.hidden', 'dont_pack_me'])
       Heirloom::Directory.any_instance.should_receive(:`).
-                          with("tar czf /tmp/dir/AAAAAAAA.tar.gz pack_me .hidden").
+                          with("tar czf /tmp/dir/file.tar.gz pack_me .hidden").
                           and_return output_mock
     end
 
@@ -29,7 +29,9 @@ describe Heirloom::Directory do
     context 'when unable to create the tar' do
       before { $?.stub(:success?).and_return(false) }
 
-      it { @directory.build_artifact_from_directory.should be_false }
+      it "should build return false" do
+        @directory.build_artifact_from_directory.should be_false
+      end
     end
 
   end

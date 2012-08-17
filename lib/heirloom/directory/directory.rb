@@ -1,10 +1,10 @@
-require 'tmpdir'
-
 module Heirloom
 
   class Directory
 
     attr_reader :local_build
+
+    include Heirloom::Misc::Tmp
 
     def initialize(args)
       @config = args[:config]
@@ -14,9 +14,7 @@ module Heirloom
     end
 
     def build_artifact_from_directory
-      random_text = (0...8).map{65.+(Kernel.rand(25)).chr}.join
-
-      @local_build = File.join(Dir.tmpdir, random_text + ".tar.gz")
+      @local_build = temp_archive
 
       @logger.info "Building Heirloom '#{@local_build}' from '#{@path}'."
       @logger.info "Excluding #{@exclude.to_s}."

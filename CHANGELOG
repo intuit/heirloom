@@ -1,4 +1,4 @@
-## v0.5.0: 
+## v0.5.0:
 
 * Verify domain exists for all cmds except build & download
 * Removing requirement to check simpledb on download.

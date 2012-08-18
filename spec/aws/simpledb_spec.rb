@@ -82,9 +82,4 @@ describe Heirloom do
     @sdb.domain_empty?('heirloom_domain').should be_false
   end
 
-  it "should remove new line charactes from the attributes" do
-    @sdb.sanitize_attributes({ "newline" => "123\n321" }).
-        should == { "newline" => "123 321" }
-  end
-
 end

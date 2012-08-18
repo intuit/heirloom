@@ -49,7 +49,7 @@ module Heirloom
       if commit
         add_git_commit_to_artifact_record commit
       else
-        @logger.warn "Could not find Git sha: #{@id}."
+        @logger.warn "Could load Git sha '#{@id}' from '#{@source}'."
       end
     end
 

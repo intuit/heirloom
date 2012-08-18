@@ -9,6 +9,8 @@
 * Add -x to download to extract heirloom to given output path
 * Verify -o specified in download is a directory
 * Requiring -d for builds (will no longer default to .)
+* Remove new lines from values
+* Verify directory given at build is a directory
 
 ## v0.4.0:
 

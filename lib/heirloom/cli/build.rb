@@ -27,6 +27,8 @@ module Heirloom
           exit 1
         end
 
+        ensure_directory :path => @opts[:directory], :config => @config
+
         @archive.destroy if @archive.exists?
                           
         build = @archive.build :bucket_prefix => @opts[:base_prefix],

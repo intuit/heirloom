@@ -43,8 +43,8 @@ describe Heirloom do
 
   it "should update the attributes for an entry" do
     @fog_mock.should_receive(:put_attributes).
-              with('domain', 'key', 'attributes', { "option" => "123" })
-    @sdb.put_attributes('domain', 'key', 'attributes', { "option" => "123" })
+              with('domain', 'key', {'key' => 'value'}, { "option" => "123" })
+    @sdb.put_attributes('domain', 'key', {'key' => 'value'}, { "option" => "123" })
   end
 
   it "should delete the given entry from sdb" do
@@ -80,6 +80,11 @@ describe Heirloom do
               and_return body_mock
     body_mock.should_receive(:body).and_return data
     @sdb.domain_empty?('heirloom_domain').should be_false
+  end
+
+  it "should remove new line charactes from the attributes" do
+    @sdb.sanitize_attributes({ "newline" => "123\n321" }).
+        should == { "newline" => "123 321" }
   end
 
 end

@@ -32,7 +32,7 @@ module Heirloom
       end
 
       def put_attributes(domain, key, attributes, options = {})
-        @sdb.put_attributes domain, key, attributes, options
+        @sdb.put_attributes domain, key, sanitize_attributes(attributes), options
       end
 
       def select(query)
@@ -46,6 +46,12 @@ module Heirloom
       def count(domain)
         body = @sdb.select("SELECT count(*) FROM #{domain}").body
         body['Items']['Domain']['Count'].first.to_i
+      end
+
+      def sanitize_attributes(attributes)
+        attributes.each_pair do |key,value|
+          value.gsub!("\n"," ")
+        end
       end
 
     end

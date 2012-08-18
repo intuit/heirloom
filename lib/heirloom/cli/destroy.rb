@@ -10,9 +10,12 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        exit 1 unless valid_options? :provided => @opts,
-                                     :required => [:name, :id],
-                                     :logger   => @logger
+        ensure_valid_options :provided => @opts,
+                             :required => [:name, :id],
+                             :config   => @config
+
+        ensure_domain_exists :name => @opts[:name], :config => @config
+
         @name = @opts[:name]
         @id = @opts[:id]
         @archive = Archive.new :name   => @name,
@@ -21,7 +24,6 @@ module Heirloom
       end
       
       def destroy
-        ensure_domain_exists :archive => @archive, :logger => @logger
         @archive.destroy
       end
 
@@ -36,7 +38,7 @@ Destroy an archive.
 
 Usage:
 
-heirloom destroy -n NAME -i ID [-l LOG_LEVEL]
+heirloom destroy -n NAME -i ID
 
 EOS
           opt :help, "Display Help"

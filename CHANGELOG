@@ -1,6 +1,14 @@
-## TBD:
+## v0.5.0:
 
-* Added check to verify domain exists for all cmds except build
+* Verify domain exists for all cmds except build & download
+* Removing requirement to check simpledb on download.
+* Adding requirement for base_prefix on download.
+* Fix error when .heirloom.yml does not exist.
+* Refactor cli option validation
+* Refactor cli specs
+* Add -x to download to extract heirloom to given output path
+* Verify -o specified in download is a directory
+* Requiring -d for builds (will no longer default to .)
 
 ## v0.4.0:
 

@@ -4,44 +4,57 @@ require 'heirloom/cli'
 
 describe Heirloom do
 
-  context "testing valid_options?" do
+  context "testing ensure_valid_options" do
 
     before do
+      @config_mock = mock 'config'
       @logger_mock = mock 'logger' 
+      @config_mock.stub :logger     => @logger_mock, 
+                        :access_key => 'key',
+                        :secret_key => 'secret'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
     end
 
     it "should return false if a required array is emtpy" do
       @logger_mock.should_receive(:error)
-      @object.valid_options?(:provided => { :array  => [],
-                                            :string => 'present' },
-                             :required => [:array, :string],
-                             :logger   => @logger_mock).should be_false
+      lambda { @object.ensure_valid_options(:provided => { 
+                                              :array  => [],
+                                              :string => 'present' 
+                                            },
+                                            :required => [:array, :string],
+                                            :config   => @config_mock) }.
+                       should raise_error SystemExit
     end
 
     it "should return false if a required string is nil" do
       @logger_mock.should_receive(:error)
-      @object.valid_options?(:provided => { :array  => ['present'],
-                                            :string => nil },
-                             :required => [:array, :string],
-                             :logger   => @logger_mock).should be_false
+      lambda { @object.ensure_valid_options(:provided => { 
+                                              :array  => ['present'],
+                                              :string => nil 
+                                            },
+                                            :required => [:array, :string],
+                                            :config   => @config_mock) }.
+                       should raise_error SystemExit
     end
 
     it "should return false if a require string is nil & array is empty" do
       @logger_mock.should_receive(:error).exactly(2).times
-      @object.valid_options?(:provided => { :array  => [],
-                                            :string => nil },
-                             :required => [:array, :string],
-                             :logger   => @logger_mock).should be_false
+      lambda { @object.ensure_valid_options(:provided => { 
+                                              :array  => [],
+                                              :string => nil 
+                                            },
+                                            :required => [:array, :string],
+                                            :config   => @config_mock) }.
+                       should raise_error SystemExit
     end
 
     it "should return true if all options are present" do
       @logger_mock.should_receive(:error).exactly(0).times
-      @object.valid_options?(:provided => { :array  => ['present'],
+      @object.ensure_valid_options(:provided => { :array  => ['present'],
                                             :string => 'present' },
                              :required => [:array, :string],
-                             :logger   => @logger_mock).should be_true
+                             :config   => @config_mock)
     end
   end
 
@@ -77,24 +90,53 @@ describe Heirloom do
 
   end
 
-  context "testing ensure domain" do
+  context "test ensure directory" do
     before do
-      @archive_mock = mock 'archive'
       @logger_stub = stub 'logger', :error => true
+      @config_mock = mock 'config'
+      @config_mock.stub :logger => @logger_stub
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
     end
 
+    it "should exit when path is not a directory" do
+      File.should_receive(:directory?).with('/tmp/test').
+                                       and_return false
+      lambda { @object.ensure_directory(:path => '/tmp/test', 
+                                        :config => @config_mock) }.
+                       should raise_error SystemExit
+    end
+
+    it "should not exit when path is a directory" do
+      File.should_receive(:directory?).with('/tmp/test').
+                                       and_return true
+      @object.ensure_directory :path => '/tmp/test', :config => @config_mock
+    end
+
+  end
+
+  context "testing ensure domain" do
+    before do
+      @archive_mock = mock 'archive'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger => @logger_stub
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+      Heirloom::Archive.should_receive(:new).
+                        with(:name => 'test', :config => @config_stub).
+                        and_return @archive_mock
+    end
+
     it "should ensure the domain for a given archive exists" do
       @archive_mock.should_receive(:domain_exists?).and_return true
-      @object.ensure_domain_exists :logger  => @logger_mock, 
-                                   :archive => @archive_mock
+      @object.ensure_domain_exists :config => @config_stub, 
+                                   :name   => 'test'
     end
 
     it "should exit if the domain does not exist" do
       @archive_mock.should_receive(:domain_exists?).and_return false
-      lambda { @object.ensure_domain_exists :logger  => @logger_stub,
-                                            :archive => @archive_mock}.
+      lambda { @object.ensure_domain_exists :config => @config_stub,
+                                            :name   => 'test'}.
                        should raise_error SystemExit
     end
   end

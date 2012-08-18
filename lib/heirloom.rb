@@ -1,6 +1,6 @@
+require "heirloom/config"
 require "heirloom/acl"
 require "heirloom/aws"
-require "heirloom/config"
 require "heirloom/logger"
 require "heirloom/archive"
 require "heirloom/directory"

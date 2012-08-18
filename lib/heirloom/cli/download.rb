@@ -10,9 +10,10 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        exit 1 unless valid_options? :provided => @opts,
-                                     :required => [:name, :id, :output],
-                                     :logger   => @logger
+        ensure_valid_options :provided => @opts,
+                             :required => [:base_prefix, :name, :id, :output],
+                             :config   => @config
+
 
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
@@ -20,9 +21,11 @@ module Heirloom
       end
       
       def download
-        ensure_domain_exists :archive => @archive, :logger => @logger
-        @archive.download :output => @opts[:output],
-                          :region => @opts[:region]
+        ensure_directory :path => @opts[:output], :config => @config
+        @archive.download :output      => @opts[:output],
+                          :region      => @opts[:region],
+                          :extract     => @opts[:extract],
+                          :base_prefix => @opts[:base_prefix]
       end
 
       private
@@ -36,17 +39,18 @@ Download an archive.
 
 Usage:
 
-heirloom download -n NAME -i ID -r REGION -o OUTPUT_FILE
+heirloom download -n NAME -i ID -r REGION -o OUTPUT_DIRECTORY
 
 EOS
+          opt :base_prefix, "Base prefix of the archive to download.", :type => :string
           opt :help, "Display Help"
-          opt :base, "Base name of the archive to download. If base is provided, Heirloom will download the archive without consulting simpledb.", :type => :string
           opt :id, "ID of the archive to download.", :type => :string
           opt :key, "AWS Access Key ID", :type => :string
           opt :name, "Name of archive.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :output, "Location to download archive.", :type => :string
+          opt :output, "Path to download archive. Must be existing directory.", :type => :string
+          opt :extract, "Extract the archive in the given output path.", :short => "-x"
           opt :region, "Region to download archive.", :type    => :string,
                                                       :default => 'us-west-1'
           opt :secret, "AWS Secret Access Key", :type => :string

@@ -39,13 +39,13 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Show details about a version of an archive.
+Show archive.
 
 Usage:
 
 heirloom show -n NAME -i ID
 
-If -i is ommited, latest version is displayed.
+If -i is ommited, latest ID is displayed.
 
 EOS
           opt :help, "Display Help"

@@ -57,13 +57,12 @@ Build and upload a new archive.
 
 Usage:
 
-heirloom build -n NAME -i ID -b BASE_PREFIX -r REGION1 -r REGION2 [-d DIRECTORY_TO_BUILD] [-p] [-g] [-e DIRECTORY_TO_EXCLUDE] [-l LOG_LEVEL]
+heirloom build -n NAME -i ID -b BASE_PREFIX -r REGION1 -r REGION2 -d DIRECTORY_TO_BUILD
 
 EOS
           opt :base_prefix, "Base bucket prefix which will be combined with region. \
 For example: -b 'test' -r 'us-west-1'  will expect bucket 'test-us-west-1' to be present", :type => :string
-          opt :directory, "Source directory of build.", :type    => :string, 
-                                                        :default => '.'
+          opt :directory, "Source directory of build.", :type  => :string
           opt :exclude, "File(s) or directorie(s) to exclude. \
 Can be specified multiple times.", :type  => :string, 
                                    :multi => true
@@ -76,7 +75,7 @@ Can be specified multiple times.", :type  => :string,
           opt :name, "Name of archive.", :type => :string
           opt :public, "Set this archive as public readable?"
           opt :region, "Region(s) to upload archive.  Can be specified multiple times.", :type  => :string,
-                                                                                   :multi => true
+                                                                                         :multi => true
           opt :secret, "AWS Secret Access Key", :type => :string
         end
       end

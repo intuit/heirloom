@@ -39,17 +39,17 @@ Download an archive.
 
 Usage:
 
-heirloom download -n NAME -i ID -r REGION -o OUTPUT_FILE
+heirloom download -n NAME -i ID -r REGION -o OUTPUT_DIRECTORY
 
 EOS
-          opt :help, "Display Help"
           opt :base_prefix, "Base prefix of the archive to download.", :type => :string
+          opt :help, "Display Help"
           opt :id, "ID of the archive to download.", :type => :string
           opt :key, "AWS Access Key ID", :type => :string
           opt :name, "Name of archive.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :output, "Path to download archive.", :type => :string
+          opt :output, "Path to download archive. Must be existing directory.", :type => :string
           opt :extract, "Extract the archive in the given output path.", :short => "-x"
           opt :region, "Region to download archive.", :type    => :string,
                                                       :default => 'us-west-1'

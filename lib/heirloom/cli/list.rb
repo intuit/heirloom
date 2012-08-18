@@ -32,15 +32,15 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-List versions of archive.
+List available IDs of archive.
 
 Usage:
 
 heirloom list -n NAME
 
 EOS
-          opt :count, "Number of versions to return.", :type    => :integer,
-                                                       :default => 10
+          opt :count, "Number of IDs to return.", :type    => :integer,
+                                                  :default => 10
           opt :help, "Display Help"
           opt :key, "AWS Access Key ID", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,

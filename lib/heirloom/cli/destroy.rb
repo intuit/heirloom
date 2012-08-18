@@ -38,7 +38,7 @@ Destroy an archive.
 
 Usage:
 
-heirloom destroy -n NAME -i ID [-l LOG_LEVEL]
+heirloom destroy -n NAME -i ID
 
 EOS
           opt :help, "Display Help"

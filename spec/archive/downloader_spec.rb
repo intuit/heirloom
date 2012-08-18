@@ -3,9 +3,9 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @config_mock = double 'config'
-    @logger_stub = double 'logger', :info => true, :debug => true
-    @config_mock.should_receive(:logger).and_return(@logger_stub)
+    @config_mock = mock 'config'
+    @logger_stub = mock 'logger', :info => true, :debug => true
+    @config_mock.stub :logger => @logger_stub
     @downloader = Heirloom::Downloader.new :config => @config_mock,
                                            :name   => 'tim',
                                            :id     => '123'

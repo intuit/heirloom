@@ -2,8 +2,6 @@ module Heirloom
 
   class Downloader
 
-    include Heirloom::Misc::Tmp
-
     def initialize(args)
       @config = args[:config]
       @name = args[:name]
@@ -12,18 +10,16 @@ module Heirloom
     end
 
     def download(args)
-      region = args[:region]
-      base_prefix = args[:base_prefix]
+      @region = args[:region]
+      @base_prefix = args[:base_prefix]
       extract = args[:extract]
       output = args[:output] ||= './'
 
       s3_downloader = Downloader::S3.new :config => @config,
                                          :logger => @logger,
-                                         :region => region
+                                         :region => @region
 
-      bucket = get_bucket :region => region, :base_prefix => base_prefix
-
-      @logger.info "Downloading s3://#{bucket}/#{key} from #{region}."
+      @logger.info "Downloading s3://#{bucket}/#{key} from #{@region}."
       archive = s3_downloader.download_file :bucket => bucket,
                                             :key    => key
 
@@ -49,8 +45,8 @@ module Heirloom
       "#{@name}/#{file}"
     end
 
-    def get_bucket(args)
-      "#{args[:base_prefix]}-#{args[:region]}"
+    def bucket
+      "#{@base_prefix}-#{@region}"
     end
 
   end

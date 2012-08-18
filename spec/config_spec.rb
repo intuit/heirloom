@@ -21,7 +21,7 @@ describe Heirloom do
   end
 
   it "should create a new config object and read from ~/.heirloom.yml" do
-    File.should_receive(:exists?).and_return true
+    File.stub :exists? => true
     File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
                                and_return(@config.to_yaml)
     config = Heirloom::Config.new
@@ -38,7 +38,7 @@ describe Heirloom do
   end
 
   it "should load a blank config if the file does not exist and no config passed" do
-    File.should_receive(:exists?).and_return false
+    File.stub :exists? => false
     config = Heirloom::Config.new
     config.access_key.should be_nil
     config.secret_key.should be_nil

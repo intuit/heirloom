@@ -1,4 +1,4 @@
-require 'tmpdir'
+require 'tempfile'
 
 module Heirloom
 
@@ -14,9 +14,7 @@ module Heirloom
     end
 
     def build_artifact_from_directory
-      random_text = (0...8).map{65.+(Kernel.rand(25)).chr}.join
-
-      @local_build = File.join(Dir.tmpdir, random_text + ".tar.gz")
+      @local_build = Tempfile.new('archive.tar.gz').path
 
       @logger.info "Building Heirloom '#{@local_build}' from '#{@path}'."
       @logger.info "Excluding #{@exclude.to_s}."

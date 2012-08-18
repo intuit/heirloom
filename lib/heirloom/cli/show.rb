@@ -10,9 +10,11 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        exit 1 unless valid_options? :provided => @opts,
-                                     :required => [:name],
-                                     :logger   => @logger
+        ensure_valid_options :provided => @opts,
+                             :required => [:name],
+                             :config   => @config
+
+        ensure_domain_exists :name => @opts[:name], :config => @config
 
         id = @opts[:id] ? @opts[:id] : latest_id
         @archive = Archive.new :name   => @opts[:name],
@@ -21,7 +23,6 @@ module Heirloom
       end
       
       def show
-        ensure_domain_exists :archive => @archive, :logger => @logger
         jj @archive.show
       end
 
@@ -38,13 +39,13 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Show details about a version of an archive.
+Show archive.
 
 Usage:
 
 heirloom show -n NAME -i ID
 
-If -i is ommited, latest version is displayed.
+If -i is ommited, latest ID is displayed.
 
 EOS
           opt :help, "Display Help"

@@ -10,16 +10,17 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        exit 1 unless valid_options? :provided => @opts,
-                                     :required => [:name],
-                                     :logger   => @logger
+        ensure_valid_options :provided => @opts,
+                             :required => [:name],
+                             :config   => @config
+
+        ensure_domain_exists :name => @opts[:name], :config => @config
 
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
       end
       
       def list(count = @opts[:count])
-        ensure_domain_exists :archive => @archive, :logger => @logger
         @logger.debug "#{@archive.count} archives found."
         jj @archive.list(count)
       end
@@ -31,15 +32,15 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-List versions of archive.
+List available IDs of archive.
 
 Usage:
 
 heirloom list -n NAME
 
 EOS
-          opt :count, "Number of versions to return.", :type    => :integer,
-                                                       :default => 10
+          opt :count, "Number of IDs to return.", :type    => :integer,
+                                                  :default => 10
           opt :help, "Display Help"
           opt :key, "AWS Access Key ID", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,

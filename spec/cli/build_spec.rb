@@ -16,6 +16,9 @@ describe Heirloom do
 
     @logger_stub = stub :error => true, :info => true
     @config_mock = mock 'config'
+    @config_mock.stub :logger     => @logger_stub,
+                      :access_key => 'key',
+                      :secret_key => 'secret'
     @archive_mock = mock 'archive'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
@@ -32,7 +35,7 @@ describe Heirloom do
     @build = Heirloom::CLI::Build.new
   end
 
-  it "should build an account" do
+  it "should build an archive" do
     @archive_mock.should_receive(:buckets_exist?).
                   with(:bucket_prefix => 'base',
                        :regions       => ["us-west-1", "us-west-2"]).

@@ -10,26 +10,26 @@ module Heirloom
     end
 
     def download(args)
-      region = args[:region]
+      @region = args[:region]
+      @base_prefix = args[:base_prefix]
+      extract = args[:extract]
+      output = args[:output] ||= './'
 
       s3_downloader = Downloader::S3.new :config => @config,
                                          :logger => @logger,
-                                         :region => region
+                                         :region => @region
 
-      bucket = reader.get_bucket :region => region
-      key = reader.get_key :region => region
+      @logger.info "Downloading s3://#{bucket}/#{key} from #{@region}."
+      archive = s3_downloader.download_file :bucket => bucket,
+                                            :key    => key
 
-      @logger.info "Downloading s3://#{bucket}/#{key} from #{region}."
-
-      file = s3_downloader.download_file :bucket => bucket,
-                                         :key    => key
-
-      output = args[:output] ||= "./#{key.split('/').last}"
-
-      @logger.info "Writing file to #{output}."
-
-      File.open(output, 'w') do |local_file|
-        local_file.write file
+      if extract
+        extracter = Extracter.new :config => @config
+        extracter.extract :archive => archive, :output => output
+      else
+        output_file = File.join output, file
+        @logger.info "Writing archive to '#{output_file}'."
+        File.open(output_file, 'w') { |local_file| local_file.write archive }
       end
 
       @logger.info "Download complete."
@@ -37,10 +37,16 @@ module Heirloom
 
     private
 
-    def reader
-      @reader ||= Reader.new :config => @config,
-                             :name   => @name,
-                             :id     => @id
+    def file 
+      "#{@id}.tar.gz"
+    end
+
+    def key
+      "#{@name}/#{file}"
+    end
+
+    def bucket
+      "#{@base_prefix}-#{@region}"
     end
 
   end

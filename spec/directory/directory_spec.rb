@@ -17,7 +17,7 @@ describe Heirloom::Directory do
                                    exactly(2).times.
                                    and_return(['pack_me', '.hidden', 'dont_pack_me'])
       Heirloom::Directory.any_instance.should_receive(:`).
-                          with("tar czf /tmp/file.tar.gz pack_me .hidden").
+                          with("cd /target/dir && tar czf /tmp/file.tar.gz pack_me .hidden").
                           and_return output_mock
     end
 

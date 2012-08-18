@@ -18,7 +18,7 @@ module Heirloom
 
       @logger.info "Building Heirloom '#{@local_build}' from '#{@path}'."
       @logger.info "Excluding #{@exclude.to_s}."
-      @logger.info "Adding #{files_to_pack.to_s}."
+      @logger.info "Adding #{files_to_pack}."
 
       build_archive
     end
@@ -26,7 +26,7 @@ module Heirloom
     private
 
     def build_archive
-      command = "tar czf #{@local_build} #{files_to_pack.join(' ')}"
+      command = "cd #{@path} && tar czf #{@local_build} #{files_to_pack}"
       @logger.info "Archiving with: `#{command}`"
       output = `#{command}`
       @logger.debug "Exited with status: '#{$?.exitstatus}' ouput: '#{output}'"
@@ -34,7 +34,7 @@ module Heirloom
     end
 
     def files_to_pack
-      Dir.entries(@path) - ['.', '..'] - @exclude
+      (Dir.entries(@path) - ['.', '..'] - @exclude).join(' ')
     end
 
   end

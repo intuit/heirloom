@@ -1,15 +1,13 @@
 module Heirloom
   class Extracter
 
-    include Heirloom::Misc::Tmp
-
     def initialize(args)
       @config = args[:config]
       @logger = @config.logger
     end
 
     def extract(args)
-      @tmp_archive = random_archive
+      @tmp_archive = Tempfile.new('archive.tar.gz').path
 
       create_tmp_archive args[:archive]
       extract_tmp_archive args[:output]

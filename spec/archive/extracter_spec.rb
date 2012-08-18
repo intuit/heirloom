@@ -6,8 +6,9 @@ describe Heirloom do
     @logger_stub = stub 'logger', :info => true, :debug => true
     @config_mock = mock 'config'
     @config_mock.stub :logger => @logger_stub
+    @tempfile_stub = stub 'tempfile', :path => '/tmp/file'
+    Tempfile.stub :new => @tempfile_stub
     @extracter = Heirloom::Extracter.new :config => @config_mock
-    @extracter.stub :random_archive => '/tmp/file'
   end
 
   it "should extract the given archive object into the output directory" do

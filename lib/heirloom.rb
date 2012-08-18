@@ -1,4 +1,3 @@
-require "heirloom/misc"
 require "heirloom/config"
 require "heirloom/acl"
 require "heirloom/aws"

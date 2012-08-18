@@ -10,14 +10,14 @@ describe Heirloom::Directory do
       @directory = Heirloom::Directory.new :config  => @config_mock,
                                            :exclude => ['.', '..', 'dont_pack_me'],
                                            :path    => '/target/dir'
-      @directory.stub :random_archive => '/tmp/dir/file.tar.gz'
+      @tempfile_stub = stub 'tempfile', :path => '/tmp/file.tar.gz'
+      Tempfile.stub :new => @tempfile_stub
       output_mock  = double 'output mock'
-      Dir.stub :tmpdir => '/tmp/dir'
       Dir.should_receive(:entries).with('/target/dir').
                                    exactly(2).times.
                                    and_return(['pack_me', '.hidden', 'dont_pack_me'])
       Heirloom::Directory.any_instance.should_receive(:`).
-                          with("tar czf /tmp/dir/file.tar.gz pack_me .hidden").
+                          with("tar czf /tmp/file.tar.gz pack_me .hidden").
                           and_return output_mock
     end
 

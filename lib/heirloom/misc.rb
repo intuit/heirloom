@@ -1,1 +1,0 @@
-require 'heirloom/misc/tmp'

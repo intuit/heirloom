@@ -36,6 +36,7 @@ describe Heirloom do
   end
 
   it "should build an archive" do
+    @build.stub :ensure_directory => true
     @archive_mock.should_receive(:buckets_exist?).
                   with(:bucket_prefix => 'base',
                        :regions       => ["us-west-1", "us-west-2"]).

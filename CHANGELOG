@@ -1,4 +1,4 @@
-## v0.5.0:
+## v0.5.0: 
 
 * Verify domain exists for all cmds except build & download
 * Removing requirement to check simpledb on download.
@@ -9,6 +9,7 @@
 * Add -x to download to extract heirloom to given output path
 * Verify -o specified in download is a directory
 * Requiring -d for builds (will no longer default to .)
+* Remove new lines from values
 
 ## v0.4.0:
 

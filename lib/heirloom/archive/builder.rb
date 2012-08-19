@@ -36,11 +36,6 @@ module Heirloom
       @local_build
     end
 
-    def cleanup
-      @logger.info "Cleaning up local build #{@local_build}."
-      File.delete @local_build
-    end
-
     private
 
     def add_git_commit
@@ -49,7 +44,7 @@ module Heirloom
       if commit
         add_git_commit_to_artifact_record commit
       else
-        @logger.warn "Could load Git sha '#{@id}' in '#{@source}'."
+        @logger.warn "Could not load Git sha '#{@id}' in '#{@source}'."
       end
     end
 

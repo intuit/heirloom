@@ -41,7 +41,6 @@ module Heirloom
                           :regions         => @opts[:region],
                           :public_readable => @opts[:public],
                           :file            => build
-          @archive.cleanup
         else
           @logger.error "Build failed."
           exit 1

@@ -21,6 +21,7 @@ module Heirloom
       @logger.info "Adding #{files_to_pack}."
 
       build_archive
+      encrypt_archive
     end
 
     private
@@ -31,6 +32,14 @@ module Heirloom
       output = `#{command}`
       @logger.debug "Exited with status: '#{$?.exitstatus}' ouput: '#{output}'"
       $?.success?
+    end
+
+    def encrypt_archive
+      cipher = Heirloom::Cipher.new :config => @config
+      @logger.info "Encrypting archive."
+      encrypted_build = cipher.encrypt_file :file   => @local_build,
+                                            :secret => '12345678901234567890123456789012'
+      @local_build = encrypted_build
     end
 
     def files_to_pack

@@ -11,7 +11,6 @@ module Heirloom
 
       create_tmp_archive args[:archive]
       extract_tmp_archive args[:output]
-      delete_tmp_archive
     end
 
     private
@@ -25,11 +24,6 @@ module Heirloom
       cmd = "tar xzf #{@tmp_archive} -C #{output}"
       @logger.debug "Executing '#{cmd}'."
       `#{cmd}`
-    end
-  
-    def delete_tmp_archive
-      @logger.debug "Deleting '#{@tmp_archive}'."
-      File.delete @tmp_archive
     end
 
   end

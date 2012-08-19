@@ -20,8 +20,13 @@ module Heirloom
                                          :region => @region
 
       @logger.info "Downloading s3://#{bucket}/#{key} from #{@region}."
-      archive = s3_downloader.download_file :bucket => bucket,
-                                            :key    => key
+      raw_archive = s3_downloader.download_file :bucket => bucket,
+                                                :key    => key
+
+      @logger.info "Decrypting archive."
+      cipher = Heirloom::Cipher.new :config => @config
+      archive = cipher.decrypt_data :data   => raw_archive, 
+                                    :secret => '12345678901234567890123456789012'
 
       if extract
         extracter = Extracter.new :config => @config

@@ -68,10 +68,6 @@ module Heirloom
       lister.list(limit)
     end
 
-    def cleanup
-      builder.cleanup
-    end
-
     def regions
       reader.regions
     end

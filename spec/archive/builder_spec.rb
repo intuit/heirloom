@@ -67,7 +67,7 @@ describe Heirloom::Builder do
         end
 
         it "should build an archive and log a warning if the git sha is not found" do
-          @logger_stub.should_receive(:warn).with "Could load Git sha '123' in 'path_to_build'."
+          @logger_stub.should_receive(:warn).with "Could not load Git sha '123' in 'path_to_build'."
           @git_dir_mock.should_receive(:commit).
                         with('123').and_return false
           @builder.build(:exclude   => ['.dir_to_exclude'],

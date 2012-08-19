@@ -33,15 +33,14 @@ module Heirloom
         config   = args[:config]
         logger   = config.logger
 
-        required << :aws_key unless config.access_key
-        required << :aws_secret unless config.secret_key
+        required << :aws_access_key unless config.access_key
+        required << :aws_secret_key unless config.secret_key
 
         missing_opts = required.sort.map do |opt|
           case provided[opt]
-          when nil
-            "Option '#{opt} (-#{opt[0]})' required but not specified."
-          when []
-            "Option '#{opt} (-#{opt[0]})' required but not specified."
+          when nil, []
+            pretty_opt = opt.to_s.gsub('_', '-')
+            "Option '#{pretty_opt}' required but not specified."
           end
         end
 

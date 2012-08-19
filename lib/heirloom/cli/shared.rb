@@ -23,7 +23,7 @@ module Heirloom
       end
 
       def generate_random_secret
-        o = [('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten
+        o = [(0..9),('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten
         (1..32).map{ o[rand(o.length)] }.join
       end
 

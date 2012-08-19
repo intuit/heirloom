@@ -16,7 +16,7 @@ module Heirloom
         secret = args[:secret]
         logger = config.logger
         if secret && secret.length != 32
-          logger.error "Secret must be 32 characters long."
+          logger.error "Secret must be exactly 32 characters long."
           exit 1
         end
       end

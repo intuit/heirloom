@@ -7,7 +7,8 @@ module Heirloom
     end
 
     def save_archive(args)
-      @output = args[:output]
+      @output  = args[:output]
+      @file    = args[:file]
       @archive = args[:archive]
       @extract = args[:extract]
 
@@ -24,7 +25,7 @@ module Heirloom
     end
 
     def write_archive
-      output_file = File.join @output, @archive
+      output_file = File.join @output, @file
       @logger.info "Writing archive to '#{output_file}'."
       File.open(output_file, 'w') { |local_file| local_file.write @archive }
     end

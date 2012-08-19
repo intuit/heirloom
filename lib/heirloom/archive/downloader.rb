@@ -32,6 +32,7 @@ module Heirloom
 
       writer.save_archive :archive => archive, 
                           :output  => output,
+                          :file    => file,
                           :extract => extract
 
       @logger.info "Download complete."

@@ -39,6 +39,7 @@ describe Heirloom do
     it "should download to the current path if output is not specified" do
       @writer_mock.should_receive(:save_archive).
                    with(:archive => 'plaintext',
+                        :file    => "123.tar.gz",
                         :output  => './',
                         :extract => false)
       @downloader.download(:region      => 'us-west-1',
@@ -50,6 +51,7 @@ describe Heirloom do
     it "should download arhcive to specified output" do
       @writer_mock.should_receive(:save_archive).
                    with(:archive => 'plaintext',
+                        :file    => "123.tar.gz",
                         :output  => '/tmp/dir',
                         :extract => false)
       @downloader.download(:output      => '/tmp/dir',
@@ -82,6 +84,7 @@ describe Heirloom do
       it "should decrypt and save the downloaded file with secret" do
         @writer_mock.should_receive(:save_archive).
                      with(:archive => 'plaintext',
+                          :file    => "123.tar.gz",
                           :output  => './',
                           :extract => false)
         @downloader.download :region      => 'us-west-1',
@@ -93,6 +96,7 @@ describe Heirloom do
       it "should decrypt and extract the downloaded file with secret" do
         @writer_mock.should_receive(:save_archive).
                      with(:archive => 'plaintext',
+                          :file    => "123.tar.gz",
                           :output  => './',
                           :extract => true)
         @downloader.download :region      => 'us-west-1',

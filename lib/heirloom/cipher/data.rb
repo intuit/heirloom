@@ -24,6 +24,9 @@ module Heirloom
         begin
           @aes.update(data) + @aes.final
         rescue OpenSSL::Cipher::CipherError => e
+          if e.message == 'wrong final block length'
+            @logger.error 'This archive does not appear to be encrypted.'
+          end
           @logger.error "Unable to decrypt archive: '#{e.message}'"
           false
         end

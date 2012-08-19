@@ -75,15 +75,15 @@ describe Heirloom do
     end
 
     it "should set the access key if specified" do
-      opts = { :key       => 'the_key',
-               :key_given => true }
+      opts = { :aws_access_key       => 'the_key',
+               :aws_access_key_given => true }
       @config_mock.should_receive(:access_key=).with 'the_key'
       @object.load_config :logger => @logger_mock, :opts => opts
     end
 
     it "should set the secret key if specified" do
-      opts = { :secret       => 'the_secret',
-               :secret_given => true }
+      opts = { :aws_secret_key       => 'the_secret',
+               :aws_secret_key_given => true }
       @config_mock.should_receive(:secret_key=).with 'the_secret'
       @object.load_config :logger => @logger_mock, :opts => opts
     end

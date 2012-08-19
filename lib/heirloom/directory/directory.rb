@@ -13,15 +13,18 @@ module Heirloom
       @logger = @config.logger
     end
 
-    def build_artifact_from_directory
+    def build_artifact_from_directory(args)
+      @secret = args[:secret]
+
       @local_build = Tempfile.new('archive.tar.gz').path
 
       @logger.info "Building Heirloom '#{@local_build}' from '#{@path}'."
       @logger.info "Excluding #{@exclude.to_s}."
       @logger.info "Adding #{files_to_pack}."
 
-      build_archive
-      encrypt_archive
+      return build_archive unless @secret
+
+      build_encrypted_archive 
     end
 
     private
@@ -34,10 +37,11 @@ module Heirloom
       $?.success?
     end
 
-    def encrypt_archive
-      @logger.info "Encrypting archive."
+    def build_encrypted_archive
+      return false unless build_archive
+      @logger.info "Secret provided. Encrypting."
       @local_build = cipher.encrypt_file :file   => @local_build,
-                                         :secret => '12345678901234567890123456789012'
+                                         :secret => @secret
     end
 
     def files_to_pack

@@ -23,7 +23,9 @@ module Heirloom
                                 :exclude   => args[:exclude],
                                 :config    => @config
 
-      return false unless directory.build_artifact_from_directory
+      unless directory.build_artifact_from_directory :secret => args[:secret]
+        return false
+      end
 
       @local_build = directory.local_build
 

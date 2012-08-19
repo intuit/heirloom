@@ -18,28 +18,30 @@ describe Heirloom do
     @s3_downloader_mock.should_receive(:download_file).
                        with(:bucket => 'bucket-us-west-1',
                             :key    => 'tim/123.tar.gz').
-                       and_return 'filename'
+                       and_return 'filedata'
     @file_mock = mock 'file'
   end
 
   context "extract set to false" do
-    it "should download to the current path if output is not specified" do
-      File.should_receive(:open).with('./123.tar.gz', 'w').
-                                 and_return @file_mock
+    context "no secret given" do
+      it "should download to the current path if output is not specified" do
+        File.should_receive(:open).with('./123.tar.gz', 'w').
+                                   and_return @file_mock
 
-      @downloader.download :region      => 'us-west-1',
-                           :base_prefix => 'bucket',
-                           :extract     => false
-    end
+        @downloader.download :region      => 'us-west-1',
+                             :base_prefix => 'bucket',
+                             :extract     => false
+      end
 
-    it "should download arhcive to specified output" do
-      File.should_receive(:open).with('/tmp/dir/123.tar.gz', 'w').
-                                 and_return @file_mock
+      it "should download arhcive to specified output" do
+        File.should_receive(:open).with('/tmp/dir/123.tar.gz', 'w').
+                                   and_return @file_mock
 
-      @downloader.download :output      => '/tmp/dir',
-                           :region      => 'us-west-1',
-                           :base_prefix => 'bucket',
-                           :extract     => false
+        @downloader.download :output      => '/tmp/dir',
+                             :region      => 'us-west-1',
+                             :base_prefix => 'bucket',
+                             :extract     => false
+      end
     end
   end
 
@@ -51,7 +53,7 @@ describe Heirloom do
     end
 
     it "should download and extract the to specified output" do
-      @extracter_mock.should_receive(:extract).with :archive => 'filename',
+      @extracter_mock.should_receive(:extract).with :archive => 'filedata',
                                                     :output  => '/tmp/dir'
       @downloader.download :output      => '/tmp/dir',
                            :region      => 'us-west-1',
@@ -60,11 +62,30 @@ describe Heirloom do
     end
 
     it "should download and extract the to the cwd" do
-      @extracter_mock.should_receive(:extract).with :archive => 'filename',
+      @extracter_mock.should_receive(:extract).with :archive => 'filedata',
                                                     :output  => './'
       @downloader.download :region      => 'us-west-1',
                            :base_prefix => 'bucket',
                            :extract     => true
+    end
+  end
+
+  context "secret given" do
+    before do
+      @cipher_mock = mock 'cipher'
+      Heirloom::Cipher.should_receive(:new).
+                       with(:config => @config_mock).
+                       and_return @cipher_mock
+    end
+
+    it "should decrypt the downloaded file with secret" do
+      @cipher_mock.should_receive(:decrypt_data).
+                   with(:secret => 'supersecret',
+                        :data   => 'filedata')
+      @downloader.download :region      => 'us-west-1',
+                           :base_prefix => 'bucket',
+                           :extract     => false,
+                           :secret      => 'supersecret'
     end
   end
 

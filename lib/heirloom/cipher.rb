@@ -14,6 +14,10 @@ module Heirloom
       data   = args[:data]
       secret = args[:secret]
 
+      return data unless secret
+
+      @logger.info "Secret provided. Decrypting archive."
+
       @aes.decrypt
       @aes.key = secret
       @aes.iv = data.slice!(0,16)

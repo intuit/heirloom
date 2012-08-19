@@ -6,8 +6,8 @@ module Heirloom
         opts = args[:opts]
         logger = args[:logger]
         config = Config.new :logger => logger
-        config.access_key = opts[:key] if opts[:key_given]
-        config.secret_key = opts[:secret] if opts[:secret_given]
+        config.access_key = opts[:aws_access_key] if opts[:aws_access_key_given]
+        config.secret_key = opts[:aws_secret_key] if opts[:aws_secret_key_given]
         config
       end
 
@@ -17,8 +17,8 @@ module Heirloom
         config   = args[:config]
         logger   = config.logger
 
-        required << :key unless config.access_key
-        required << :secret unless config.secret_key
+        required << :aws_key unless config.access_key
+        required << :aws_secret unless config.secret_key
 
         missing_opts = required.map do |opt|
           case provided[opt]

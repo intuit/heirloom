@@ -46,15 +46,14 @@ describe Heirloom do
                   with(:bucket_prefix => 'base',
                        :directory     => '/buildme',
                        :exclude       => ["exclude1", "exclude2"],
-                       :git           => false).
+                       :git           => false,
+                       :secret        => nil).
                   and_return '/tmp/build123.tar.gz'
     @archive_mock.should_receive(:upload).
                   with(:bucket_prefix   => 'base',
                        :regions         => ['us-west-1', 'us-west-2'],
                        :public_readable => false,
                        :file            => '/tmp/build123.tar.gz')
-    @archive_mock.should_receive(:cleanup)
-
     @build.build
   end
 

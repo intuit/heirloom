@@ -15,7 +15,6 @@ describe Heirloom do
     File.should_receive(:open).with('/tmp/file', 'w')
     Heirloom::Extracter.any_instance.should_receive(:`).
                         with('tar xzf /tmp/file -C /output')
-    File.should_receive(:delete).with '/tmp/file'
     @extracter.extract :archive => 'test', :output => '/output'
   end
 

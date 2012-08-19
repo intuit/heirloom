@@ -24,7 +24,6 @@ module Heirloom
                                                 :key    => key
 
       @logger.info "Decrypting archive."
-      cipher = Heirloom::Cipher.new :config => @config
       archive = cipher.decrypt_data :data   => raw_archive, 
                                     :secret => '12345678901234567890123456789012'
 
@@ -54,5 +53,8 @@ module Heirloom
       "#{@base_prefix}-#{@region}"
     end
 
+    def cipher
+      @cipher = Heirloom::Cipher.new :config => @config
+    end
   end
 end

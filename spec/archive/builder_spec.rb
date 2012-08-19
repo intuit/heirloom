@@ -90,12 +90,4 @@ describe Heirloom::Builder do
 
   end
 
-  describe 'cleanup' do
-    it "should cleanup the local archive" do
-      @builder.local_build = '/tmp/file'
-      File.should_receive(:delete).with('/tmp/file')
-      @builder.cleanup
-    end
-  end
-
 end

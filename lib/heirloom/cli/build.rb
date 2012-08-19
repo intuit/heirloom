@@ -60,10 +60,10 @@ Build and upload a new archive.
 
 Usage:
 
-heirloom build -n NAME -i ID -b BASE_PREFIX -r REGION1 -r REGION2 -d DIRECTORY_TO_BUILD
+heirloom build -n NAME -i ID -b BASE_PREFIX -r REGION1 -r REGION2 -d DIRECTORY_TO_UPLOAD
 
 EOS
-          opt :base_prefix, "Base bucket prefix which will be combined with region. \
+          opt :base_prefix, "Base prefix which will be combined with region. \
 For example: -b 'test' -r 'us-west-1'  will expect bucket 'test-us-west-1' \
 to be present", :type => :string
           opt :directory, "Source directory of build.", :type  => :string

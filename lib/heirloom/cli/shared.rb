@@ -36,7 +36,7 @@ module Heirloom
         required << :aws_key unless config.access_key
         required << :aws_secret unless config.secret_key
 
-        missing_opts = required.map do |opt|
+        missing_opts = required.sort.map do |opt|
           case provided[opt]
           when nil
             "Option '#{opt} (-#{opt[0]})' required but not specified."

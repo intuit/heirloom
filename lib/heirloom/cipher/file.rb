@@ -20,6 +20,8 @@ module Heirloom
         @aes.iv = iv
         @aes.key = secret
 
+        # Need to refactor to be less complex
+        # Additionally tests to do fully cover logic
         ::File.open(output,'w') do |enc|
           enc << iv
           ::File.open(file) do |f|

@@ -47,9 +47,9 @@ EOS
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
           opt :updated_value, "Updated value of attribute.", :type => :string
-          opt :aws_access_key, "AWS Access Key ID", :type => :string, 
+          opt :aws_access_key, "AWS Access Key ID", :type  => :string, 
                                                     :short => :none
-          opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
+          opt :aws_secret_key, "AWS Secret Access Key", :type  => :string, 
                                                         :short => :none
         end
       end

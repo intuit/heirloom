@@ -18,12 +18,13 @@ module Heirloom
 
     def build(args)
       @source = args[:directory] ||= '.'
+      @secret = args[:secret]
 
       directory = Directory.new :path      => @source,
                                 :exclude   => args[:exclude],
                                 :config    => @config
 
-      unless directory.build_artifact_from_directory :secret => args[:secret]
+      unless directory.build_artifact_from_directory :secret => @secret
         return false
       end
 
@@ -64,15 +65,16 @@ module Heirloom
     end
 
     def create_artifact_record
-      attributes = { 'built_by' => "#{user}@#{hostname}",
-                     'built_at' => Time.now.utc.iso8601,
-                     'id'       => @id }
+      attributes = { 'built_by'  => "#{user}@#{hostname}",
+                     'built_at'  => Time.now.utc.iso8601,
+                     'encrypted' => encrypted?,
+                     'id'        => @id }
       @logger.info "Create artifact record #{@id}."
       sdb.put_attributes @domain, @id, attributes
     end
 
-    def sdb
-      @sdb ||= AWS::SimpleDB.new :config => @config
+    def encrypted?
+      @secret != nil
     end
 
     def user
@@ -81,6 +83,10 @@ module Heirloom
 
     def hostname
       Socket.gethostname
+    end
+
+    def sdb
+      @sdb ||= AWS::SimpleDB.new :config => @config
     end
 
   end

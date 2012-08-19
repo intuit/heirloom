@@ -30,10 +30,10 @@ module Heirloom
 
       return false unless archive
 
-      writer.save_archive :archive => archive, 
-                          :output  => output,
-                          :file    => file,
-                          :extract => extract
+      return false unless writer.save_archive :archive => archive, 
+                                              :output  => output,
+                                              :file    => file,
+                                              :extract => extract
 
       @logger.info "Download complete."
 

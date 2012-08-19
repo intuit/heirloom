@@ -20,7 +20,7 @@ describe Heirloom::Builder do
         before do
           @author_stub    = stub :name => 'weaver'
           @directory_stub = stub :build_artifact_from_directory => '/tmp/build_dir',
-                             :local_build                   => '/var/tmp/file.tar.gz'
+                                 :local_build                   => '/var/tmp/file.tar.gz'
           @git_dir_mock   = double "git directory mock"
 
           Heirloom::Directory.should_receive(:new).

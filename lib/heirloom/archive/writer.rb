@@ -39,6 +39,13 @@ module Heirloom
       cmd = "tar xzf #{@tmp_archive} -C #{@output}"
       @logger.debug "Executing '#{cmd}'."
       `#{cmd}`
+      if $?.success?
+        @logger.debug "Archive succesfully extracted."
+        true
+      else
+        @logger.error "Error extracting archive."
+        false
+      end
     end
 
   end

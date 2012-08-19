@@ -41,7 +41,7 @@ describe Heirloom do
                    with(:archive => 'plaintext',
                         :file    => "123.tar.gz",
                         :output  => './',
-                        :extract => false)
+                        :extract => false).and_return true
       @downloader.download(:region      => 'us-west-1',
                            :base_prefix => 'bucket',
                            :extract     => false,
@@ -53,7 +53,7 @@ describe Heirloom do
                    with(:archive => 'plaintext',
                         :file    => "123.tar.gz",
                         :output  => '/tmp/dir',
-                        :extract => false)
+                        :extract => false).and_return true
       @downloader.download(:output      => '/tmp/dir',
                            :region      => 'us-west-1',
                            :base_prefix => 'bucket',
@@ -86,7 +86,7 @@ describe Heirloom do
                      with(:archive => 'plaintext',
                           :file    => "123.tar.gz",
                           :output  => './',
-                          :extract => false)
+                          :extract => false).and_return true
         @downloader.download :region      => 'us-west-1',
                              :base_prefix => 'bucket',
                              :extract     => false,
@@ -98,7 +98,7 @@ describe Heirloom do
                      with(:archive => 'plaintext',
                           :file    => "123.tar.gz",
                           :output  => './',
-                          :extract => true)
+                          :extract => true).and_return true
         @downloader.download :region      => 'us-west-1',
                              :base_prefix => 'bucket',
                              :extract     => true,

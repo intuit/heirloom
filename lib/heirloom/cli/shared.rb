@@ -11,6 +11,16 @@ module Heirloom
         config
       end
 
+      def ensure_valid_secret(args)
+        config = args[:config]
+        secret = args[:secret]
+        logger = config.logger
+        if secret && secret.length != 32
+          logger.error "Secret must be 32 characters long."
+          exit 1
+        end
+      end
+
       def ensure_valid_options(args)
         provided = args[:provided]
         required = args[:required]

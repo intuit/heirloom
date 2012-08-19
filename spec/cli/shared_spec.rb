@@ -16,6 +16,13 @@ describe Heirloom do
       @object.extend Heirloom::CLI::Shared
     end
 
+    it "should exit if the secret is given and under 32 characters" do
+      @logger_mock.should_receive(:error)
+      lambda { @object.ensure_valid_secret(:secret => 'shorty',
+                                           :config => @config_mock) }.
+                       should raise_error SystemExit
+    end
+
     it "should return false if a required array is emtpy" do
       @logger_mock.should_receive(:error)
       lambda { @object.ensure_valid_options(:provided => { 

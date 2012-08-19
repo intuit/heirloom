@@ -20,9 +20,9 @@ module Heirloom
         @aes.iv = iv
         @aes.key = secret
 
-        File.open(output,'w') do |enc|
+        ::File.open(output,'w') do |enc|
           enc << iv
-          File.open(file) do |f|
+          ::File.open(file) do |f|
             loop do
               r = f.read(4096)
               break unless r

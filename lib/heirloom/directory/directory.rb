@@ -41,7 +41,7 @@ module Heirloom
       return false unless build_archive
       @logger.info "Secret provided. Encrypting."
       @local_build = cipher_file.encrypt_file :file   => @local_build,
-                                         :secret => @secret
+                                              :secret => @secret
     end
 
     def files_to_pack

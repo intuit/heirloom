@@ -28,6 +28,7 @@ module Heirloom
         end
 
         ensure_directory :path => @opts[:directory], :config => @config
+        ensure_valid_secret :secret => @opts[:secret], :config => @config
 
         @archive.destroy if @archive.exists?
                           

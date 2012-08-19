@@ -23,8 +23,8 @@ module Heirloom
         @aes.iv = data.slice!(0,16)
         begin
           @aes.update(data) + @aes.final
-        rescue OpenSSL::Cipher::CipherError
-          @logger.error "Unable to decrypt archive."
+        rescue OpenSSL::Cipher::CipherError => e
+          @logger.error "Unable to decrypt archive: '#{e.message}'"
           false
         end
       end

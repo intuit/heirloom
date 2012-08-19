@@ -14,7 +14,6 @@ module Heirloom
                              :required => [:base_prefix, :name, :id, :output],
                              :config   => @config
 
-
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config
@@ -22,6 +21,7 @@ module Heirloom
       
       def download
         ensure_directory :path => @opts[:output], :config => @config
+        ensure_valid_secret :secret => @opts[:secret], :config => @config
         archive = @archive.download :output      => @opts[:output],
                                     :region      => @opts[:region],
                                     :extract     => @opts[:extract],

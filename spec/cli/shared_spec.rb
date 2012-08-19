@@ -18,6 +18,7 @@ describe Heirloom do
 
     it "should exit if the secret is given and under 32 characters" do
       @logger_mock.should_receive(:error)
+      @logger_mock.stub :info => true
       lambda { @object.ensure_valid_secret(:secret => 'shorty',
                                            :config => @config_mock) }.
                        should raise_error SystemExit

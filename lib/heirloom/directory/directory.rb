@@ -40,7 +40,7 @@ module Heirloom
     def build_encrypted_archive
       return false unless build_archive
       @logger.info "Secret provided. Encrypting."
-      @local_build = cipher.encrypt_file :file   => @local_build,
+      @local_build = cipher_file.encrypt_file :file   => @local_build,
                                          :secret => @secret
     end
 
@@ -48,8 +48,8 @@ module Heirloom
       (Dir.entries(@path) - ['.', '..'] - @exclude).join(' ')
     end
 
-    def cipher
-      @cipher = Heirloom::Cipher.new :config => @config
+    def cipher_file
+      @cipher_file = Heirloom::Cipher::File.new :config => @config
     end
 
   end

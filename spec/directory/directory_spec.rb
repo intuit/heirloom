@@ -33,8 +33,9 @@ describe Heirloom::Directory do
       context 'without secret provided' do
         before do
           @cipher_mock = mock 'cipher'
-          Heirloom::Cipher.should_receive(:new).with(:config => @config_mock).
-                            and_return @cipher_mock
+          Heirloom::Cipher::File.should_receive(:new).
+                                 with(:config => @config_mock).
+                                 and_return @cipher_mock
         end
 
         it "should build and encrypt an archive from the path" do

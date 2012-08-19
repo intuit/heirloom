@@ -12,9 +12,9 @@ module Heirloom
     def download(args)
       @region = args[:region]
       @base_prefix = args[:base_prefix]
-      @extract = args[:extract]
-      @secret = args[:secret]
-      @output = args[:output] ||= './'
+      extract = args[:extract]
+      secret = args[:secret]
+      output = args[:output] ||= './'
 
       @logger.info "Downloading s3://#{bucket}/#{key} from #{@region}."
 
@@ -25,10 +25,12 @@ module Heirloom
       raw_archive = s3_downloader.download_file :bucket => bucket,
                                                 :key    => key
 
-      @archive = cipher.decrypt_data :data   => raw_archive, 
-                                     :secret => @secret
+      archive = cipher_data.decrypt_data :data   => raw_archive,
+                                         :secret => secret
 
-      save_archive
+      writer.save_archive :archive => archive, 
+                          :output  => output,
+                          :extract => extract
 
       @logger.info "Download complete."
     end
@@ -47,22 +49,12 @@ module Heirloom
       "#{@base_prefix}-#{@region}"
     end
 
-    def save_archive
-      if @extract
-        extracter.extract :archive => @archive, :output => @output
-      else
-        output_file = File.join @output, file
-        @logger.info "Writing archive to '#{output_file}'."
-        File.open(output_file, 'w') { |local_file| local_file.write @archive }
-      end
+    def writer
+      @writer ||= Writer.new :config => @config
     end
 
-    def extracter
-      @extracter ||= Extracter.new :config => @config
-    end
-
-    def cipher
-      @cipher ||= Cipher.new :config => @config
+    def cipher_data
+      @cipher_data ||= Cipher::Data.new :config => @config
     end
   end
 end

@@ -12,7 +12,7 @@ module Heirloom
 
         ensure_valid_options :provided => @opts, 
                              :required => [:name, :id, :region, 
-                                           :base_prefix, :directory],
+                                           :base, :directory],
                              :config   => @config
 
         @archive = Archive.new :name   => @opts[:name],
@@ -21,7 +21,7 @@ module Heirloom
       end
 
       def build
-        unless @archive.buckets_exist? :bucket_prefix => @opts[:base_prefix],
+        unless @archive.buckets_exist? :bucket_prefix => @opts[:base],
                                        :regions       => @opts[:region]
           @logger.error "Buckets do no exist in required regions."
           exit 1
@@ -32,21 +32,21 @@ module Heirloom
 
         @archive.destroy if @archive.exists?
                           
-        build = @archive.build :bucket_prefix => @opts[:base_prefix],
+        build = @archive.build :bucket_prefix => @opts[:base],
                                :directory     => @opts[:directory],
                                :exclude       => @opts[:exclude],
                                :git           => @opts[:git],
                                :secret        => @opts[:secret]
 
-        if build
-          @archive.upload :bucket_prefix   => @opts[:base_prefix],
-                          :regions         => @opts[:region],
-                          :public_readable => @opts[:public],
-                          :file            => build
-        else
+        unless build
           @logger.error "Build failed."
           exit 1
         end
+
+        @archive.upload :bucket_prefix   => @opts[:base],
+                        :regions         => @opts[:region],
+                        :public_readable => @opts[:public],
+                        :file            => build
       end
 
       private
@@ -56,14 +56,14 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Build and upload a new archive.
+Upload a directory to Heirloom.
 
 Usage:
 
-heirloom build -n NAME -i ID -b BASE_PREFIX -r REGION1 -r REGION2 -d DIRECTORY_TO_UPLOAD
+heirloom upload -n NAME -i ID -b BASE -r REGION1 -r REGION2 -d DIRECTORY_TO_UPLOAD
 
 EOS
-          opt :base_prefix, "Base prefix which will be combined with region. \
+          opt :base, "Base prefix which will be combined with region. \
 For example: -b 'test' -r 'us-west-1'  will expect bucket 'test-us-west-1' \
 to be present", :type => :string
           opt :directory, "Source directory of build.", :type  => :string

@@ -18,7 +18,7 @@ module Heirloom
       case cmd
       when 'authorize'
         CLI::Authorize.new.authorize
-      when 'build'
+      when 'build', 'upload'
         CLI::Build.new.build
       when 'destroy', 'delete'
         CLI::Destroy.new.destroy
@@ -28,13 +28,13 @@ module Heirloom
         CLI::List.new.list
       when 'show'
         CLI::Show.new.show
-      when 'tag'
+      when 'update', 'tag'
         CLI::Update.new.update
       when '-v'
         puts Heirloom::VERSION
       else
         puts "Unkown command: '#{cmd}'." unless cmd == '-h'
-        puts "heirloom [list|show|build|authorize|update|download|destroy] OPTIONS"
+        puts "heirloom [list|show|upload|authorize|tag|download|destroy] OPTIONS"
         puts "Append -h for help on specific command."
       end
     end

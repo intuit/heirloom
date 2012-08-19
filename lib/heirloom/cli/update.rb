@@ -33,11 +33,11 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Update an archive's attribute.
+Tag an archive with an attribute and value.
 
 Usage:
 
-heirloom update -n NAME -i ID -a ATTRIBUTE_TO_UPDATE -u UPDATED_VALUE
+heirloom tag -n NAME -i ID -a ATTRIBUTE -u UPDATED_VALUE
 
 EOS
           opt :attribute, "Attribute to update.", :type => :string

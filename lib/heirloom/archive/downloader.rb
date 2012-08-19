@@ -28,11 +28,15 @@ module Heirloom
       archive = cipher_data.decrypt_data :data   => raw_archive,
                                          :secret => secret
 
+      return false unless archive
+
       writer.save_archive :archive => archive, 
                           :output  => output,
                           :extract => extract
 
       @logger.info "Download complete."
+
+      output
     end
 
     private

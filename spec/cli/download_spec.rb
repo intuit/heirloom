@@ -34,11 +34,12 @@ describe Heirloom do
   end
 
   it "should download an archive" do
-    @archive_mock.should_receive(:download).with :output      => '/tmp/test123',
+    @archive_mock.should_receive(:download).with(:output      => '/tmp/test123',
                                                  :region      => 'us-east-1',
                                                  :base_prefix => 'base',
                                                  :extract     => false,
-                                                 :secret      => nil
+                                                 :secret      => nil).
+                  and_return '/tmp/test123'
     @cli_download.should_receive(:ensure_directory).
                   with(:config => @config_mock, 
                        :path => '/tmp/test123').

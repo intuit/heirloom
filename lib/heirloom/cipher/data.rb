@@ -24,6 +24,7 @@ module Heirloom
         begin
           @aes.update(data) + @aes.final
         rescue OpenSSL::Cipher::CipherError
+          @logger.error "Unable to decrypt archive."
           false
         end
       end

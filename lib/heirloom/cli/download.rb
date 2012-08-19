@@ -22,11 +22,12 @@ module Heirloom
       
       def download
         ensure_directory :path => @opts[:output], :config => @config
-        @archive.download :output      => @opts[:output],
-                          :region      => @opts[:region],
-                          :extract     => @opts[:extract],
-                          :base_prefix => @opts[:base_prefix],
-                          :secret      => @opts[:secret]
+        archive = @archive.download :output      => @opts[:output],
+                                    :region      => @opts[:region],
+                                    :extract     => @opts[:extract],
+                                    :base_prefix => @opts[:base_prefix],
+                                    :secret      => @opts[:secret]
+        exit 1 unless archive
       end
 
       private

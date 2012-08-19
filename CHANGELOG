@@ -13,9 +13,9 @@
 * Verify directory given at build is a directory
 * Support archiving directories outside the cwd.
 * Fixed bug in git repo verification on build.
-* Added support for encryption
-* Removed short name and changed long name for AWS CLI Creds
-* Adding encrypted attribute by default
+* Added support for encryption.
+* Removed short name and changed long name for AWS CLI creds.
+* Adding encrypted attribute by default for all builds.
 
 ## v0.4.0:
 

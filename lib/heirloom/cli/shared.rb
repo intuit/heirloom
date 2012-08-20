@@ -15,16 +15,10 @@ module Heirloom
         config = args[:config]
         secret = args[:secret]
         logger = config.logger
-        if secret && secret.length != 32
-          logger.error "Secret must be exactly 32 characters long."
-          logger.info "Random sample secret: #{generate_random_secret}"
+        if secret && secret.length < 8
+          logger.error "Secret must be at least 8 characters long."
           exit 1
         end
-      end
-
-      def generate_random_secret
-        o = [(0..9),('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten
-        (1..32).map{ o[rand(o.length)] }.join
       end
 
       def ensure_valid_options(args)

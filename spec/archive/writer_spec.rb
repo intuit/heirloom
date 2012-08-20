@@ -17,7 +17,7 @@ describe Heirloom do
       File.should_receive(:open).with('/tmp/tempfile', 'w')
       Heirloom::Writer.any_instance.should_receive(:`).
                        with('tar xzf /tmp/tempfile -C /output')
-      $?.should_receive(:success?).and_return true
+      $?.stub :success? => true
       @writer.save_archive(:archive => 'archive_data', 
                            :output  => '/output',
                            :file    => 'id.tar.gz',
@@ -28,8 +28,8 @@ describe Heirloom do
       File.should_receive(:open).with('/tmp/tempfile', 'w')
       Heirloom::Writer.any_instance.should_receive(:`).
                        with('tar xzf /tmp/tempfile -C /output')
+      $?.stub :success? => false
       @logger_mock.should_receive(:error).with "Error extracting archive."
-      $?.should_receive(:success?).and_return false
       @writer.save_archive(:archive => 'archive_data', 
                            :output  => '/output',
                            :file    => 'id.tar.gz',

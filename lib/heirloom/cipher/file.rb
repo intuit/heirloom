@@ -18,7 +18,7 @@ module Heirloom
 
         @aes.encrypt
         @aes.iv = iv
-        @aes.key = secret
+        @aes.key = Digest::SHA256.hexdigest secret
 
         # Need to refactor to be less complex
         # Additionally tests to do fully cover logic

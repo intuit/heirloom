@@ -22,9 +22,12 @@ describe Heirloom::Directory do
     end
 
     context 'when succesful' do
+      before do 
+        $?.stub :success? => true
+      end
+
       context 'without secret provided' do
         it "should build an archive from the path" do
-          $?.should_receive(:success?).and_return true
           @directory.build_artifact_from_directory(:secret => nil).
                      should be_true
         end
@@ -39,7 +42,6 @@ describe Heirloom::Directory do
         end
 
         it "should build and encrypt an archive from the path" do
-          $?.should_receive(:success?).and_return true
           @cipher_mock.should_receive(:encrypt_file).
                        with(:file => '/tmp/file.tar.gz', 
                             :secret => 'supersecret').

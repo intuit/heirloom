@@ -18,10 +18,10 @@ describe Heirloom do
 
     it "should decrypt the given data" do
       @aes_mock.should_receive(:decrypt)
-      @aes_mock.should_receive(:key=).with 'mysecret'
+      @aes_mock.should_receive(:key=).with Digest::SHA256.hexdigest 'mysecret'
       @aes_mock.should_receive(:iv=).with 'firstsixteenchar'
       @aes_mock.should_receive(:update).with('crypteddata').and_return 'cleartext'
-      @aes_mock.should_receive(:final).and_return 'final'
+      @aes_mock.stub :final => 'final'
       @data.decrypt_data(:data => 'firstsixteencharcrypteddata',
                          :secret => 'mysecret').
             should == 'cleartextfinal'
@@ -31,7 +31,7 @@ describe Heirloom do
       @logger_mock.should_receive(:error).
                    with "Unable to decrypt archive: 'OpenSSL::Cipher::CipherError'"
       @aes_mock.should_receive(:decrypt)
-      @aes_mock.should_receive(:key=).with 'badsecret'
+      @aes_mock.should_receive(:key=).with Digest::SHA256.hexdigest 'badsecret'
       @aes_mock.should_receive(:iv=).with 'firstsixteenchar'
       @aes_mock.should_receive(:update).with('crypteddata').and_return 'crap'
       @aes_mock.should_receive(:final).and_raise OpenSSL::Cipher::CipherError

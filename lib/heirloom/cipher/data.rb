@@ -13,13 +13,13 @@ module Heirloom
         data   = args[:data]
         secret = args[:secret]
 
-        return data unless secret
+        return data unless args[:secret]
 
         @logger.info "Secret provided. Decrypting archive."
 
         @aes = OpenSSL::Cipher::AES256.new(:CBC)
         @aes.decrypt
-        @aes.key = secret
+        @aes.key = Digest::SHA256.hexdigest secret
         @aes.iv = data.slice!(0,16)
         begin
           @aes.update(data) + @aes.final

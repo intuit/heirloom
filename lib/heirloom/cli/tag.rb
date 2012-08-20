@@ -11,7 +11,7 @@ module Heirloom
                               :opts   => @opts
 
         ensure_valid_options :provided => @opts,
-                             :required => [:name, :id, :attribute, :updated_value],
+                             :required => [:name, :id, :attribute, :value],
                              :config   => @config
 
         ensure_domain_exists :name => @opts[:name], :config => @config
@@ -23,7 +23,7 @@ module Heirloom
       
       def tag
         @archive.update :attribute  => @opts[:attribute],
-                        :value      => @opts[:updated_value]
+                        :value      => @opts[:value]
       end
 
       private
@@ -37,7 +37,7 @@ Tag an archive with an attribute and value.
 
 Usage:
 
-heirloom tag -n NAME -i ID -a ATTRIBUTE -u UPDATED_VALUE
+heirloom tag -n NAME -i ID -a ATTRIBUTE -u VALUE
 
 EOS
           opt :attribute, "Attribute to update.", :type => :string
@@ -46,7 +46,8 @@ EOS
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
-          opt :updated_value, "Updated value of attribute.", :type => :string
+          opt :value, "Value of attribute.", :type  => :string,
+                                             :short => 'u'
           opt :aws_access_key, "AWS Access Key ID", :type  => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type  => :string, 

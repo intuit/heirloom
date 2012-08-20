@@ -4,11 +4,11 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    options = { :name           => 'archive_name',
-                :id             => '1.0.0',
-                :level          => 'info',
-                :attribute      => 'att',
-                :updated_value  => 'val' }
+    options = { :name      => 'archive_name',
+                :id        => '1.0.0',
+                :level     => 'info',
+                :attribute => 'att',
+                :value     => 'val' }
     @logger_stub = stub :debug => true
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'

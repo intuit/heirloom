@@ -18,6 +18,7 @@
 * Adding encrypted attribute by default for all builds.
 * Change base_prefix CLI option to base
 * Changed subcommands build -> upload, update -> tag
+* Changed tag option updated_value -> value
 
 ## v0.4.0:
 

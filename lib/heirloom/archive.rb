@@ -4,7 +4,7 @@ require 'heirloom/archive/builder.rb'
 require 'heirloom/archive/updater.rb'
 require 'heirloom/archive/uploader.rb'
 require 'heirloom/archive/downloader.rb'
-require 'heirloom/archive/extracter.rb'
+require 'heirloom/archive/writer.rb'
 require 'heirloom/archive/authorizer.rb'
 require 'heirloom/archive/destroyer.rb'
 require 'heirloom/archive/verifier.rb'
@@ -66,10 +66,6 @@ module Heirloom
 
     def list(limit=10)
       lister.list(limit)
-    end
-
-    def cleanup
-      builder.cleanup
     end
 
     def regions

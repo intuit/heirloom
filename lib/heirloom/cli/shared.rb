@@ -6,9 +6,19 @@ module Heirloom
         opts = args[:opts]
         logger = args[:logger]
         config = Config.new :logger => logger
-        config.access_key = opts[:key] if opts[:key_given]
-        config.secret_key = opts[:secret] if opts[:secret_given]
+        config.access_key = opts[:aws_access_key] if opts[:aws_access_key_given]
+        config.secret_key = opts[:aws_secret_key] if opts[:aws_secret_key_given]
         config
+      end
+
+      def ensure_valid_secret(args)
+        config = args[:config]
+        secret = args[:secret]
+        logger = config.logger
+        if secret && secret.length < 8
+          logger.error "Secret must be at least 8 characters long."
+          exit 1
+        end
       end
 
       def ensure_valid_options(args)
@@ -17,15 +27,14 @@ module Heirloom
         config   = args[:config]
         logger   = config.logger
 
-        required << :key unless config.access_key
-        required << :secret unless config.secret_key
+        required << :aws_access_key unless config.access_key
+        required << :aws_secret_key unless config.secret_key
 
-        missing_opts = required.map do |opt|
+        missing_opts = required.sort.map do |opt|
           case provided[opt]
-          when nil
-            "Option '#{opt} (-#{opt[0]})' required but not specified."
-          when []
-            "Option '#{opt} (-#{opt[0]})' required but not specified."
+          when nil, []
+            pretty_opt = opt.to_s.gsub('_', '-')
+            "Option '#{pretty_opt}' required but not specified."
           end
         end
 

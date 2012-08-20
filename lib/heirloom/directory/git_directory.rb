@@ -11,13 +11,22 @@ module Heirloom
     end
 
     def commit(sha = nil)
-      repo = Repo.new @path
+      return false unless repo
+
       if sha
         commit = repo.commits(sha)
         commit ? commit.first : false
       else
         repo.commits.first
       end
+    end
+
+    private
+
+    def repo
+      Repo.new @path
+    rescue Grit::InvalidGitRepositoryError
+      false
     end
 
   end

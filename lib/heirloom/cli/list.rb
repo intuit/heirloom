@@ -42,11 +42,13 @@ EOS
           opt :count, "Number of IDs to return.", :type    => :integer,
                                                   :default => 10
           opt :help, "Display Help"
-          opt :key, "AWS Access Key ID", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
-          opt :secret, "AWS Secret Access Key", :type => :string
+          opt :aws_access_key, "AWS Access Key ID", :type => :string, 
+                                                    :short => :none
+          opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
+                                                        :short => :none
         end
       end
 

@@ -1,6 +1,6 @@
 module Heirloom
   module CLI
-    class Update
+    class Tag
 
       include Heirloom::CLI::Shared
 
@@ -11,7 +11,7 @@ module Heirloom
                               :opts   => @opts
 
         ensure_valid_options :provided => @opts,
-                             :required => [:name, :id, :attribute, :updated_value],
+                             :required => [:name, :id, :attribute, :value],
                              :config   => @config
 
         ensure_domain_exists :name => @opts[:name], :config => @config
@@ -21,9 +21,9 @@ module Heirloom
                                :config => @config
       end
       
-      def update
+      def tag
         @archive.update :attribute  => @opts[:attribute],
-                        :value      => @opts[:updated_value]
+                        :value      => @opts[:value]
       end
 
       private
@@ -33,22 +33,25 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Update an archive's attribute.
+Tag an archive with an attribute and value.
 
 Usage:
 
-heirloom update -n NAME -i ID -a ATTRIBUTE_TO_UPDATE -u UPDATED_VALUE
+heirloom tag -n NAME -i ID -a ATTRIBUTE -u VALUE
 
 EOS
           opt :attribute, "Attribute to update.", :type => :string
           opt :help, "Display Help"
           opt :id, "ID of the archive to display.", :type => :string
-          opt :key, "AWS Access Key ID", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :name, "Name of archive.", :type => :string
-          opt :secret, "AWS Secret Access Key", :type => :string
-          opt :updated_value, "Updated value of attribute.", :type => :string
+          opt :value, "Value of attribute.", :type  => :string,
+                                             :short => 'u'
+          opt :aws_access_key, "AWS Access Key ID", :type  => :string, 
+                                                    :short => :none
+          opt :aws_secret_key, "AWS Secret Access Key", :type  => :string, 
+                                                        :short => :none
         end
       end
     end

@@ -18,10 +18,10 @@ describe Heirloom do
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_stub
-    Heirloom::CLI::Update.any_instance.should_receive(:load_config).
-                          with(:logger => @logger_stub,
-                               :opts   => options).
-                          and_return @config_mock
+    Heirloom::CLI::Tag.any_instance.should_receive(:load_config).
+                       with(:logger => @logger_stub,
+                            :opts   => options).
+                       and_return @config_mock
     Heirloom::Archive.should_receive(:new).
                       with(:name => 'archive_name',
                            :config => @config_mock).
@@ -32,14 +32,14 @@ describe Heirloom do
                            :config => @config_mock).
                       and_return @archive_mock
     @archive_mock.should_receive(:domain_exists?).and_return true
-    @cli_update = Heirloom::CLI::Update.new
+    @cli_tag = Heirloom::CLI::Tag.new
   end
 
-  it "should update an attribute for a given id" do
+  it "should tag an archive attribute with a given id" do
     @archive_mock.should_receive(:update).
                   with(:attribute => 'att',
                        :value     => 'val')
-    @cli_update.update
+    @cli_tag.tag
   end
 
 end

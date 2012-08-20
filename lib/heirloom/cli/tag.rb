@@ -1,6 +1,6 @@
 module Heirloom
   module CLI
-    class Update
+    class Tag
 
       include Heirloom::CLI::Shared
 
@@ -21,7 +21,7 @@ module Heirloom
                                :config => @config
       end
       
-      def update
+      def tag
         @archive.update :attribute  => @opts[:attribute],
                         :value      => @opts[:updated_value]
       end

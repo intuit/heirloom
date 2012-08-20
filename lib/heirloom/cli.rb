@@ -3,10 +3,10 @@ require 'trollop'
 
 require 'heirloom/cli/shared'
 require 'heirloom/cli/authorize'
-require 'heirloom/cli/build'
+require 'heirloom/cli/upload'
 require 'heirloom/cli/list'
 require 'heirloom/cli/show'
-require 'heirloom/cli/update'
+require 'heirloom/cli/tag'
 require 'heirloom/cli/download'
 require 'heirloom/cli/destroy'
 
@@ -18,8 +18,6 @@ module Heirloom
       case cmd
       when 'authorize'
         CLI::Authorize.new.authorize
-      when 'build', 'upload'
-        CLI::Build.new.build
       when 'destroy', 'delete'
         CLI::Destroy.new.destroy
       when 'download'
@@ -29,7 +27,9 @@ module Heirloom
       when 'show'
         CLI::Show.new.show
       when 'update', 'tag'
-        CLI::Update.new.update
+        CLI::Tag.new.tag
+      when 'build', 'upload'
+        CLI::Upload.new.build
       when '-v'
         puts Heirloom::VERSION
       else

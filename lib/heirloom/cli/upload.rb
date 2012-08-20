@@ -1,6 +1,6 @@
 module Heirloom
   module CLI
-    class Build
+    class Upload
 
       include Heirloom::CLI::Shared
 
@@ -20,7 +20,7 @@ module Heirloom
                                :config => @config
       end
 
-      def build
+      def upload
         unless @archive.buckets_exist? :bucket_prefix => @opts[:base],
                                        :regions       => @opts[:region]
           @logger.error "Buckets do no exist in required regions."

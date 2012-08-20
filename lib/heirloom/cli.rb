@@ -29,7 +29,7 @@ module Heirloom
       when 'update', 'tag'
         CLI::Tag.new.tag
       when 'build', 'upload'
-        CLI::Upload.new.build
+        CLI::Upload.new.upload
       when '-v'
         puts Heirloom::VERSION
       else

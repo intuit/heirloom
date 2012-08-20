@@ -17,6 +17,7 @@
 * Removed short name and changed long name for AWS CLI creds.
 * Adding encrypted attribute by default for all builds.
 * Change base_prefix CLI option to base
+* Changed subcommands build -> upload, update -> tag
 
 ## v0.4.0:
 

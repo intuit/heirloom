@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   s.add_development_dependency "rspec"
 
-  s.add_runtime_dependency 'fog'
-  s.add_runtime_dependency 'grit'
-  s.add_runtime_dependency 'logger'
-  s.add_runtime_dependency 'trollop'
+  s.add_runtime_dependency 'fog', '= 1.5.0'
+  s.add_runtime_dependency 'grit', '= 2.5.0' 
+  s.add_runtime_dependency 'logger', '= 1.2.8'
+  s.add_runtime_dependency 'trollop', '= 2.0'
 end

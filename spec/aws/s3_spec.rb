@@ -51,5 +51,21 @@ describe Heirloom do
     @s3.put_object_acl 'bucket', 'object', 'grants'
   end
 
+  it "should call put bucket with location_constraint us-west-1" do
+    options = { 'LocationConstraint' => 'us-west-1',
+                'x-amz-acl'          => 'private' }
+    @fog_mock.should_receive(:put_bucket).
+              with('name', options)
+    @s3.put_bucket 'name', 'us-west-1'
+  end
+
+  it "should call put bucket with location_constraint nil when region us-west-1" do
+    options = { 'LocationConstraint' => nil,
+                'x-amz-acl'          => 'private' }
+    @fog_mock.should_receive(:put_bucket).
+              with('name', options)
+    @s3.put_bucket 'name', 'us-east-1'
+  end
+
 
 end

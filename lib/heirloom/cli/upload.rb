@@ -21,11 +21,11 @@ module Heirloom
       end
 
       def upload
-        @archive.setup :regions       => @opts[:region],
-                       :bucket_prefix => @opts[:base]
-
         ensure_directory :path => @opts[:directory], :config => @config
         ensure_valid_secret :secret => @opts[:secret], :config => @config
+
+        @archive.setup :regions       => @opts[:region],
+                       :bucket_prefix => @opts[:base]
 
         @archive.destroy :keep_domain => true if @archive.exists?
                           

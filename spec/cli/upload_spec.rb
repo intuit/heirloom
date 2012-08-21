@@ -14,7 +14,7 @@ describe Heirloom do
                 :name      => 'archive_name',
                 :id        => '1.0.0' }
 
-    @logger_stub = stub :error => true, :info => true
+    @logger_stub = stub 'logger', :error => true, :info => true
     @config_mock = mock 'config'
     @config_mock.stub :logger     => @logger_stub,
                       :access_key => 'key',
@@ -37,10 +37,10 @@ describe Heirloom do
 
   it "should upload an archive" do
     @upload.stub :ensure_directory => true
-    @archive_mock.should_receive(:buckets_exist?).
+    @upload.stub :ensure_valid_secret => true
+    @archive_mock.should_receive(:setup).
                   with(:bucket_prefix => 'base',
-                       :regions       => ["us-west-1", "us-west-2"]).
-                  and_return true
+                       :regions       => ["us-west-1", "us-west-2"])
     @archive_mock.stub :exists? => false
     @archive_mock.should_receive(:build).
                   with(:bucket_prefix => 'base',

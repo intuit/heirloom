@@ -22,6 +22,10 @@ module Heirloom
       end
       
       def tag
+        unless @archive.exists?
+          @logger.error "Archive does not exist"
+          exit 1
+        end
         @archive.update :attribute  => @opts[:attribute],
                         :value      => @opts[:value]
       end

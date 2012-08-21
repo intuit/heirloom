@@ -43,11 +43,11 @@ describe Heirloom do
                        :regions       => ["us-west-1", "us-west-2"])
     @archive_mock.stub :exists? => false
     @archive_mock.should_receive(:build).
-                  with(:bucket_prefix => 'base',
-                       :directory     => '/buildme',
-                       :exclude       => ["exclude1", "exclude2"],
-                       :git           => false,
-                       :secret        => nil).
+                  with(:base      => 'base',
+                       :directory => '/buildme',
+                       :exclude   => ["exclude1", "exclude2"],
+                       :git       => false,
+                       :secret    => nil).
                   and_return '/tmp/build123.tar.gz'
     @archive_mock.should_receive(:upload).
                   with(:bucket_prefix   => 'base',

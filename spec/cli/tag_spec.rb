@@ -9,7 +9,7 @@ describe Heirloom do
                 :level     => 'info',
                 :attribute => 'att',
                 :value     => 'val' }
-    @logger_stub = stub :debug => true
+    @logger_stub = stub :debug => true, :error => true
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'
     @config_mock.stub :logger     => @logger_stub, 
@@ -36,10 +36,16 @@ describe Heirloom do
   end
 
   it "should tag an archive attribute with a given id" do
+    @archive_mock.stub :exists? => true
     @archive_mock.should_receive(:update).
                   with(:attribute => 'att',
                        :value     => 'val')
     @cli_tag.tag
+  end
+
+  it "should exit if the archive does not exist" do
+    @archive_mock.stub :exists? => false
+    lambda { @cli_tag.tag }.should raise_error SystemExit
   end
 
 end

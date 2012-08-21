@@ -6,9 +6,6 @@ describe Heirloom::Builder do
     @logger_stub   = stub :debug => 'true', :info => 'true', :warn => 'true'
     @config_mock.stub(:logger).and_return(@logger_stub)
     @simpledb_mock = double 'simple db'
-    Heirloom::AWS::SimpleDB.should_receive(:new).with(:config => @config_mock).
-                            and_return(@simpledb_mock)
-    @simpledb_mock.should_receive(:create_domain).with 'heirloom_tim'
     @builder       = Heirloom::Builder.new :config => @config_mock,
                                            :name   => 'tim',
                                            :id     => '123'
@@ -16,8 +13,7 @@ describe Heirloom::Builder do
 
   describe 'build' do
     context 'when successful' do
-      context 'with a git directory' do
-        before do
+      before do
           @author_stub    = stub :name => 'weaver'
           @directory_stub = stub :build_artifact_from_directory => '/tmp/build_dir',
                                  :local_build                   => '/var/tmp/file.tar.gz'
@@ -32,6 +28,14 @@ describe Heirloom::Builder do
                                  with(:path => 'path_to_build').
                                  and_return @git_dir_mock
           @builder.should_receive(:create_artifact_record)
+      end
+
+      context 'with a git directory' do
+
+        before do
+          Heirloom::AWS::SimpleDB.should_receive(:new).
+                                  with(:config => @config_mock).
+                                  and_return(@simpledb_mock)
         end
 
         it "should build an archive" do
@@ -66,6 +70,9 @@ describe Heirloom::Builder do
                          :git       => 'true').should == '/var/tmp/file.tar.gz'
         end
 
+      end
+
+      context "without git dir" do
         it "should build an archive and log a warning if the git sha is not found" do
           @logger_stub.should_receive(:warn).with "Could not load Git sha '123' in 'path_to_build'."
           @git_dir_mock.should_receive(:commit).

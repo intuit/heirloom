@@ -16,8 +16,8 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
-      @name = args[:name]
-      @id = args[:id]
+      @name   = args[:name]
+      @id     = args[:id]
     end
 
     def authorize(accounts)

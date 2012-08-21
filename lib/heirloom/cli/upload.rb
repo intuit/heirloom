@@ -21,19 +21,13 @@ module Heirloom
       end
 
       def upload
-        #unless @archive.buckets_exist? :bucket_prefix => @opts[:base],
-        #                               :regions       => @opts[:region]
-        #  @logger.error "Buckets do no exist in required regions."
-        #  exit 1
-        #end
-        
         @archive.setup :regions       => @opts[:region],
                        :bucket_prefix => @opts[:base]
 
         ensure_directory :path => @opts[:directory], :config => @config
         ensure_valid_secret :secret => @opts[:secret], :config => @config
 
-        @archive.destroy if @archive.exists?
+        @archive.destroy :keep_domain => true if @archive.exists?
                           
         build = @archive.build :bucket_prefix => @opts[:base],
                                :directory     => @opts[:directory],

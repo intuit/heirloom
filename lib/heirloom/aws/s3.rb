@@ -34,6 +34,12 @@ module Heirloom
         @s3.put_object_acl(bucket, key, grants)
       end
 
+      def put_bucket(bucket_name, region)
+        location_constraint = region == 'us-east-1' ? nil : region
+        @s3.put_bucket bucket_name, { 'LocationConstraint' => location_constraint,
+                                      'x-amz-acl'          => 'private' }
+      end
+
     end
   end
 end

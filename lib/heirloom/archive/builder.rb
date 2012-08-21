@@ -13,7 +13,6 @@ module Heirloom
       @domain = "heirloom_#{@name}"
       @id = args[:id]
       @logger = @config.logger
-      sdb.create_domain @domain
     end
 
     def build(args)

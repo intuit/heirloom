@@ -33,10 +33,10 @@ module Heirloom
                          :region => region
 
       if s3.get_bucket bucket
-        @logger.debug "#{bucket} exists in #{region}"
+        @logger.debug "Bucket #{bucket} exists in #{region}"
         true
       else
-        @logger.debug "#{bucket} in #{region} does not exist"
+        @logger.debug "Bucket #{bucket} in #{region} does not exist"
         false
       end
     end

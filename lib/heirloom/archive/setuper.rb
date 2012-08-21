@@ -24,7 +24,7 @@ module Heirloom
        
         unless verifier.bucket_exists? :region        => region,
                                        :bucket_prefix => @bucket_prefix
-          @logger.info "Creating #{bucket} in #{region}."
+          @logger.info "Creating bucket #{bucket} in #{region}."
           s3 = AWS::S3.new :config => @config,
                            :region => region
           s3.put_bucket bucket, region

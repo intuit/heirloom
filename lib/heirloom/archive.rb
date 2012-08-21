@@ -61,8 +61,9 @@ module Heirloom
       verifier.domain_exists?
     end
 
-    def destroy
-      destroyer.destroy :regions => regions
+    def destroy(args)
+      destroyer.destroy :regions     => regions,
+                        :keep_domain => args[:keep_domain]
     end
 
     def show

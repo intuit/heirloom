@@ -125,17 +125,6 @@ describe Heirloom do
       @archive.list
     end
 
-    it "should call cleanup method" do
-      mock = double('Mock')
-      Heirloom::Builder.should_receive(:new).
-                        with(:config => @config_mock,
-                             :name   => 'chef',
-                             :id     => '123').
-                        and_return mock
-      mock.should_receive(:cleanup)
-      @archive.cleanup
-    end
-
     it "should return true if the required buckets exist" do
       mock = double('Mock')
       Heirloom::Verifier.should_receive(:new).

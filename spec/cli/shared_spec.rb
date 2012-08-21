@@ -16,6 +16,14 @@ describe Heirloom do
       @object.extend Heirloom::CLI::Shared
     end
 
+    it "should exit if the secret is given and under 8 characters" do
+      @logger_mock.should_receive(:error)
+      @logger_mock.stub :info => true
+      lambda { @object.ensure_valid_secret(:secret => 'shorty',
+                                           :config => @config_mock) }.
+                       should raise_error SystemExit
+    end
+
     it "should return false if a required array is emtpy" do
       @logger_mock.should_receive(:error)
       lambda { @object.ensure_valid_options(:provided => { 
@@ -75,15 +83,15 @@ describe Heirloom do
     end
 
     it "should set the access key if specified" do
-      opts = { :key       => 'the_key',
-               :key_given => true }
+      opts = { :aws_access_key       => 'the_key',
+               :aws_access_key_given => true }
       @config_mock.should_receive(:access_key=).with 'the_key'
       @object.load_config :logger => @logger_mock, :opts => opts
     end
 
     it "should set the secret key if specified" do
-      opts = { :secret       => 'the_secret',
-               :secret_given => true }
+      opts = { :aws_secret_key       => 'the_secret',
+               :aws_secret_key_given => true }
       @config_mock.should_receive(:secret_key=).with 'the_secret'
       @object.load_config :logger => @logger_mock, :opts => opts
     end

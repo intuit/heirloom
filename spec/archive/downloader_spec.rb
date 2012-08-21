@@ -15,57 +15,111 @@ describe Heirloom do
                                   :logger => @logger_stub,
                                   :region => 'us-west-1').
                              and_return @s3_downloader_mock
-    @s3_downloader_mock.should_receive(:download_file).
-                       with(:bucket => 'bucket-us-west-1',
-                            :key    => 'tim/123.tar.gz').
-                       and_return 'filename'
-    @file_mock = mock 'file'
+    @cipher_mock = mock 'cipher'
+    Heirloom::Cipher::Data.should_receive(:new).
+                           with(:config => @config_mock).
+                           and_return @cipher_mock
   end
 
-  context "extract set to false" do
-    it "should download to the current path if output is not specified" do
-      File.should_receive(:open).with('./123.tar.gz', 'w').
-                                 and_return @file_mock
+  context "no secret given" do
+    before do
+      @writer_mock = mock 'writer'
+      Heirloom::Writer.should_receive(:new).
+                       with(:config => @config_mock).
+                       and_return @writer_mock
+      @s3_downloader_mock.should_receive(:download_file).
+                          with(:bucket => 'bucket-us-west-1',
+                               :key    => 'tim/123.tar.gz').
+                          and_return 'plaintext'
+      @cipher_mock.should_receive(:decrypt_data).
+                   with(:secret => nil,
+                        :data   => 'plaintext').and_return 'plaintext'
+    end
 
-      @downloader.download :region      => 'us-west-1',
+    it "should download to the current path if output is not specified" do
+      @writer_mock.should_receive(:save_archive).
+                   with(:archive => 'plaintext',
+                        :file    => "123.tar.gz",
+                        :output  => './',
+                        :extract => false).and_return true
+      @downloader.download(:region      => 'us-west-1',
                            :base_prefix => 'bucket',
-                           :extract     => false
+                           :extract     => false,
+                           :secret      => nil).should == './'
     end
 
     it "should download arhcive to specified output" do
-      File.should_receive(:open).with('/tmp/dir/123.tar.gz', 'w').
-                                 and_return @file_mock
-
-      @downloader.download :output      => '/tmp/dir',
+      @writer_mock.should_receive(:save_archive).
+                   with(:archive => 'plaintext',
+                        :file    => "123.tar.gz",
+                        :output  => '/tmp/dir',
+                        :extract => false).and_return true
+      @downloader.download(:output      => '/tmp/dir',
                            :region      => 'us-west-1',
                            :base_prefix => 'bucket',
-                           :extract     => false
+                           :extract     => false,
+                           :secret      => nil).should == '/tmp/dir'
     end
   end
 
-  context "extract set to true" do
+  context "secret given" do
     before do
-      @extracter_mock = mock 'extracter'
-      Heirloom::Extracter.should_receive(:new).with(:config => @config_mock).
-                          and_return @extracter_mock
+      @s3_downloader_mock.should_receive(:download_file).
+                          with(:bucket => 'bucket-us-west-1',
+                               :key    => 'tim/123.tar.gz').
+                          and_return 'encrypted_data'
     end
 
-    it "should download and extract the to specified output" do
-      @extracter_mock.should_receive(:extract).with :archive => 'filename',
-                                                    :output  => '/tmp/dir'
-      @downloader.download :output      => '/tmp/dir',
-                           :region      => 'us-west-1',
-                           :base_prefix => 'bucket',
-                           :extract     => true
+    context "valid secret" do
+      before do
+        @writer_mock = mock 'writer'
+        Heirloom::Writer.should_receive(:new).
+                         with(:config => @config_mock).
+                         and_return @writer_mock
+        @cipher_mock.should_receive(:decrypt_data).
+                     with(:secret => 'supersecret',
+                          :data   => 'encrypted_data').and_return 'plaintext'
+      end
+
+      it "should decrypt and save the downloaded file with secret" do
+        @writer_mock.should_receive(:save_archive).
+                     with(:archive => 'plaintext',
+                          :file    => "123.tar.gz",
+                          :output  => './',
+                          :extract => false).and_return true
+        @downloader.download :region      => 'us-west-1',
+                             :base_prefix => 'bucket',
+                             :extract     => false,
+                             :secret      => 'supersecret'
+      end
+
+      it "should decrypt and extract the downloaded file with secret" do
+        @writer_mock.should_receive(:save_archive).
+                     with(:archive => 'plaintext',
+                          :file    => "123.tar.gz",
+                          :output  => './',
+                          :extract => true).and_return true
+        @downloader.download :region      => 'us-west-1',
+                             :base_prefix => 'bucket',
+                             :extract     => true,
+                             :secret      => 'supersecret'
+      end
     end
 
-    it "should download and extract the to the cwd" do
-      @extracter_mock.should_receive(:extract).with :archive => 'filename',
-                                                    :output  => './'
-      @downloader.download :region      => 'us-west-1',
-                           :base_prefix => 'bucket',
-                           :extract     => true
+    context "invalid secret" do
+      before do
+        @cipher_mock.should_receive(:decrypt_data).
+                     with(:secret => 'badsecret',
+                          :data   => 'encrypted_data').and_return false
+      end
+
+      it "should return false if the decrypt_data returns false" do
+        @downloader.download(:region      => 'us-west-1',
+                             :base_prefix => 'bucket',
+                             :extract     => false,
+                             :secret      => 'badsecret').should be_false
+      end 
+
     end
   end
-
 end

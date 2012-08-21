@@ -18,12 +18,15 @@ module Heirloom
 
     def build(args)
       @source = args[:directory] ||= '.'
+      @secret = args[:secret]
 
       directory = Directory.new :path      => @source,
                                 :exclude   => args[:exclude],
                                 :config    => @config
 
-      return false unless directory.build_artifact_from_directory
+      unless directory.build_artifact_from_directory :secret => @secret
+        return false
+      end
 
       @local_build = directory.local_build
 
@@ -36,11 +39,6 @@ module Heirloom
       @local_build
     end
 
-    def cleanup
-      @logger.info "Cleaning up local build #{@local_build}."
-      File.delete @local_build
-    end
-
     private
 
     def add_git_commit
@@ -49,14 +47,14 @@ module Heirloom
       if commit
         add_git_commit_to_artifact_record commit
       else
-        @logger.warn "Could not find Git sha: #{@id}."
+        @logger.warn "Could not load Git sha '#{@id}' in '#{@source}'."
       end
     end
 
     def add_git_commit_to_artifact_record(commit)
       attributes = { 'sha'             => @id,
                      'abbreviated_sha' => commit.id_abbrev,
-                     'message'         => commit.message,
+                     'message'         => commit.message.gsub("\n"," "),
                      'author'          => commit.author.name }
 
       attributes.each_pair do |k, v|
@@ -67,15 +65,16 @@ module Heirloom
     end
 
     def create_artifact_record
-      attributes = { 'built_by' => "#{user}@#{hostname}",
-                     'built_at' => Time.now.utc.iso8601,
-                     'id'       => @id }
+      attributes = { 'built_by'  => "#{user}@#{hostname}",
+                     'built_at'  => Time.now.utc.iso8601,
+                     'encrypted' => encrypted?,
+                     'id'        => @id }
       @logger.info "Create artifact record #{@id}."
       sdb.put_attributes @domain, @id, attributes
     end
 
-    def sdb
-      @sdb ||= AWS::SimpleDB.new :config => @config
+    def encrypted?
+      @secret != nil
     end
 
     def user
@@ -84,6 +83,10 @@ module Heirloom
 
     def hostname
       Socket.gethostname
+    end
+
+    def sdb
+      @sdb ||= AWS::SimpleDB.new :config => @config
     end
 
   end

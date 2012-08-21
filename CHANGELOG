@@ -2,13 +2,23 @@
 
 * Verify domain exists for all cmds except build & download
 * Removing requirement to check simpledb on download.
-* Adding requirement for base_prefix on download.
+* Adding requirement for base on download.
 * Fix error when .heirloom.yml does not exist.
 * Refactor cli option validation
 * Refactor cli specs
 * Add -x to download to extract heirloom to given output path
 * Verify -o specified in download is a directory
 * Requiring -d for builds (will no longer default to .)
+* Remove new lines from values of git comments
+* Verify directory given at build is a directory
+* Support archiving directories outside the cwd.
+* Fixed bug in git repo verification on build.
+* Added support for encryption.
+* Removed short name and changed long name for AWS CLI creds.
+* Adding encrypted attribute by default for all builds.
+* Change base_prefix CLI option to base
+* Changed subcommands build -> upload, update -> tag
+* Changed tag option updated_value -> value
 
 ## v0.4.0:
 

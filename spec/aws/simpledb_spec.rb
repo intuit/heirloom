@@ -43,8 +43,8 @@ describe Heirloom do
 
   it "should update the attributes for an entry" do
     @fog_mock.should_receive(:put_attributes).
-              with('domain', 'key', 'attributes', { "option" => "123" })
-    @sdb.put_attributes('domain', 'key', 'attributes', { "option" => "123" })
+              with('domain', 'key', {'key' => 'value'}, { "option" => "123" })
+    @sdb.put_attributes('domain', 'key', {'key' => 'value'}, { "option" => "123" })
   end
 
   it "should delete the given entry from sdb" do

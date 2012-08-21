@@ -44,10 +44,10 @@ module Heirloom
         @logger.info "Adding attribute #{s3_endpoint}."
 
         sdb.put_attributes domain, id, { "#{@region}-http-url" => http_endpoint }
-        @logger.info "Adding attribute #{http_endpoint}."
+        @logger.debug "Adding attribute #{http_endpoint}."
 
         sdb.put_attributes domain, id, { "#{@region}-https-url" => https_endpoint }
-        @logger.info "Adding attribute #{https_endpoint}."
+        @logger.debug "Adding attribute #{https_endpoint}."
       end
 
       private

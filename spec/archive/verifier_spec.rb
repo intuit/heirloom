@@ -6,7 +6,7 @@ describe Heirloom do
     @config_mock = double 'config'
     @logger_stub = stub 'logger', :debug => true
     @s3_mock = double 's3_mock'
-    @config_mock.should_receive(:logger).and_return(@logger_stub)
+    @config_mock.stub :logger => @logger_stub
     @verifier = Heirloom::Verifier.new :config => @config_mock,
                                        :name   => 'heirloom-name'
   end

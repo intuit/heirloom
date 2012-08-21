@@ -29,11 +29,11 @@ module Heirloom
 
         @archive.destroy :keep_domain => true if @archive.exists?
                           
-        build = @archive.build :bucket_prefix => @opts[:base],
-                               :directory     => @opts[:directory],
-                               :exclude       => @opts[:exclude],
-                               :git           => @opts[:git],
-                               :secret        => @opts[:secret]
+        build = @archive.build :base       => @opts[:base],
+                               :directory  => @opts[:directory],
+                               :exclude    => @opts[:exclude],
+                               :git        => @opts[:git],
+                               :secret     => @opts[:secret]
 
         unless build
           @logger.error "Build failed."

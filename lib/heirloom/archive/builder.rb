@@ -18,6 +18,7 @@ module Heirloom
     def build(args)
       @source = args[:directory] ||= '.'
       @secret = args[:secret]
+      @base = args[:base]
 
       directory = Directory.new :path      => @source,
                                 :exclude   => args[:exclude],
@@ -67,6 +68,7 @@ module Heirloom
       attributes = { 'built_by'  => "#{user}@#{hostname}",
                      'built_at'  => Time.now.utc.iso8601,
                      'encrypted' => encrypted?,
+                     'base'      => @base,
                      'id'        => @id }
       @logger.info "Create artifact record #{@id}."
       sdb.put_attributes @domain, @id, attributes

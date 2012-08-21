@@ -25,4 +25,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'grit', '= 2.5.0' 
   s.add_runtime_dependency 'logger', '= 1.2.8'
   s.add_runtime_dependency 'trollop', '= 2.0'
+  s.add_runtime_dependency 'ValidateEmail', '= 1.0.0'
 end

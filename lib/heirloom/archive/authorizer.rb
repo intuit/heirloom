@@ -10,8 +10,10 @@ module Heirloom
     end
 
     def authorize(args)
+      @accounts = args[:accounts]
       regions = args[:regions]
-      accounts = args[:accounts]
+
+      return false unless validate_format_of_accounts
 
       @logger.info "Authorizing access to artifact."
 
@@ -23,14 +25,29 @@ module Heirloom
 
         s3_acl.allow_read_access_from_accounts :key_name   => @id,
                                                :key_folder => @name,
-                                               :bucket     => bucket,
-                                               :accounts   => accounts
+                                               :accounts   => @accounts,
+                                               :bucket     => bucket
       end
 
       @logger.info "Authorization complete."
+      true
     end
 
     private
+
+    def validate_format_of_accounts
+      @accounts.each do |account|
+        unless validate_email account
+          @logger.error "#{account} is not a valid email address."
+          return false
+        end
+      end
+    end
+
+    def validate_email email
+      email_pattern = (email =~ /^.*@.*\..*$/)
+      email_pattern.nil? ? false : true
+    end
 
     def reader
       @reader ||= Reader.new :config => @config,

@@ -22,7 +22,9 @@ module Heirloom
       end
 
       def authorize
-        @archive.authorize @opts[:accounts]
+        unless @archive.authorize @opts[:accounts]
+          exit 1
+        end
       end
 
       private

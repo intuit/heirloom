@@ -21,6 +21,8 @@
 * Changed tag option updated_value -> value
 * On upload, Heirloom will attempt to create buckets which do not exist.
 * Will not destroy the sdb domain when cleanin up old versions on upload.
+* Hard coding gem versions
+* Validating email addresses in authorize
 
 ## v0.4.0:
 

@@ -8,7 +8,7 @@ describe Heirloom do
                 :accounts => ['test@test.com'],
                 :name     => 'archive_name',
                 :id       => '1.0.0' }
-    @logger_stub = stub
+    @logger_stub = stub 'logger', :error => true
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'
     @config_mock.stub :logger     => @logger_stub,
@@ -35,8 +35,15 @@ describe Heirloom do
   end
 
   it "should authorize an account" do
-    @archive_mock.should_receive(:authorize).with ['test@test.com']
+    @archive_mock.should_receive(:authorize).with(['test@test.com']).
+                  and_return true
     @cli_authorize.authorize
+  end
+
+  it "should exit if authorize returns false" do
+    @archive_mock.should_receive(:authorize).with(['test@test.com']).
+                  and_return false
+    lambda { @cli_authorize.authorize }.should raise_error SystemExit
   end
 
 end

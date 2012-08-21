@@ -14,7 +14,7 @@ describe Heirloom do
     before do
       @logger_mock.stub :info => true
       @reader_mock = mock 'archive reader'
-      @destroyer.should_receive(:reader).and_return @reader_mock
+      @destroyer.stub :reader => @reader_mock
       @reader_mock.should_receive(:get_bucket).
                   with(:region => 'us-west-1').
                   and_return 'bucket-us-west-1'

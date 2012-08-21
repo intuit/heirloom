@@ -4,6 +4,7 @@ require 'heirloom/archive/builder.rb'
 require 'heirloom/archive/updater.rb'
 require 'heirloom/archive/uploader.rb'
 require 'heirloom/archive/downloader.rb'
+require 'heirloom/archive/setuper.rb'
 require 'heirloom/archive/writer.rb'
 require 'heirloom/archive/authorizer.rb'
 require 'heirloom/archive/destroyer.rb'
@@ -15,8 +16,8 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
-      @name = args[:name]
-      @id = args[:id]
+      @name   = args[:name]
+      @id     = args[:id]
     end
 
     def authorize(accounts)
@@ -34,6 +35,10 @@ module Heirloom
 
     def download(args)
       downloader.download args
+    end
+
+    def setup(args)
+      setuper.setup args
     end
 
     def update(args)
@@ -56,8 +61,9 @@ module Heirloom
       verifier.domain_exists?
     end
 
-    def destroy
-      destroyer.destroy :regions => regions
+    def destroy(args)
+      destroyer.destroy :regions     => regions,
+                        :keep_domain => args[:keep_domain]
     end
 
     def show
@@ -119,6 +125,11 @@ module Heirloom
       @destroyer ||= Destroyer.new :config => @config,
                                    :name   => @name,
                                    :id     => @id
+    end
+
+    def setuper
+      @setuper ||= Setuper.new :config => @config,
+                               :name   => @name
     end
 
     def verifier

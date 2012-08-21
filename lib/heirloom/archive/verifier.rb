@@ -14,21 +14,31 @@ module Heirloom
       result = true
 
       regions.each do |region|
-        bucket = "#{bucket_prefix}-#{region}"
-        
-        s3 ||= AWS::S3.new :config => @config,
-                           :region => region
-
-        if s3.get_bucket bucket
-          @logger.debug "#{bucket} exists in #{region}"
-        else
-          @logger.debug "#{bucket} in #{region} does not exist"
+        unless bucket_exists? :region        => region,
+                              :bucket_prefix => bucket_prefix
           result = false
         end
-
       end
 
       result
+    end
+
+    def bucket_exists?(args)
+      bucket_prefix = args[:bucket_prefix]
+      region = args[:region]
+
+      bucket = "#{bucket_prefix}-#{region}"
+      
+      s3 ||= AWS::S3.new :config => @config,
+                         :region => region
+
+      if s3.get_bucket bucket
+        @logger.debug "Bucket #{bucket} exists in #{region}"
+        true
+      else
+        @logger.debug "Bucket #{bucket} in #{region} does not exist"
+        false
+      end
     end
 
     def domain_exists?

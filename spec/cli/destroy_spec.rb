@@ -34,7 +34,7 @@ describe Heirloom do
   end
 
   it "should destroy an archive" do
-    @archive_mock.should_receive(:destroy)
+    @archive_mock.should_receive(:destroy).with :keep_domain => false
     @cli_destroy.destroy
   end
 

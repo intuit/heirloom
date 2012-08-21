@@ -164,8 +164,9 @@ describe Heirloom do
                                :id      => '123').
                           and_return destroyer_mock
       destroyer_mock.should_receive(:destroy).
-                     with(:regions => ['us-west-1', 'us-west-2'])
-      @archive.destroy
+                     with(:regions     => ['us-west-1', 'us-west-2'],
+                          :keep_domain => false)
+      @archive.destroy :keep_domain => false
     end
 
     it "should call the regions method for an archive" do

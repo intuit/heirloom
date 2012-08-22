@@ -24,10 +24,21 @@ aws:
 
 * **access_key / secret_key**: AWS account credentials where you would like the archives stored.
 
+Proxy Support
+-------------
+
+Heirloom uses the http_proxy & https_proxy variables.
+
+```
+export http_proxy=http://1.2.3.4:80
+export http_proxys=http://1.2.3.4:80
+```
+
 Platforms
 ---------
 
 Currently I support AWS S3 for object storage and AWS SimpleDB for metadata management.  One day I'd like to expand to other providers.
+
 
 Documentation
 -------------

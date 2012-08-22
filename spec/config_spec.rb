@@ -4,9 +4,9 @@ describe Heirloom do
 
   before do
     @config = { 'aws' => 
-                { 'access_key'     => 'key',
-                  'secret_key'     => 'secret',
-                  'primary_region' => 'us-west-2'
+                { 'access_key '     => 'key',
+                  'secret_key '     => 'secret',
+                  'metadata_region' => 'us-west-2'
                 }
               }
   end
@@ -16,7 +16,7 @@ describe Heirloom do
                                   :logger => 'da-logger'
     config.access_key.should == @config['aws']['access_key']
     config.secret_key.should == @config['aws']['secret_key']
-    config.primary_region.should == @config['aws']['primary_region']
+    config.metadata_region.should == @config['aws']['metadata_region']
     config.logger.should == 'da-logger'
   end
 
@@ -27,14 +27,14 @@ describe Heirloom do
     config = Heirloom::Config.new
     config.access_key.should == @config['aws']['access_key']
     config.secret_key.should == @config['aws']['secret_key']
-    config.primary_region.should == @config['aws']['primary_region']
+    config.metadata_region.should == @config['aws']['metadata_region']
   end
 
-  it "should set the primary region to us-west-1 if not present in config" do
+  it "should return nil if metadata_region not present in config" do
     @config['aws'] = {}
     config = Heirloom::Config.new :config => @config,
                                   :logger => 'da-logger'
-    config.primary_region.should == 'us-west-1'
+    config.metadata_region.should == nil
   end
 
   it "should load a blank config if the file does not exist and no config passed" do
@@ -42,7 +42,7 @@ describe Heirloom do
     config = Heirloom::Config.new
     config.access_key.should be_nil
     config.secret_key.should be_nil
-    config.primary_region.should == 'us-west-1'
+    config.metadata_region.should be_nil
   end
 
 end

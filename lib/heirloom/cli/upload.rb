@@ -71,6 +71,8 @@ Can be specified multiple times.", :type  => :string, :multi => true
           opt :id, "ID for archive (when -g specified, assumed to be GIT sha).", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
+          opt :metadata, "Location of Heirloom metadata.", :type    => :string,   
+                                                           :default => 'us-west-1'
           opt :name, "Name of archive.", :type => :string
           opt :public, "Set this archive as public readable?"
           opt :region, "Region(s) to upload archive. \

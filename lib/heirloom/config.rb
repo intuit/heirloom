@@ -1,7 +1,7 @@
 module Heirloom
   class Config
 
-    attr_accessor :access_key, :secret_key, :primary_region, :logger
+    attr_accessor :access_key, :secret_key, :metadata_region, :logger
 
     def initialize(args = {})
       @config = args.fetch :config, load_config_file
@@ -13,7 +13,7 @@ module Heirloom
       aws = @config['aws']
       self.access_key = aws['access_key']
       self.secret_key = aws['secret_key']
-      self.primary_region = aws['primary_region'] ||= 'us-west-1'
+      self.metadata_region = aws['metadata_region']
     end
 
     def load_config_file

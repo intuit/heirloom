@@ -1,3 +1,10 @@
+## v0.6.0:
+
+* Allowing engineer to specify region for metadata
+* Ensuring metadata is in an upload region
+* Split setup into seperate subcommand
+* Perform additional validation on CLI options
+
 ## v0.5.0:
 
 * Verify domain exists for all cmds except build & download

@@ -16,11 +16,12 @@ module Heirloom
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
         ensure_domain_exists :name => @opts[:name], :config => @config
-
         id = @opts[:id] ? @opts[:id] : latest_id
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config,
                                :id     => id
+        ensure_archive_exists :archive => @archive,
+                              :config => @config
       end
       
       def show
@@ -53,8 +54,8 @@ EOS
           opt :id, "ID of the archive to display.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "Location of Heirloom metadata.", :type    => :string,   
-                                                                  :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
+                                                                          :default => 'us-west-1'
           opt :name, "Name of archive.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none

@@ -179,7 +179,6 @@ describe Heirloom do
 
   context "testing ensure valid regions" do
     before do
-      @archive_mock = mock 'archive'
       @logger_stub = stub 'logger', :error => true
       @config_stub = stub 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
@@ -199,5 +198,30 @@ describe Heirloom do
     end
 
   end
+
+  context "testing ensure archive exists" do
+    before do
+      @archive_mock = mock 'archive'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should ensure the archive exists" do
+      @archive_mock.should_receive(:exists?).and_return true
+      options = { :config => @config_stub, :archive => @archive_mock }
+      @object.ensure_archive_exists options
+    end
+
+    it "should exit if the archive does not exist" do
+      @archive_mock.should_receive(:exists?).and_return false
+      options = { :config => @config_stub, :archive => @archive_mock }
+      lambda { @object.ensure_archive_exists options }.
+                       should raise_error SystemExit
+    end
+  end
+
 
 end

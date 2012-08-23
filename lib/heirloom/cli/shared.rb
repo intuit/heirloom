@@ -30,7 +30,6 @@ module Heirloom
 
         required << :aws_access_key unless config.access_key
         required << :aws_secret_key unless config.secret_key
-        required << :metadata unless config.metadata_region
 
         missing_opts = required.sort.map do |opt|
           case provided[opt]
@@ -61,8 +60,10 @@ module Heirloom
         region = args[:region]
         logger = config.logger
         valid_regions = ['us-east-1', 'us-west-1', 'us-west-2']
+
         unless valid_regions.include? region
-          logger.error "#{region} is not a valid region."
+          logger.error "'#{region}' is not a valid region."
+          logger.error "Valid regions: #{valid_regions.join(', ')}"
           exit 1
         end
       end
@@ -71,9 +72,10 @@ module Heirloom
         config  = args[:config]
         regions = args[:regions]
         logger  = config.logger
+
         unless regions.include? config.metadata_region
-          logger.error "Upload Regions: #{regions.join(', ')}."
-          logger.error "Metadata Region: #{config.metadata_region}."
+          logger.error "Upload Regions: '#{regions.join(', ')}'."
+          logger.error "Metadata Region: '#{config.metadata_region}'."
           logger.error "Upload regions must include metadata region."
           exit 1
         end
@@ -102,7 +104,8 @@ module Heirloom
 
         unless archive.buckets_exist? :regions       => regions,
                                       :bucket_prefix => base
-          logger.error "Required buckets for #{base} do not exist."
+          logger.error "Required buckets for '#{base}' do not exist."
+          logger.error "Run 'heirloom setup -h' for help setting up new region."
           exit 1
         end
       end
@@ -116,7 +119,19 @@ module Heirloom
                               :config => config
 
         unless archive.domain_exists?
-          logger.error "#{name} metadata does not exist in #{config.metadata_region}."
+          logger.error "Metadata domain '#{name}' does not exist in '#{config.metadata_region}'."
+          logger.error "Run 'heirloom setup -h' for help setting up new region."
+          exit 1
+        end
+      end
+
+      def ensure_archive_exists(args)
+        config  = args[:config]
+        archive = args[:archive]
+        logger  = config.logger
+
+        unless archive.exists?
+          logger.error "Archive does not exist."
           exit 1
         end
       end

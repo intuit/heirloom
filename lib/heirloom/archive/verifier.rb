@@ -33,10 +33,10 @@ module Heirloom
                          :region => region
 
       if s3.get_bucket bucket
-        @logger.info "Bucket #{bucket} exists in #{region}."
+        @logger.debug "Bucket '#{bucket}' exists in '#{region}'."
         true
       else
-        @logger.info "Bucket #{bucket} does not exist in #{region}."
+        @logger.info "Bucket '#{bucket}' does not exist in '#{region}'."
         false
       end
     end
@@ -45,10 +45,10 @@ module Heirloom
       domain = "heirloom_#{@name}"
       region = @config.metadata_region
       if sdb.domain_exists? domain
-        @logger.info "Domain #{@name} exists in #{region}."
+        @logger.debug "Domain '#{@name}' exists in '#{region}'."
         true
       else
-        @logger.info "Domain #{@name} does not exist in #{region}."
+        @logger.info "Domain '#{@name}' does not exist in '#{region}'."
         false
       end
     end

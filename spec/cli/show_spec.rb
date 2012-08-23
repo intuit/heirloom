@@ -31,6 +31,7 @@ describe Heirloom do
                            :id     => '1.0.0',
                            :config => @config_mock).
                       and_return @archive_mock
+    @archive_mock.stub :exists? => true
     @archive_mock.should_receive(:domain_exists?).and_return true
     @cli_show = Heirloom::CLI::Show.new
   end

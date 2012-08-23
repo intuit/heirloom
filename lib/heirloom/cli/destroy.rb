@@ -22,6 +22,8 @@ module Heirloom
         @archive = Archive.new :name   => @name,
                                :id     => @id,
                                :config => @config
+        ensure_archive_exists :archive => @archive,
+                              :config => @config
       end
       
       def destroy
@@ -46,8 +48,8 @@ EOS
           opt :id, "ID of the archive to display.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "Location of Heirloom metadata.", :type    => :string,   
-                                                                  :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
+                                                                          :default => 'us-west-1'
           opt :name, "Name of archive.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none

@@ -37,7 +37,7 @@ module Heirloom
         puts Heirloom::VERSION
       else
         puts "Unkown command: '#{cmd}'." unless cmd == '-h'
-        puts "heirloom [list|show|setup|upload|authorize|tag|download|destroy] OPTIONS"
+        puts "heirloom [authorize|destroy|download|list|setup|show|tag|upload] OPTIONS"
         puts "Append -h for help on specific command."
       end
     end

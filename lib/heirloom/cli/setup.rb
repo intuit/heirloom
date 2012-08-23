@@ -16,8 +16,8 @@ module Heirloom
                              :config   => @config
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
-        ensure_valid_regions :region => @opts[:region],
-                             :config => @config
+        ensure_valid_regions :regions => @opts[:region],
+                             :config  => @config
 
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config

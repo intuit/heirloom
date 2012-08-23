@@ -16,7 +16,7 @@ module Heirloom
       value = args[:value]
 
       sdb.put_attributes @domain, @id, { attribute => value }, { :replace => attribute }
-      @logger.info "Updated #{@name} (#{@id}): #{attribute} = #{value}."
+      @logger.info "Tagged #{@name} (#{@id}): #{attribute} = #{value}."
     end
 
     private

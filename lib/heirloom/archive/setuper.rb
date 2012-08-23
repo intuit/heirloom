@@ -14,6 +14,7 @@ module Heirloom
       @bucket_prefix = args[:bucket_prefix]
       create_buckets
       create_domain
+      @logger.info "Setup complete."
     end
 
     private

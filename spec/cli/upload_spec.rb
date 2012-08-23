@@ -4,21 +4,25 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    options = { :level     => 'info',
-                :base      => 'base',
-                :git       => false,
-                :exclude   => ['exclude1', 'exclude2'],
-                :region    => ['us-west-1', 'us-west-2'],
-                :directory => '/buildme',
-                :public    => false,
-                :name      => 'archive_name',
-                :id        => '1.0.0' }
+    @regions = ['us-west-1', 'us-west-2']
+    options = { :level           => 'info',
+                :base            => 'base',
+                :git             => false,
+                :exclude         => ['exclude1', 'exclude2'],
+                :region          => @regions,
+                :directory       => '/buildme',
+                :public          => false,
+                :secret          => 'secret12',
+                :name            => 'archive_name',
+                :id              => '1.0.0', 
+                :metadata_region => 'us-west-1' }
 
     @logger_stub = stub 'logger', :error => true, :info => true
     @config_mock = mock 'config'
-    @config_mock.stub :logger     => @logger_stub,
-                      :access_key => 'key',
-                      :secret_key => 'secret'
+    @config_mock.stub :logger          => @logger_stub,
+                      :access_key      => 'key',
+                      :secret_key      => 'secret',
+                      :metadata_region => 'us-west-1'
     @archive_mock = mock 'archive'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
@@ -36,25 +40,37 @@ describe Heirloom do
   end
 
   it "should upload an archive" do
-    @upload.stub :ensure_directory => true
-    @upload.stub :ensure_valid_secret => true
-    @archive_mock.should_receive(:setup).
-                  with(:bucket_prefix => 'base',
-                       :regions       => ["us-west-1", "us-west-2"])
+    @upload.should_receive(:ensure_domain_exists).
+            with(:name   => 'archive_name',
+                 :config => @config_mock)
+    @upload.should_receive(:ensure_buckets_exist).
+            with(:base    => 'base',
+                 :name    => 'archive_name',
+                 :regions => @regions,
+                 :config  => @config_mock)
+    @upload.should_receive(:ensure_directory).
+            with(:path   => '/buildme',
+                 :config => @config_mock)
+    @upload.should_receive(:ensure_valid_secret).
+            with(:secret => 'secret12',
+                 :config => @config_mock)
+    @upload.should_receive(:ensure_metadata_in_upload_region).
+            with(:config  => @config_mock,
+                 :regions => @regions)
     @archive_mock.stub :exists? => false
     @archive_mock.should_receive(:build).
                   with(:base      => 'base',
                        :directory => '/buildme',
                        :exclude   => ["exclude1", "exclude2"],
                        :git       => false,
-                       :secret    => nil).
+                       :secret    => 'secret12').
                   and_return '/tmp/build123.tar.gz'
     @archive_mock.should_receive(:upload).
                   with(:bucket_prefix   => 'base',
-                       :regions         => ['us-west-1', 'us-west-2'],
+                       :regions         => @regions,
                        :public_readable => false,
                        :file            => '/tmp/build123.tar.gz')
-    @upload.upload
+    @upload.upload 
   end
 
 end

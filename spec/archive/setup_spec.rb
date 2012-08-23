@@ -5,7 +5,7 @@ describe Heirloom do
   before do
     @logger_stub = stub 'logger', :debug => true, :info => true
     @config_mock = mock 'config'
-    @config_mock.stub :logger => @logger_stub
+    @config_mock.stub :logger => @logger_stub, :metadata_region => 'us-west-1'
     @verifier_mock = mock 'verifier'
     Heirloom::Verifier.should_receive(:new).
                        with(:config => @config_mock,

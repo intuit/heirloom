@@ -33,7 +33,12 @@ module Heirloom
     end
 
     def create_domain
-      sdb.create_domain @domain unless verifier.domain_exists?
+      region = @config.metadata_region
+
+      unless verifier.domain_exists?
+        @logger.info "Creating domain #{@name} in #{region}."
+        sdb.create_domain @domain 
+      end
     end
 
     def verifier

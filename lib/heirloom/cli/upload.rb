@@ -21,11 +21,22 @@ module Heirloom
       end
 
       def upload
-        ensure_directory :path => @opts[:directory], :config => @config
-        ensure_valid_secret :secret => @opts[:secret], :config => @config
-
-        @archive.setup :regions       => @opts[:region],
-                       :bucket_prefix => @opts[:base]
+        ensure_valid_region :region => @opts[:metadata_region],
+                            :config => @config
+        ensure_valid_regions :regions => @opts[:region],
+                             :config  => @config
+        ensure_domain_exists :name   => @opts[:name], 
+                             :config => @config
+        ensure_buckets_exist :base    => @opts[:base],
+                             :name    => @opts[:name],
+                             :regions => @opts[:region],
+                             :config  => @config
+        ensure_directory :path   => @opts[:directory], 
+                         :config => @config
+        ensure_valid_secret :secret => @opts[:secret], 
+                            :config => @config
+        ensure_metadata_in_upload_region :config  => @config, 
+                                         :regions => @opts[:region]
 
         @archive.destroy :keep_domain => true if @archive.exists?
                           
@@ -71,12 +82,14 @@ Can be specified multiple times.", :type  => :string, :multi => true
           opt :id, "ID for archive (when -g specified, assumed to be GIT sha).", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata, "Location of Heirloom metadata.", :type    => :string,   
-                                                           :default => 'us-west-1'
+          opt :metadata_region, "AWS Region to store metadata.", :type    => :string,   
+                                                                 :default => 'us-west-1'
           opt :name, "Name of archive.", :type => :string
           opt :public, "Set this archive as public readable?"
           opt :region, "Region(s) to upload archive. \
-Can be specified multiple times.", :type  => :string, :multi => true
+Can be specified multiple times.", :type  => :string, 
+                                   :multi => true,
+                                   :default => 'us-west-1'
           opt :secret, "Encrypt the archive with given secret.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none

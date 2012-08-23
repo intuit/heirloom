@@ -13,6 +13,8 @@ module Heirloom
         ensure_valid_options :provided => @opts,
                              :required => [:base_prefix, :name, :id, :output],
                              :config   => @config
+        ensure_valid_region :region => @opts[:metadata_region],
+                            :config => @config
 
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
@@ -50,8 +52,6 @@ EOS
           opt :id, "ID of the archive to download.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata, "Location of Heirloom metadata.", :type    => :string,   
-                                                           :default => 'us-west-1'
           opt :name, "Name of archive.", :type => :string
           opt :output, "Path to download archive. Must be existing directory.", :type => :string
           opt :region, "Region to download archive.", :type    => :string,

@@ -5,7 +5,7 @@ describe Heirloom do
     @config_mock = mock 'config'
     @config_mock.should_receive(:access_key).and_return 'the-key'
     @config_mock.should_receive(:secret_key).and_return 'the-secret'
-    @config_mock.should_receive(:primary_region).and_return 'us-west-1'
+    @config_mock.should_receive(:metadata_region).and_return 'us-west-1'
     @fog_mock = mock 'fog'
     Fog::AWS::SimpleDB.should_receive(:new).
                        with(:aws_access_key_id     => 'the-key',

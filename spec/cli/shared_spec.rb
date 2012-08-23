@@ -9,9 +9,10 @@ describe Heirloom do
     before do
       @config_mock = mock 'config'
       @logger_mock = mock 'logger' 
-      @config_mock.stub :logger     => @logger_mock, 
-                        :access_key => 'key',
-                        :secret_key => 'secret'
+      @config_mock.stub :logger          => @logger_mock, 
+                        :access_key      => 'key',
+                        :secret_key      => 'secret',
+                        :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
     end
@@ -82,16 +83,20 @@ describe Heirloom do
                           :opts => {}).should == @config_mock
     end
 
+    it "should set the metadata region if specified" do
+      opts = { :metadata_region => 'us-west-1' }
+      @config_mock.should_receive(:metadata_region=).with 'us-west-1'
+      @object.load_config :logger => @logger_mock, :opts => opts
+    end
+
     it "should set the access key if specified" do
-      opts = { :aws_access_key       => 'the_key',
-               :aws_access_key_given => true }
+      opts = { :aws_access_key => 'the_key' }
       @config_mock.should_receive(:access_key=).with 'the_key'
       @object.load_config :logger => @logger_mock, :opts => opts
     end
 
     it "should set the secret key if specified" do
-      opts = { :aws_secret_key       => 'the_secret',
-               :aws_secret_key_given => true }
+      opts = { :aws_secret_key => 'the_secret' }
       @config_mock.should_receive(:secret_key=).with 'the_secret'
       @object.load_config :logger => @logger_mock, :opts => opts
     end
@@ -127,7 +132,8 @@ describe Heirloom do
     before do
       @archive_mock = mock 'archive'
       @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger => @logger_stub
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
       Heirloom::Archive.should_receive(:new).
@@ -136,17 +142,86 @@ describe Heirloom do
     end
 
     it "should ensure the domain for a given archive exists" do
-      @archive_mock.should_receive(:domain_exists?).and_return true
+      @archive_mock.stub :domain_exists? => true
       @object.ensure_domain_exists :config => @config_stub, 
                                    :name   => 'test'
     end
 
     it "should exit if the domain does not exist" do
-      @archive_mock.should_receive(:domain_exists?).and_return false
+      @archive_mock.stub :domain_exists? => false
       lambda { @object.ensure_domain_exists :config => @config_stub,
                                             :name   => 'test'}.
                        should raise_error SystemExit
     end
   end
+
+  context "testing ensure metadata domain" do
+    before do
+      @archive_mock = mock 'archive'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should ensure the metadata domain is included in the upload domains" do
+      options = { :config => @config_stub, :regions => ['us-west-1', 'us-east-1'] }
+      @object.ensure_metadata_in_upload_region options
+    end
+
+    it "should exit if the metadata region is not in an upload region" do
+      options = { :config => @config_stub, :regions => ['us-west-2', 'us-east-1'] }
+      lambda { @object.ensure_metadata_in_upload_region options }.
+                       should raise_error SystemExit
+    end
+  end
+
+  context "testing ensure valid regions" do
+    before do
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should ensure the metadata domain is included in the upload domains" do
+      options = { :config => @config_stub, :regions => ['us-west-2', 'us-east-1'] }
+      @object.ensure_valid_regions options
+    end
+
+    it "should exit if the region is not valid" do
+      options = { :config => @config_stub, :regions => ['us-west-2', 'us-bad-1'] }
+      lambda { @object.ensure_valid_regions options }.
+                       should raise_error SystemExit
+    end
+
+  end
+
+  context "testing ensure archive exists" do
+    before do
+      @archive_mock = mock 'archive'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should ensure the archive exists" do
+      @archive_mock.should_receive(:exists?).and_return true
+      options = { :config => @config_stub, :archive => @archive_mock }
+      @object.ensure_archive_exists options
+    end
+
+    it "should exit if the archive does not exist" do
+      @archive_mock.should_receive(:exists?).and_return false
+      options = { :config => @config_stub, :archive => @archive_mock }
+      lambda { @object.ensure_archive_exists options }.
+                       should raise_error SystemExit
+    end
+  end
+
 
 end

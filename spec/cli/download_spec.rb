@@ -4,19 +4,21 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    options = { :name        => 'archive_name',
-                :id          => '1.0.0',
-                :level       => 'info',
-                :output      => '/tmp/test123',
-                :region      => 'us-east-1',
-                :extract     => false,
-                :base_prefix => 'base' }
+    options = { :name            => 'archive_name',
+                :id              => '1.0.0',
+                :level           => 'info',
+                :output          => '/tmp/test123',
+                :region          => 'us-east-1',
+                :extract         => false,
+                :metadata_region => 'us-west-1',
+                :base            => 'base' }
     @logger_stub = stub 'logger'
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'
     @config_mock.stub :logger     => @logger_stub,
                       :access_key => 'key',
-                      :secret_key => 'secret'
+                      :secret_key => 'secret',
+                      :metadata_region => 'us-west-1'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).
                              with(:log_level => 'info').

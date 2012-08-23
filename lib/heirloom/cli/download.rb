@@ -11,7 +11,7 @@ module Heirloom
                               :opts   => @opts
 
         ensure_valid_options :provided => @opts,
-                             :required => [:base_prefix, :name, :id, :output],
+                             :required => [:base, :name, :id, :output],
                              :config   => @config
 
         @archive = Archive.new :name   => @opts[:name],
@@ -25,7 +25,7 @@ module Heirloom
         archive = @archive.download :output      => @opts[:output],
                                     :region      => @opts[:region],
                                     :extract     => @opts[:extract],
-                                    :base_prefix => @opts[:base_prefix],
+                                    :base_prefix => @opts[:base],
                                     :secret      => @opts[:secret]
         exit 1 unless archive
       end
@@ -44,14 +44,14 @@ Usage:
 heirloom download -n NAME -i ID -r REGION -o OUTPUT_DIRECTORY
 
 EOS
-          opt :base_prefix, "Base prefix of the archive to download.", :type => :string
+          opt :base, "Base of the archive to download.", :type => :string
+          opt :extract, "Extract the archive in the given output path.", :short => "-x"
           opt :help, "Display Help"
           opt :id, "ID of the archive to download.", :type => :string
-          opt :name, "Name of archive.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :output, "Path to download archive. Must be existing directory.", :type => :string
-          opt :extract, "Extract the archive in the given output path.", :short => "-x"
+          opt :name, "Name of archive.", :type => :string
+          opt :output, "Path to output downloaded archive. Must be existing directory.", :type => :string
           opt :region, "Region to download archive.", :type    => :string,
                                                       :default => 'us-west-1'
           opt :secret, "Secret for ecrypted archive.", :type => :string

@@ -8,7 +8,7 @@ module Heirloom
         @config = args[:config]
         @sdb = Fog::AWS::SimpleDB.new :aws_access_key_id     => @config.access_key,
                                       :aws_secret_access_key => @config.secret_key,
-                                      :region                => @config.primary_region
+                                      :region                => @config.metadata_region
       end
 
       def domains

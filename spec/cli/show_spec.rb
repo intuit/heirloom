@@ -32,7 +32,7 @@ describe Heirloom do
                            :config => @config_mock).
                       and_return @archive_mock
     @archive_mock.stub :exists? => true
-    @archive_mock.should_receive(:domain_exists?).and_return true
+    @archive_mock.stub :domain_exists? => true
     @cli_show = Heirloom::CLI::Show.new
   end
 

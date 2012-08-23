@@ -70,7 +70,7 @@ describe Heirloom do
                        :regions         => @regions,
                        :public_readable => false,
                        :file            => '/tmp/build123.tar.gz')
-    @upload.upload 
+    @upload.upload
   end
 
 end

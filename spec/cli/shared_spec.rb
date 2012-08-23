@@ -142,13 +142,13 @@ describe Heirloom do
     end
 
     it "should ensure the domain for a given archive exists" do
-      @archive_mock.should_receive(:domain_exists?).and_return true
+      @archive_mock.stub :domain_exists? => true
       @object.ensure_domain_exists :config => @config_stub, 
                                    :name   => 'test'
     end
 
     it "should exit if the domain does not exist" do
-      @archive_mock.should_receive(:domain_exists?).and_return false
+      @archive_mock.stub :domain_exists? => false
       lambda { @object.ensure_domain_exists :config => @config_stub,
                                             :name   => 'test'}.
                        should raise_error SystemExit

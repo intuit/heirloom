@@ -1,6 +1,6 @@
 module Heirloom
   class Catalog
-    class Lister
+    class List
 
       def initialize(args)
         @config = args[:config]

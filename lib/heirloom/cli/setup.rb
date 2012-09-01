@@ -19,6 +19,8 @@ module Heirloom
         ensure_valid_regions :regions => @opts[:region],
                              :config  => @config
 
+        @catalog = Catalog.new :name   => @opts[:name],
+                               :config => @config
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
       end

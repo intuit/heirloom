@@ -1,6 +1,6 @@
 module Heirloom
   class Catalog
-    class Verifier
+    class Verify
 
       def initialize(args)
         @config = args[:config]

@@ -1,6 +1,6 @@
 module Heirloom
   class Catalog
-    class Setuper
+    class Delete
 
       def initialize(args)
         @config = args[:config]
@@ -8,11 +8,12 @@ module Heirloom
         @region = @config.metadata_region
       end
 
-      def create_catalog_domain
-        unless verifier.catalog_domain_exists?
-          @logger.info "Creating catalog domain in #{@region}."
-          sdb.create_domain "heirloom"
-        end
+      def delete_domain_from_catalog(args)
+        name    = args[:name]
+        regions = args[:regions]
+        return false unless verifier.catalog_domain_exists?
+        domain = "heirloom_#{name}"
+        sdb.delete_attributes 'heirloom', domain
       end
 
       private

@@ -29,8 +29,11 @@ module Heirloom
         ensure_metadata_in_upload_region :config  => @config, 
                                          :regions => @opts[:region]
         @catalog.create_catalog_domain
-        @catalog.add_to_catalog :regions => @opts[:region],
-                                :base    => @opts[:base]
+        unless @catalog.add_to_catalog :regions => @opts[:region],
+                                       :base    => @opts[:base]
+           @logger.warn "#{@opts[:name]} already exists, exiting."
+           exit 1
+        end
         @archive.setup :regions       => @opts[:region],
                        :bucket_prefix => @opts[:base]
       end

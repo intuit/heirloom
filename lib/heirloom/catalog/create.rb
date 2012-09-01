@@ -21,8 +21,8 @@ module Heirloom
         @sdb ||= AWS::SimpleDB.new :config => @config
       end
 
-      def verifier
-        @verifier ||= AWS::Catalog::Verifier.new :config => @config
+      def verify
+        @verify ||= Catalog::Verify.new :config => @config
       end
 
     end

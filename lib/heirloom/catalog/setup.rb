@@ -9,7 +9,7 @@ module Heirloom
       end
 
       def create_catalog_domain
-        unless verifier.catalog_domain_exists?
+        unless verify.catalog_domain_exists?
           @logger.info "Creating catalog domain in #{@region}."
           sdb.create_domain "heirloom"
         end
@@ -21,8 +21,8 @@ module Heirloom
         @sdb ||= AWS::SimpleDB.new :config => @config
       end
 
-      def verifier
-        @verifier ||= AWS::Catalog::Verifier.new :config => @config
+      def verify
+        @verify ||= Catalog::Verify.new :config => @config
       end
 
     end

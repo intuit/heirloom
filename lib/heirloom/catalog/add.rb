@@ -3,17 +3,19 @@ module Heirloom
     class Add
 
       def initialize(args)
-        @config = args[:config]
-        @logger = @config.logger
-        @region = @config.metadata_region
+        @config  = args[:config]
+        @name    = args[:name]
+        @regions = args[:regions]
+        @logger  = @config.logger
       end
 
-      def add_domain_to_catalog(args)
-        name    = args[:name]
-        regions = args[:regions]
-        return false unless verifier.catalog_domain_exists?
-        domain = "heirloom_#{name}"
-        sdb.put_attributes 'heirloom', domain, { "regions" => regions }
+      def add_to_catalog
+        return true if verify.entry_exists_in_catalog? @name
+
+        @logger.info "Adding #{@name} to catalog."
+        sdb.put_attributes 'heirloom', 
+                           "heirloom_#{@name}", 
+                           { "regions" => @regions }
       end
 
       private
@@ -22,8 +24,8 @@ module Heirloom
         @sdb ||= AWS::SimpleDB.new :config => @config
       end
 
-      def verifier
-        @verifier ||= AWS::Catalog::Verifier.new :config => @config
+      def verify
+        @verify ||= Catalog::Verify.new :config => @config
       end
 
     end

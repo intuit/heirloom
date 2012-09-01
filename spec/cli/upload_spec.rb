@@ -6,10 +6,8 @@ describe Heirloom do
   before do
     @regions = ['us-west-1', 'us-west-2']
     options = { :level           => 'info',
-                :base            => 'base',
                 :git             => false,
                 :exclude         => ['exclude1', 'exclude2'],
-                :region          => @regions,
                 :directory       => '/buildme',
                 :public          => false,
                 :secret          => 'secret12',
@@ -24,6 +22,8 @@ describe Heirloom do
                       :secret_key      => 'secret',
                       :metadata_region => 'us-west-1'
     @archive_mock = mock 'archive'
+    @catalog_stub = stub 'catalog', :regions => @regions,
+                                    :base    => 'base'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_stub
@@ -36,6 +36,10 @@ describe Heirloom do
                            :name => 'archive_name',
                            :config => @config_mock).
                       and_return @archive_mock
+    Heirloom::Catalog.should_receive(:new).
+                      with(:name => 'archive_name',
+                           :config => @config_mock).
+                      and_return @catalog_stub
     @upload = Heirloom::CLI::Upload.new
   end
 
@@ -54,9 +58,6 @@ describe Heirloom do
     @upload.should_receive(:ensure_valid_secret).
             with(:secret => 'secret12',
                  :config => @config_mock)
-    @upload.should_receive(:ensure_metadata_in_upload_region).
-            with(:config  => @config_mock,
-                 :regions => @regions)
     @archive_mock.stub :exists? => false
     @archive_mock.should_receive(:build).
                   with(:base      => 'base',

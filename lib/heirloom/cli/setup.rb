@@ -14,10 +14,6 @@ module Heirloom
                              :required => [:metadata_region, :region, 
                                            :name, :base],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
-        ensure_valid_regions :regions => @opts[:region],
-                             :config  => @config
 
         @catalog = Catalog.new :name    => @opts[:name],
                                :config  => @config

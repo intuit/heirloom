@@ -8,7 +8,7 @@ module Heirloom
         @region = @config.metadata_region
       end
 
-      def delete_domain_from_catalog(args)
+      def delete_from_catalog(args)
         name    = args[:name]
         regions = args[:regions]
         return false unless verifier.catalog_domain_exists?

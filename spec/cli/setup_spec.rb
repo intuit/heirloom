@@ -18,6 +18,7 @@ describe Heirloom do
                       :secret_key      => 'secret',
                       :metadata_region => 'us-west-1'
     @archive_mock = mock 'archive'
+    @catalog_mock = mock 'catalog'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_stub
@@ -29,6 +30,10 @@ describe Heirloom do
                       with(:name => 'archive_name',
                            :config => @config_mock).
                       and_return @archive_mock
+    Heirloom::Catalog.should_receive(:new).
+                      with(:name => 'archive_name',
+                           :config => @config_mock).
+                      and_return @catalog_mock
     @setup = Heirloom::CLI::Setup.new
   end
 
@@ -36,6 +41,10 @@ describe Heirloom do
     @setup.should_receive(:ensure_metadata_in_upload_region).
             with(:config  => @config_mock,
                  :regions => @regions)
+    @catalog_mock.should_receive(:create_catalog_domain)
+    @catalog_mock.should_receive(:add_to_catalog).
+                  with :regions => @regions, 
+                       :base    => 'base'
     @archive_mock.should_receive(:setup).
                   with(:regions       => @regions,
                        :bucket_prefix => 'base')

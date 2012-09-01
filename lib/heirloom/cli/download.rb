@@ -48,7 +48,7 @@ Download an archive.
 
 Usage:
 
-heirloom download -n NAME -i ID -r REGION -o OUTPUT_DIRECTORY
+heirloom download -n NAME -i ID -o OUTPUT_DIRECTORY
 
 To download archive without looking up details in SimpleDB, specify region (-r) and base (-b) options.
 

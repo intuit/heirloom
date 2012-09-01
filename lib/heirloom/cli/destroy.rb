@@ -27,7 +27,7 @@ module Heirloom
       end
       
       def destroy
-        @archive.destroy :keep_domain => false
+        @archive.destroy
       end
 
       private

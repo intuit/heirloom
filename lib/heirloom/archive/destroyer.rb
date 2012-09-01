@@ -12,7 +12,6 @@ module Heirloom
 
     def destroy(args)
       regions = args[:regions]
-      keep_domain = args[:keep_domain]
 
       @logger.info "Destroying #{@name} - #{@id}"
 
@@ -34,25 +33,9 @@ module Heirloom
       end
 
       sdb.delete @domain, @id
-
-      destroy_domain unless keep_domain
     end
 
     private
-
-    def destroy_domain
-
-      # Simple DB is eventually consisten
-      # Sleep for 3 sec for changes to reflect
-      Kernel.sleep 3
-
-      if sdb.domain_empty? @domain
-        @logger.info "Domain #{@domain} empty. Destroying."
-        sdb.delete_domain @domain
-      end
-
-      @logger.info "Destroy complete."
-    end
 
     def sdb
       @sdb ||= AWS::SimpleDB.new :config => @config

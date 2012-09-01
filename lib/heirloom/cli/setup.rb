@@ -20,17 +20,21 @@ module Heirloom
                              :config  => @config
 
         @catalog = Catalog.new :name    => @opts[:name],
-                               :config  => @config,
-                               :regions => @opts[:region]
+                               :config  => @config
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
       end
 
       def setup
+        ensure_valid_region :region => @opts[:metadata_region],
+                            :config => @config
+        ensure_valid_regions :regions => @opts[:region],
+                             :config  => @config
         ensure_metadata_in_upload_region :config  => @config, 
                                          :regions => @opts[:region]
         @catalog.create_catalog_domain
-        @catalog.add_to_catalog
+        @catalog.add_to_catalog :regions => @opts[:region],
+                                :base    => @opts[:base]
         @archive.setup :regions       => @opts[:region],
                        :bucket_prefix => @opts[:base]
       end

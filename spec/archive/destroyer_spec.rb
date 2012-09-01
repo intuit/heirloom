@@ -38,16 +38,8 @@ describe Heirloom do
       Kernel.should_receive(:sleep).with 3
       @sdb_mock.should_receive(:domain_empty?).with('heirloom_tim').
                and_return true
-      @sdb_mock.should_receive(:delete_domain).with('heirloom_tim')
       @destroyer.destroy :regions => ['us-west-1'],
                          :keep_domain => false
-    end
-
-    it "should destroy the given archive but keep the sbd domain" do
-      @sdb_mock.should_receive(:domain_empty?).exactly(0).times
-      @sdb_mock.should_receive(:delete_domain).exactly(0).times
-      @destroyer.destroy :regions     => ['us-west-1'],
-                         :keep_domain => true
     end
 
 end

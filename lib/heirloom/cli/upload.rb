@@ -11,36 +11,34 @@ module Heirloom
                               :opts   => @opts
 
         ensure_valid_options :provided => @opts, 
-                             :required => [:name, :id, :region, 
-                                           :base, :directory],
+                             :required => [:name, :id, :directory],
                              :config   => @config
-
+        @catalog = Catalog.new :name    => @opts[:name],
+                               :config  => @config
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config
+        @regions = @catalog.regions
+        @base    = @catalog.base
       end
 
       def upload
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
-        ensure_valid_regions :regions => @opts[:region],
-                             :config  => @config
         ensure_domain_exists :name   => @opts[:name], 
                              :config => @config
-        ensure_buckets_exist :base    => @opts[:base],
+        ensure_buckets_exist :base    => @base,
                              :name    => @opts[:name],
-                             :regions => @opts[:region],
+                             :regions => @regions,
                              :config  => @config
         ensure_directory :path   => @opts[:directory], 
                          :config => @config
         ensure_valid_secret :secret => @opts[:secret], 
                             :config => @config
-        ensure_metadata_in_upload_region :config  => @config, 
-                                         :regions => @opts[:region]
 
-        @archive.destroy :keep_domain => true if @archive.exists?
+        @archive.destroy if @archive.exists?
                           
-        build = @archive.build :base       => @opts[:base],
+        build = @archive.build :base       => @base,
                                :directory  => @opts[:directory],
                                :exclude    => @opts[:exclude],
                                :git        => @opts[:git],
@@ -51,8 +49,8 @@ module Heirloom
           exit 1
         end
 
-        @archive.upload :bucket_prefix   => @opts[:base],
-                        :regions         => @opts[:region],
+        @archive.upload :bucket_prefix   => @base,
+                        :regions         => @regions,
                         :public_readable => @opts[:public],
                         :file            => build
       end
@@ -68,12 +66,9 @@ Upload a directory to Heirloom.
 
 Usage:
 
-heirloom upload -n NAME -i ID -b BASE -r REGION1 -r REGION2 -d DIRECTORY_TO_UPLOAD
+heirloom upload -n NAME -i ID -d DIRECTORY_TO_UPLOAD
 
 EOS
-          opt :base, "Base prefix which will be combined with region. \
-For example: -b 'test' -r 'us-west-1'  will expect bucket 'test-us-west-1' \
-to be present", :type => :string
           opt :directory, "Source directory of build.", :type  => :string
           opt :exclude, "File(s) or directorie(s) to exclude. \
 Can be specified multiple times.", :type  => :string, :multi => true
@@ -86,10 +81,6 @@ Can be specified multiple times.", :type  => :string, :multi => true
                                                                           :default => 'us-west-1'
           opt :name, "Name of archive.", :type => :string
           opt :public, "Set this archive as public readable?"
-          opt :region, "Region(s) to upload archive. \
-Can be specified multiple times.", :type  => :string, 
-                                   :multi => true,
-                                   :default => 'us-west-1'
           opt :secret, "Encrypt the archive with given secret.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none

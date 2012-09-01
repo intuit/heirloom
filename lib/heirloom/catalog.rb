@@ -7,5 +7,20 @@ require 'heirloom/catalog/verify.rb'
 
 module Heirloom
   class Catalog
+    def initialize(args)
+      @config = args[:config]
+      @name   = args[:name]
+    end
+
+    def setup
+      setup.create_catalog_domain
+    end
+
+    private
+
+    def setup
+      @setup ||= Catalog::Setup.new :config => @config,
+                                    :name   => @name
+    end
   end
 end

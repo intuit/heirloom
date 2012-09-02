@@ -9,7 +9,7 @@ module Heirloom
     end
 
     def list(limit=10)
-      sdb.select("select * from #{@domain} where built_at > '2000-01-01T00:00:00.000Z'\
+      sdb.select("select * from `#{@domain}` where built_at > '2000-01-01T00:00:00.000Z'\
                   order by built_at desc limit #{limit}").keys
     end
 

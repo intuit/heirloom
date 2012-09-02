@@ -56,7 +56,7 @@ describe Heirloom do
     body_mock = mock 'return body'
     data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
     @fog_mock.should_receive(:select).
-              with('SELECT count(*) FROM heirloom_domain').
+              with('SELECT count(*) FROM `heirloom_domain`').
               and_return body_mock
     body_mock.should_receive(:body).and_return data
     @sdb.count('heirloom_domain').should == 1
@@ -66,7 +66,7 @@ describe Heirloom do
     body_mock = mock 'return body'
     data = { 'Items' => { 'Domain' => { 'Count' => ['0'] } } }
     @fog_mock.should_receive(:select).
-              with('SELECT count(*) FROM heirloom_domain').
+              with('SELECT count(*) FROM `heirloom_domain`').
               and_return body_mock
     body_mock.should_receive(:body).and_return data
     @sdb.domain_empty?('heirloom_domain').should be_true
@@ -76,7 +76,7 @@ describe Heirloom do
     body_mock = mock 'return body'
     data = { 'Items' => { 'Domain' => { 'Count' => ['50'] } } }
     @fog_mock.should_receive(:select).
-              with('SELECT count(*) FROM heirloom_domain').
+              with('SELECT count(*) FROM `heirloom_domain`').
               and_return body_mock
     body_mock.should_receive(:body).and_return data
     @sdb.domain_empty?('heirloom_domain').should be_false
@@ -86,7 +86,7 @@ describe Heirloom do
     body_mock = mock 'return body'
     data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
     @fog_mock.should_receive(:select).
-              with("SELECT count(*) FROM heirloom WHERE itemName() = 'archive'").
+              with("SELECT count(*) FROM `heirloom` WHERE itemName() = 'archive'").
               and_return body_mock
     body_mock.should_receive(:body).and_return data
     @sdb.item_count('heirloom', 'archive').should == 1

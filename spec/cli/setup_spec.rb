@@ -37,14 +37,12 @@ describe Heirloom do
     @setup = Heirloom::CLI::Setup.new
   end
 
-  it "should setup s3 buckets and simpledb domain" do
-    @setup.should_receive(:ensure_metadata_in_upload_region).
-            with(:config  => @config_mock,
-                 :regions => @regions)
+  it "should setup s3 buckets, catalog and simpledb domain" do
     @catalog_mock.should_receive(:create_catalog_domain)
     @catalog_mock.should_receive(:add_to_catalog).
-                  with :regions => @regions, 
-                       :base    => 'base'
+                  with(:regions => @regions, 
+                       :base    => 'base').
+                  and_return true
     @archive_mock.should_receive(:setup).
                   with(:regions       => @regions,
                        :bucket_prefix => 'base')

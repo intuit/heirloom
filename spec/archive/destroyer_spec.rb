@@ -31,15 +31,11 @@ describe Heirloom do
                              :bucket     => 'bucket-us-west-1'
       @sdb_mock = mock 'sdb'
       @destroyer.stub :sdb => @sdb_mock
-      @sdb_mock.should_receive(:delete).with 'heirloom_tim', '123'
     end
 
     it "should destroy the given archive" do
-      Kernel.should_receive(:sleep).with 3
-      @sdb_mock.should_receive(:domain_empty?).with('heirloom_tim').
-               and_return true
-      @destroyer.destroy :regions => ['us-west-1'],
-                         :keep_domain => false
+      @sdb_mock.should_receive(:delete).with 'heirloom_tim', '123'
+      @destroyer.destroy :regions => ['us-west-1']
     end
 
 end

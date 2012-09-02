@@ -5,15 +5,21 @@ module Heirloom
       def initialize(args)
         @config = args[:config]
         @logger = @config.logger
-        @region = @config.metadata_region
       end
 
       def delete_from_catalog(args)
         name    = args[:name]
-        regions = args[:regions]
-        return false unless verifier.catalog_domain_exists?
-        domain = "heirloom_#{name}"
+        domain  = "heirloom_#{name}"
+
+        return false unless catalog_domain_exists?
+
+        @logger.info "Deleting #{name} from catalog."
+
         sdb.delete_attributes 'heirloom', domain
+      end
+
+      def catalog_domain_exists?
+        verify.catalog_domain_exists?
       end
 
       private

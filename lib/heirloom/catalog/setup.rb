@@ -10,7 +10,7 @@ module Heirloom
 
       def create_catalog_domain
         unless verify.catalog_domain_exists?
-          @logger.info "Creating catalog domain in #{@region}."
+          @logger.info "Creating catalog in #{@region}."
           sdb.create_domain "heirloom"
         end
       end

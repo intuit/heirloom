@@ -12,15 +12,18 @@ module Heirloom
         regions = args[:regions]
         base    = args[:base]
 
-        if verify.entry_exists_in_catalog? @name
-          return false
-        end
+        return false if entry_exists_in_catalog?
 
         @logger.info "Adding #{@name} to catalog."
+
         sdb.put_attributes 'heirloom', 
                            "heirloom_#{@name}", 
                            { "regions" => regions, "base" => base }
 
+      end
+
+      def entry_exists_in_catalog?
+        verify.entry_exists_in_catalog? @name
       end
 
       private

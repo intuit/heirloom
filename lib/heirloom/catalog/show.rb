@@ -12,7 +12,7 @@ module Heirloom
       end
 
       def base
-        lookup :name => @name, :attribute => 'base'
+        lookup(:name => @name, :attribute => 'base').first
       end
 
       private
@@ -22,7 +22,8 @@ module Heirloom
         attribute = args[:attribute]
         domain    = "heirloom_#{name}"
         query     = "select #{attribute} from heirloom where itemName() = '#{domain}'"
-        sdb.select(query)[domain][attribute].first
+        result    = sdb.select(query)
+        result[domain][attribute]
       end
 
       def sdb

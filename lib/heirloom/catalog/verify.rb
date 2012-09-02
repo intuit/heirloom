@@ -19,10 +19,7 @@ module Heirloom
       end
 
       def entry_exists_in_catalog?(entry)
-        query = "select count(*) from heirloom where itemName() = 'heirloom_#{entry}'"
-        count = sdb.select(query)['Domain']['Count'].first.to_i
-
-        if count.zero?
+        if sdb.item_count('heirloom', "heirloom_#{entry}").zero?
           @logger.debug "#{entry} does not exist in catalog."
           false
         else

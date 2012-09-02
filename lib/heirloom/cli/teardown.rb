@@ -19,8 +19,6 @@ module Heirloom
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
 
-        @regions = @catalog.regions
-        @base    = @catalog.base
       end
 
       def teardown
@@ -30,13 +28,16 @@ module Heirloom
         ensure_archive_domain_empty :archive => @archive,
                                     :config  => @config
 
+        @regions = @catalog.regions
+        @base    = @catalog.base
+
         unless @opts[:keep_buckets]
           @archive.delete_buckets :regions       => @regions,
                                   :bucket_prefix => @base
         end
 
         @archive.delete_domain
-        @catalog.delete_from_catalog :name => @opts[:name]
+        @catalog.delete_from_catalog
       end
 
       private

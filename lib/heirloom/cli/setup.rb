@@ -32,8 +32,12 @@ module Heirloom
         @catalog.create_catalog_domain
         unless @catalog.add_to_catalog :regions => @opts[:region],
                                        :base    => @opts[:base]
-           @logger.warn "#{@opts[:name]} already exists, exiting."
-           exit 1
+           if @opts[:force]
+             @logger.warn "#{@opts[:name]} already exists."
+           else
+             @logger.warn "#{@opts[:name]} already exists, exiting."
+             exit 1
+           end
         end
 
         @archive.setup :regions       => @opts[:region],
@@ -58,6 +62,7 @@ EOS
 region. For example: '-b test -r us-west-1 -r us-east-1' will create bucket test-us-west-1 \
 in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
           opt :help, "Display Help"
+          opt :force, "Force setup if entry already exists"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,

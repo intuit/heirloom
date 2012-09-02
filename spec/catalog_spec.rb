@@ -4,10 +4,10 @@ describe Heirloom::Catalog do
 
   before do 
     @config_mock = mock 'catalog'
-    @regions = ['us-west-1', 'us-west-2']
-    @base = 'thebase'
-    @catalog = Heirloom::Catalog.new :config => @config_mock,
-                                     :name   => 'new_archive'
+    @regions     = ['us-west-1', 'us-west-2']
+    @base        = 'thebase'
+    @catalog     = Heirloom::Catalog.new :config => @config_mock,
+                                         :name   => 'new_archive'
   end
 
   context "testing add" do

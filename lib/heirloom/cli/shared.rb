@@ -118,7 +118,7 @@ module Heirloom
                               :config => config
 
         unless archive.domain_exists?
-          logger.error "Metadata domain '#{name}' does not exist in '#{config.metadata_region}'."
+          logger.error "Metadata '#{name}' does not exist in '#{config.metadata_region}'."
           exit 1
         end
       end

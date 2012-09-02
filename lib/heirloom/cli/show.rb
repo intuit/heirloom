@@ -41,7 +41,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Show archive.
+Show Heirloom.
 
 Usage:
 
@@ -51,12 +51,12 @@ If -i is ommited, latest ID is displayed.
 
 EOS
           opt :help, "Display Help"
-          opt :id, "ID of the archive to display.", :type => :string
+          opt :id, "ID of the Heirloom to display.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
                                                                           :default => 'us-west-1'
-          opt :name, "Name of archive.", :type => :string
+          opt :name, "Name of Heirloom.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

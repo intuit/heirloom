@@ -72,16 +72,16 @@ EOS
           opt :directory, "Source directory of build.", :type  => :string
           opt :exclude, "File(s) or directorie(s) to exclude. \
 Can be specified multiple times.", :type  => :string, :multi => true
-          opt :git, "Read git commit information from directory and set as archive attributes."
+          opt :git, "Read git commit information from directory and set as Heirloom attributes."
           opt :help, "Display Help"
-          opt :id, "ID for archive (when -g specified, assumed to be GIT sha).", :type => :string
+          opt :id, "ID for Heirloom (when -g specified, assumed to be GIT sha).", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
                                                                           :default => 'us-west-1'
-          opt :name, "Name of archive.", :type => :string
-          opt :public, "Set this archive as public readable?"
-          opt :secret, "Encrypt the archive with given secret.", :type => :string
+          opt :name, "Name of Heirloom.", :type => :string
+          opt :public, "Set this Heirloom as public readable?"
+          opt :secret, "Encrypt the Heirloom with given secret.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

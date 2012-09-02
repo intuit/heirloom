@@ -34,8 +34,6 @@ module Heirloom
 
       add_git_commit if args[:git]
 
-      @logger.info "Build complete."
-
       @local_build
     end
 

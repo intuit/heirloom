@@ -47,11 +47,13 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Teardown S3 buckets and SimpleDB domain for a given Heirloom.
+Teardown S3 buckets and SimpleDB domain for a given Heirloom name.
 
 Usage:
 
 heirloom teardown -n NAME
+
+Note: All Heirlooms must be destroyed.
 
 EOS
           opt :help, "Display Help"
@@ -59,7 +61,7 @@ EOS
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
                                                                           :default => 'us-west-1'
-          opt :name, "Name of archive.", :type => :string
+          opt :name, "Name of Heirloom.", :type => :string
           opt :keep_buckets, "Do not delete S3 buckets."
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none

@@ -18,7 +18,7 @@ module Heirloom
 
       @local_build = Tempfile.new('archive.tar.gz').path
 
-      @logger.info "Building Heirloom '#{@local_build}' from '#{@path}'."
+      @logger.debug "Building Heirloom '#{@local_build}' from '#{@path}'."
       @logger.debug "Excluding #{@exclude.to_s}."
       @logger.debug "Adding #{files_to_pack}."
 

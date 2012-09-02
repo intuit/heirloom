@@ -67,8 +67,8 @@ in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
                                                                           :default => 'us-west-1'
-          opt :name, "Name of archive.", :type => :string
-          opt :region, "AWS Region(s) to upload archive. \
+          opt :name, "Name of Heirloom.", :type => :string
+          opt :region, "AWS Region(s) to upload Heirloom. \
 Can be specified multiple times.", :type  => :string, 
                                    :multi => true,
                                    :default => 'us-west-1'

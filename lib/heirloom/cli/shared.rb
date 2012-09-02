@@ -105,7 +105,6 @@ module Heirloom
         unless archive.buckets_exist? :regions       => regions,
                                       :bucket_prefix => base
           logger.error "Required buckets for '#{base}' do not exist."
-          logger.error "Run 'heirloom setup -h' for help setting up new region."
           exit 1
         end
       end
@@ -120,7 +119,6 @@ module Heirloom
 
         unless archive.domain_exists?
           logger.error "Metadata domain '#{name}' does not exist in '#{config.metadata_region}'."
-          logger.error "Run 'heirloom setup -h' for help setting up new region."
           exit 1
         end
       end
@@ -142,7 +140,7 @@ module Heirloom
         logger  = config.logger
 
         unless archive.count.zero?
-          logger.error "Domain not empty."
+          logger.error "Not empty."
           exit 1
         end
       end

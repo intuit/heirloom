@@ -13,7 +13,7 @@ module Heirloom
     def destroy(args)
       regions = args[:regions]
 
-      @logger.info "Destroying #{@name} - #{@id}"
+      @logger.info "Destroying #{@name} #{@id}"
 
       regions.each do |region|
         bucket = reader.get_bucket :region => region

@@ -33,7 +33,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-List available IDs of archive.
+List Heirloom IDs.
 
 Usage:
 
@@ -47,7 +47,7 @@ EOS
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
                                                                           :default => 'us-west-1'
-          opt :name, "Name of archive.", :type => :string
+          opt :name, "Name of Heirloom.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

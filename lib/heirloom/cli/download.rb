@@ -44,28 +44,28 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Download an archive.
+Download Heirloom.
 
 Usage:
 
 heirloom download -n NAME -i ID -o OUTPUT_DIRECTORY
 
-To download archive without looking up details in SimpleDB, specify region (-r) and base (-b) options.
+To download Heirloom without looking up details in SimpleDB, specify region (-r) and base (-b) options.
 
 EOS
-          opt :base, "Base of the archive to download.", :type => :string
-          opt :extract, "Extract the archive in the given output path.", :short => "-x"
+          opt :base, "Base of the Heirloom to download.", :type => :string
+          opt :extract, "Extract the Heirloom into the given output path.", :short => "-x"
           opt :help, "Display Help"
-          opt :id, "ID of the archive to download.", :type => :string
+          opt :id, "ID of the Heirloom to download.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
                                                                           :default => 'us-west-1'
-          opt :name, "Name of archive.", :type => :string
-          opt :output, "Path to output downloaded archive. Must be existing directory.", :type => :string
-          opt :region, "Region to download archive.", :type    => :string,
+          opt :name, "Name of Heirloom.", :type => :string
+          opt :output, "Path to output downloaded Heirloom. Must be existing directory.", :type => :string
+          opt :region, "Region to download Heirloom.", :type    => :string,
                                                       :default => 'us-west-1'
-          opt :secret, "Secret for ecrypted archive.", :type => :string
+          opt :secret, "Secret for ecrypted Heirloom.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

@@ -31,8 +31,17 @@ describe Heirloom::Catalog::Verify do
   end
 
   context "testing entry_exists_in_catalog?" do
-    it "should return true if an entry exists in catalog"
-    it "should return false if an entry does not exist in catalog"
+    it "should return true if an entry exists in catalog" do
+      @sdb_mock.should_receive(:item_count).
+                with('heirloom', 'heirloom_a_archive').and_return 1
+      @verify.entry_exists_in_catalog?('a_archive').should be_true
+    end
+
+    it "should return false if an entry does not exist in catalog" do
+      @sdb_mock.should_receive(:item_count).
+                with('heirloom', 'heirloom_a_archive').and_return 0
+      @verify.entry_exists_in_catalog?('a_archive').should be_false
+    end
   end
 
 end

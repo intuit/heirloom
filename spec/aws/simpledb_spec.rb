@@ -82,4 +82,14 @@ describe Heirloom do
     @sdb.domain_empty?('heirloom_domain').should be_false
   end
 
+  it "should return the count for a specific itemName within a domain" do
+    body_mock = mock 'return body'
+    data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
+    @fog_mock.should_receive(:select).
+              with("SELECT count(*) FROM heirloom WHERE itemName() = 'archive'").
+              and_return body_mock
+    body_mock.should_receive(:body).and_return data
+    @sdb.item_count('heirloom', 'archive').should == 1
+  end
+
 end

@@ -1,4 +1,10 @@
-## v0.6.1:
+## HEAD:
+
+* Addign catalog which will contain all heirloom regions & bases.
+* CLI will lookup base & region from catalog.
+* Added teardown command to delete domains & buckets.
+
+### v0.6.1:
 
 * Allowing engineer to specify region for metadata
 * Ensuring metadata is in an upload region

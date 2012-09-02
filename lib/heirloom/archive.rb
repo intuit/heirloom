@@ -5,6 +5,7 @@ require 'heirloom/archive/updater.rb'
 require 'heirloom/archive/uploader.rb'
 require 'heirloom/archive/downloader.rb'
 require 'heirloom/archive/setuper.rb'
+require 'heirloom/archive/teardowner.rb'
 require 'heirloom/archive/writer.rb'
 require 'heirloom/archive/authorizer.rb'
 require 'heirloom/archive/destroyer.rb'
@@ -39,6 +40,14 @@ module Heirloom
 
     def setup(args)
       setuper.setup args
+    end
+
+    def delete_buckets(args)
+      teardowner.delete_buckets args
+    end
+
+    def delete_domain
+      teardowner.delete_domain
     end
 
     def update(args)
@@ -129,6 +138,11 @@ module Heirloom
     def setuper
       @setuper ||= Setuper.new :config => @config,
                                :name   => @name
+    end
+
+    def teardowner
+      @teardowner ||= Teardowner.new :config => @config,
+                                     :name   => @name
     end
 
     def verifier

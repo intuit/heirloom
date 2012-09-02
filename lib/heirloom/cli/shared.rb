@@ -136,6 +136,17 @@ module Heirloom
         end
       end
 
+      def ensure_archive_domain_empty(args)
+        config  = args[:config]
+        archive = args[:archive]
+        logger  = config.logger
+
+        unless archive.count.zero?
+          logger.error "Domain not empty."
+          exit 1
+        end
+      end
+
     end
   end
 end

@@ -20,18 +20,16 @@ describe Heirloom::Catalog::Delete do
     Heirloom::AWS::SimpleDB.should_receive(:new).
                             with(:config => @config_stub).
                             and_return @sdb_mock
-    @sdb_mock.should_receive(:delete_attributes).
+    @sdb_mock.should_receive(:delete).
               with('heirloom', 'heirloom_old_archive').
               and_return true
-    @delete.delete_from_catalog(:name => 'old_archive').
-            should be_true
+    @delete.delete_from_catalog.should be_true
   end
 
   it "should return false if an entry does not exist in catalog" do
     @verify_mock.should_receive(:catalog_domain_exists?).
                  and_return false
-    @delete.delete_from_catalog(:name => 'old_archive').
-            should be_false
+    @delete.delete_from_catalog.should be_false
   end
 
 end

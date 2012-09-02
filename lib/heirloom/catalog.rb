@@ -16,8 +16,12 @@ module Heirloom
       setup.create_catalog_domain
     end
 
+    def delete_from_catalog
+      delete.delete_from_catalog
+    end
+
     def add_to_catalog(args)
-      add.add_to_catalog(args)
+      add.add_to_catalog args
     end
 
     def regions
@@ -30,18 +34,23 @@ module Heirloom
 
     private
 
+    def add
+      @add ||= Catalog::Add.new :config => @config,
+                                :name   => @name
+    end
+
+    def delete
+      @delete ||= Catalog::Delete.new :config => @config,
+                                      :name   => @name
+    end
+
     def setup
       @setup ||= Catalog::Setup.new :config => @config
     end
 
-    def add
-      @add ||= Catalog::Add.new :config  => @config,
-                                :name    => @name
-    end
-
     def show
-      @show ||= Catalog::Show.new :config  => @config,
-                                  :name    => @name
+      @show ||= Catalog::Show.new :config => @config,
+                                  :name   => @name
     end
   end
 end

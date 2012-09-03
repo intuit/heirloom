@@ -223,5 +223,28 @@ describe Heirloom do
     end
   end
 
+  context "testing ensure archive domain empty" do
+    before do
+      @archive_mock = mock 'archive'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @options = { :config => @config_stub, :archive => @archive_mock }
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should ensure the domain is empty" do
+      @archive_mock.should_receive(:count).and_return 0
+      @object.ensure_archive_domain_empty @options 
+    end
+
+    it "should exit if the domain is not empty" do
+      @archive_mock.should_receive(:count).and_return 200
+      lambda { @object.ensure_archive_domain_empty @options }.
+                       should raise_error SystemExit
+    end
+  end
+
 
 end

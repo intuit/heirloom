@@ -21,7 +21,7 @@ module Heirloom
         key = "#{@id}.tar.gz"
 
         if bucket
-          @logger.info "Destroying 's3://#{bucket}/#{@name}/#{key}'."
+          @logger.debug "Destroying 's3://#{bucket}/#{@name}/#{key}'."
 
           s3_destroyer = Destroyer::S3.new :config => @config,
                                            :region => region

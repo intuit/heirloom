@@ -15,7 +15,7 @@ module Heirloom
 
       return false unless validate_format_of_accounts
 
-      @logger.info "Authorizing access."
+      @logger.info "Authorizing #{@accounts.join(', ')}."
 
       regions.each do |region|
         bucket = reader.get_bucket :region => region

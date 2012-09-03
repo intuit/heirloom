@@ -28,7 +28,7 @@ module Heirloom
                                      :accounts => accounts
 
         accounts.each do |a|
-          logger.info "Authorizing #{a} to s3://#{bucket}/#{key}."
+          logger.debug "Authorizing #{a} to s3://#{bucket}/#{key}."
         end
         s3.put_object_acl bucket, key, grants
       end

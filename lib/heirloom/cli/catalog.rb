@@ -15,8 +15,7 @@ module Heirloom
                              :config   => @config
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
-        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
-                                         :config  => @config
+        @catalog = Heirloom::Catalog.new :config  => @config
       end
       
       def list

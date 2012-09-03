@@ -6,6 +6,7 @@
 * Added teardown command to delete domains & buckets.
 * Enclosing simpledb domains in `s
 * Added catalog subcommand to list available Heirlooms from catalog.
+* Reducing log levels
 
 ### v0.6.1:
 

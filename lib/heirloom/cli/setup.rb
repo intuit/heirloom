@@ -15,8 +15,8 @@ module Heirloom
                                            :name, :base],
                              :config   => @config
 
-        @catalog = Catalog.new :name    => @opts[:name],
-                               :config  => @config
+        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
+                                         :config  => @config
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
       end
@@ -62,7 +62,7 @@ EOS
 region. For example: '-b test -r us-west-1 -r us-east-1' will create bucket test-us-west-1 \
 in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
           opt :help, "Display Help"
-          opt :force, "Force setup if entry already exists"
+          opt :force, "Force setup even if entry already exists in catalog."
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,

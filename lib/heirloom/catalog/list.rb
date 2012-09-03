@@ -6,9 +6,9 @@ module Heirloom
         @config = args[:config]
       end
 
-      def list
-        query  = "select * from heirloom"
-        sdb.select(query).keys
+      def all
+        query  = "SELECT * FROM heirloom"
+        sdb.select query
       end
 
       private

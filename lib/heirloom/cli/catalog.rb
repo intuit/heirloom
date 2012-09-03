@@ -1,6 +1,6 @@
 module Heirloom
   module CLI
-    class Teardown
+    class Catalog
 
       include Heirloom::CLI::Shared
 
@@ -10,59 +10,47 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        ensure_valid_options :provided => @opts, 
-                             :required => [:name],
+        ensure_valid_options :provided => @opts,
+                             :required => [],
                              :config   => @config
-
+        ensure_valid_region :region => @opts[:metadata_region],
+                            :config => @config
         @catalog = Heirloom::Catalog.new :name    => @opts[:name],
                                          :config  => @config
-        @archive = Archive.new :name   => @opts[:name],
-                               :config => @config
-
       end
-
-      def teardown
-        ensure_domain_exists :name   => @opts[:name],
-                             :config => @config
-
-        ensure_archive_domain_empty :archive => @archive,
-                                    :config  => @config
-
-        @regions = @catalog.regions
-        @base    = @catalog.base
-
-        unless @opts[:keep_buckets]
-          @archive.delete_buckets :regions       => @regions,
-                                  :bucket_prefix => @base
+      
+      def list
+        if @opts[:details]
+          jj catalog_with_heirloom_prefix_removed
+        else
+          jj catalog_with_heirloom_prefix_removed.keys
         end
-
-        @archive.delete_domain
-        @catalog.delete_from_catalog
       end
 
       private
+
+      def catalog_with_heirloom_prefix_removed
+        Hash[@catalog.all.map { |k, v| [k.sub(/heirloom_/, ''), v] }]
+      end
 
       def read_options
         Trollop::options do
           version Heirloom::VERSION
           banner <<-EOS
 
-Teardown S3 buckets and SimpleDB domain for a given Heirloom name.
+Show catalog of Heirlooms.
 
 Usage:
 
-heirloom teardown -n NAME
-
-Note: All Heirlooms must be destroyed.
+heirloom catalog
 
 EOS
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
+          opt :details, "Include details."
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
                                                                           :default => 'us-west-1'
-          opt :name, "Name of Heirloom.", :type => :string
-          opt :keep_buckets, "Do not delete S3 buckets."
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

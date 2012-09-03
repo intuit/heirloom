@@ -12,8 +12,6 @@ module Heirloom
         regions = args[:regions]
         base    = args[:base]
 
-        return false if entry_exists_in_catalog?
-
         @logger.info "Adding #{@name} to catalog."
 
         sdb.put_attributes 'heirloom', 
@@ -22,18 +20,10 @@ module Heirloom
 
       end
 
-      def entry_exists_in_catalog?
-        verify.entry_exists_in_catalog? @name
-      end
-
       private
 
       def sdb
         @sdb ||= AWS::SimpleDB.new :config => @config
-      end
-
-      def verify
-        @verify ||= Catalog::Verify.new :config => @config
       end
 
     end

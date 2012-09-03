@@ -1,5 +1,6 @@
 require 'heirloom/catalog/add.rb'
 require 'heirloom/catalog/delete.rb'
+require 'heirloom/catalog/list.rb'
 require 'heirloom/catalog/setup.rb'
 require 'heirloom/catalog/show.rb'
 require 'heirloom/catalog/verify.rb'
@@ -32,6 +33,10 @@ module Heirloom
       show.base
     end
 
+    def all
+      list.all
+    end
+
     private
 
     def add
@@ -42,6 +47,10 @@ module Heirloom
     def delete
       @delete ||= Catalog::Delete.new :config => @config,
                                       :name   => @name
+    end
+
+    def list
+      @list ||= Catalog::List.new :config => @config
     end
 
     def setup

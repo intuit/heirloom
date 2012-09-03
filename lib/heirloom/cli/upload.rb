@@ -13,8 +13,8 @@ module Heirloom
         ensure_valid_options :provided => @opts, 
                              :required => [:name, :id, :directory],
                              :config   => @config
-        @catalog = Catalog.new :name    => @opts[:name],
-                               :config  => @config
+        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
+                                         :config  => @config
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config

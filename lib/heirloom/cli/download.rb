@@ -14,8 +14,8 @@ module Heirloom
                              :required => [:name, :id, :output],
                              :config   => @config
 
-        @catalog = Catalog.new :name    => @opts[:name],
-                               :config  => @config
+        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
+                                         :config  => @config
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config

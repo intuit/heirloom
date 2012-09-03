@@ -3,6 +3,7 @@ require 'trollop'
 
 require 'heirloom/cli/shared'
 require 'heirloom/cli/authorize'
+require 'heirloom/cli/catalog'
 require 'heirloom/cli/upload'
 require 'heirloom/cli/setup'
 require 'heirloom/cli/list'
@@ -20,6 +21,8 @@ module Heirloom
       case cmd
       when 'authorize'
         CLI::Authorize.new.authorize
+      when 'catalog'
+        CLI::Catalog.new.list
       when 'destroy', 'delete'
         CLI::Destroy.new.destroy
       when 'download'
@@ -40,7 +43,7 @@ module Heirloom
         puts Heirloom::VERSION
       else
         puts "Unkown command: '#{cmd}'." unless cmd == '-h'
-        puts "heirloom [authorize|destroy|download|list|setup|show|tag|teardown|upload] OPTIONS"
+        puts "heirloom [authorize|catalog|destroy|download|list|setup|show|tag|teardown|upload] OPTIONS"
         puts "Append -h for help on specific command."
       end
     end

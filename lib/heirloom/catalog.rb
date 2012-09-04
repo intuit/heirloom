@@ -17,6 +17,10 @@ module Heirloom
       setup.create_catalog_domain
     end
 
+    def catalog_domain_exists?
+      verify.catalog_domain_exists?
+    end
+
     def delete_from_catalog
       delete.delete_from_catalog
     end
@@ -61,5 +65,10 @@ module Heirloom
       @show ||= Catalog::Show.new :config => @config,
                                   :name   => @name
     end
+
+    def verify
+      @verify ||= Catalog::Verify.new :config => @config
+    end
+
   end
 end

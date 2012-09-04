@@ -20,10 +20,10 @@ module Heirloom
 
       def entry_exists_in_catalog?(entry)
         if sdb.item_count('heirloom', "heirloom_#{entry}").zero?
-          @logger.debug "#{entry} does not exist in catalog."
+          @logger.debug "#{entry} does not exist in catalog in #{@region}."
           false
         else
-          @logger.debug "#{entry} exists in catalog."
+          @logger.debug "#{entry} exists in catalog in #{@region}."
           true
         end
       end

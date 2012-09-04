@@ -246,5 +246,27 @@ describe Heirloom do
     end
   end
 
+  context "testing ensure catalog domain exists" do
+    before do
+      @catalog_mock = mock 'catalog'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @options = { :config => @config_stub, :catalog => @catalog_mock }
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should ensure the catlog domain exists" do
+      @catalog_mock.stub :catalog_domain_exists? => true
+      @object.ensure_catalog_domain_exists @options
+    end
+
+    it "should exit if the catlog domain does not exist" do
+      @catalog_mock.stub :catalog_domain_exists? => false
+      lambda { @object.ensure_catalog_domain_exists @options }.
+                       should raise_error SystemExit
+    end
+  end
 
 end

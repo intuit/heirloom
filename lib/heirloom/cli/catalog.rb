@@ -16,9 +16,11 @@ module Heirloom
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
         @catalog = Heirloom::Catalog.new :config  => @config
+        ensure_catalog_domain_exists :config  => @config,
+                                     :catalog => @catalog
       end
       
-      def list
+      def all
         if @opts[:details]
           jj catalog_with_heirloom_prefix_removed
         else

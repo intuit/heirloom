@@ -13,6 +13,7 @@ describe Heirloom do
     @logger_stub = stub :debug => true
     @config_mock = mock 'config'
     @catalog_mock = mock 'catalog'
+    @catalog_mock.stub :catalog_domain_exists? => true
     @config_mock.stub :logger          => @logger_mock, 
                       :access_key      => 'key',
                       :secret_key      => 'secret',
@@ -36,7 +37,7 @@ describe Heirloom do
                         { 'regions' => ['us-west-1'],
                           'base'    => ['base'] } }
     @cli_catalog.should_receive(:jj).with formated_result
-    @cli_catalog.list
+    @cli_catalog.all
   end
 
 end

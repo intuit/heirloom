@@ -22,7 +22,7 @@ module Heirloom
       when 'authorize'
         CLI::Authorize.new.authorize
       when 'catalog'
-        CLI::Catalog.new.list
+        CLI::Catalog.new.all
       when 'destroy', 'delete'
         CLI::Destroy.new.destroy
       when 'download'

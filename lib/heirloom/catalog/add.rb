@@ -16,7 +16,7 @@ module Heirloom
 
         sdb.put_attributes 'heirloom', 
                            "heirloom_#{@name}", 
-                           { "regions" => regions, "base" => base }
+                           "regions" => regions, "base" => base
 
       end
 

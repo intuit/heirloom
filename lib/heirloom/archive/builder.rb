@@ -52,7 +52,7 @@ module Heirloom
     def add_git_commit_to_artifact_record(commit)
       attributes = { 'sha'             => @id,
                      'abbreviated_sha' => commit.id_abbrev,
-                     'message'         => commit.message.gsub("\n"," "),
+                     'message'         => commit.message.gsub("\n"," ")[0..1023],
                      'author'          => commit.author.name }
 
       attributes.each_pair do |k, v|

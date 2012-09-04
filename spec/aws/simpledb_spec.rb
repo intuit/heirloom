@@ -52,34 +52,46 @@ describe Heirloom do
     @sdb.delete('domain', 'key')
   end
 
-  it "should count the number of entries in the domain" do
-    body_mock = mock 'return body'
-    data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
-    @fog_mock.should_receive(:select).
-              with('SELECT count(*) FROM heirloom_domain').
-              and_return body_mock
-    body_mock.should_receive(:body).and_return data
-    @sdb.count('heirloom_domain').should == 1
-  end
+  context "testing counts" do
+    before do
+      @body_stub = stub 'body'
+    end
 
-  it "should return true if no entries for the domain" do
-    body_mock = mock 'return body'
-    data = { 'Items' => { 'Domain' => { 'Count' => ['0'] } } }
-    @fog_mock.should_receive(:select).
-              with('SELECT count(*) FROM heirloom_domain').
-              and_return body_mock
-    body_mock.should_receive(:body).and_return data
-    @sdb.domain_empty?('heirloom_domain').should be_true
-  end
+    it "should count the number of entries in the domain" do
+      data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
+      @fog_mock.should_receive(:select).
+                with('SELECT count(*) FROM `heirloom_domain`').
+                and_return @body_stub
+      @body_stub.stub :body => data
+      @sdb.count('heirloom_domain').should == 1
+    end
 
-  it "should return false if entries exist for the domain" do
-    body_mock = mock 'return body'
-    data = { 'Items' => { 'Domain' => { 'Count' => ['50'] } } }
-    @fog_mock.should_receive(:select).
-              with('SELECT count(*) FROM heirloom_domain').
-              and_return body_mock
-    body_mock.should_receive(:body).and_return data
-    @sdb.domain_empty?('heirloom_domain').should be_false
+    it "should return true if no entries for the domain" do
+      data = { 'Items' => { 'Domain' => { 'Count' => ['0'] } } }
+      @fog_mock.should_receive(:select).
+                with('SELECT count(*) FROM `heirloom_domain`').
+                and_return @body_stub
+      @body_stub.stub :body => data
+      @sdb.domain_empty?('heirloom_domain').should be_true
+    end
+
+    it "should return false if entries exist for the domain" do
+      data = { 'Items' => { 'Domain' => { 'Count' => ['50'] } } }
+      @fog_mock.should_receive(:select).
+                with('SELECT count(*) FROM `heirloom_domain`').
+                and_return @body_stub
+      @body_stub.stub :body => data
+      @sdb.domain_empty?('heirloom_domain').should be_false
+    end
+
+    it "should return the count for a specific itemName within a domain" do
+      data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
+      @fog_mock.should_receive(:select).
+                with("SELECT count(*) FROM `heirloom` WHERE itemName() = 'archive'").
+                and_return @body_stub
+      @body_stub.stub :body => data
+      @sdb.item_count('heirloom', 'archive').should == 1
+    end
   end
 
 end

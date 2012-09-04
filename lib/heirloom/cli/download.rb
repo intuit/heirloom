@@ -11,22 +11,29 @@ module Heirloom
                               :opts   => @opts
 
         ensure_valid_options :provided => @opts,
-                             :required => [:base, :name, :id, :output],
+                             :required => [:name, :id, :output],
                              :config   => @config
 
+        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
+                                         :config  => @config
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config
+
+        # Lookup region & base from simpledb unless specified
+        # To Do, valid validation message that simpledb exists
+        @region = @opts[:region] || @catalog.regions.first
+        @base   = @opts[:base]   || @catalog.base
       end
       
       def download
         ensure_directory :path => @opts[:output], :config => @config
         ensure_valid_secret :secret => @opts[:secret], :config => @config
         archive = @archive.download :output      => @opts[:output],
-                                    :region      => @opts[:region],
                                     :extract     => @opts[:extract],
-                                    :base_prefix => @opts[:base],
-                                    :secret      => @opts[:secret]
+                                    :secret      => @opts[:secret],
+                                    :region      => @region,
+                                    :base_prefix => @base
         exit 1 unless archive
       end
 
@@ -37,24 +44,28 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Download an archive.
+Download Heirloom.
 
 Usage:
 
-heirloom download -n NAME -i ID -r REGION -o OUTPUT_DIRECTORY
+heirloom download -n NAME -i ID -o OUTPUT_DIRECTORY
+
+To download Heirloom without looking up details in SimpleDB, specify region (-r) and base (-b) options.
 
 EOS
-          opt :base, "Base of the archive to download.", :type => :string
-          opt :extract, "Extract the archive in the given output path.", :short => "-x"
+          opt :base, "Base of the Heirloom to download.", :type => :string
+          opt :extract, "Extract the Heirloom into the given output path.", :short => "-x"
           opt :help, "Display Help"
-          opt :id, "ID of the archive to download.", :type => :string
+          opt :id, "ID of the Heirloom to download.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :name, "Name of archive.", :type => :string
-          opt :output, "Path to output downloaded archive. Must be existing directory.", :type => :string
-          opt :region, "Region to download archive.", :type    => :string,
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
+                                                                          :default => 'us-west-1'
+          opt :name, "Name of Heirloom.", :type => :string
+          opt :output, "Path to output downloaded Heirloom. Must be existing directory.", :type => :string
+          opt :region, "Region to download Heirloom.", :type    => :string,
                                                       :default => 'us-west-1'
-          opt :secret, "Secret for ecrypted archive.", :type => :string
+          opt :secret, "Secret for ecrypted Heirloom.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

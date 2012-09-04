@@ -4,15 +4,14 @@ describe Heirloom do
 
     before do
       @config_mock = double 'config'
-      @logger_mock = double 'logger'
-      @config_mock.should_receive(:logger).and_return(@logger_mock)
+      @logger_stub = stub 'logger', :info => true, :debug => true
+      @config_mock.stub :logger => @logger_stub
       @destroyer = Heirloom::Destroyer.new :config => @config_mock,
                                            :name   => 'tim',
                                            :id     => '123'
     end
 
     before do
-      @logger_mock.stub :info => true
       @reader_mock = mock 'archive reader'
       @destroyer.stub :reader => @reader_mock
       @reader_mock.should_receive(:get_bucket).
@@ -31,23 +30,11 @@ describe Heirloom do
                              :bucket     => 'bucket-us-west-1'
       @sdb_mock = mock 'sdb'
       @destroyer.stub :sdb => @sdb_mock
-      @sdb_mock.should_receive(:delete).with 'heirloom_tim', '123'
     end
 
     it "should destroy the given archive" do
-      Kernel.should_receive(:sleep).with 3
-      @sdb_mock.should_receive(:domain_empty?).with('heirloom_tim').
-               and_return true
-      @sdb_mock.should_receive(:delete_domain).with('heirloom_tim')
-      @destroyer.destroy :regions => ['us-west-1'],
-                         :keep_domain => false
-    end
-
-    it "should destroy the given archive but keep the sbd domain" do
-      @sdb_mock.should_receive(:domain_empty?).exactly(0).times
-      @sdb_mock.should_receive(:delete_domain).exactly(0).times
-      @destroyer.destroy :regions     => ['us-west-1'],
-                         :keep_domain => true
+      @sdb_mock.should_receive(:delete).with 'heirloom_tim', '123'
+      @destroyer.destroy :regions => ['us-west-1']
     end
 
 end

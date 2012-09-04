@@ -1,4 +1,14 @@
-## v0.6.1:
+## HEAD:
+
+* Adding catalog which will contain all heirloom regions & bases.
+* CLI will lookup base & region from catalog.
+* Removing base requirement for all subcmds outside download & setup.
+* Added teardown command to delete domains & buckets.
+* Enclosing simpledb domains in `s
+* Added catalog subcommand to list available Heirlooms from catalog.
+* Reducing log levels
+
+### v0.6.1:
 
 * Allowing engineer to specify region for metadata
 * Ensuring metadata is in an upload region

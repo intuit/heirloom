@@ -36,7 +36,7 @@ module Heirloom
         @logger.debug "Bucket '#{bucket}' exists in '#{region}'."
         true
       else
-        @logger.info "Bucket '#{bucket}' does not exist in '#{region}'."
+        @logger.debug "Bucket '#{bucket}' does not exist in '#{region}'."
         false
       end
     end
@@ -48,7 +48,7 @@ module Heirloom
         @logger.debug "Domain '#{@name}' exists in '#{region}'."
         true
       else
-        @logger.info "Domain '#{@name}' does not exist in '#{region}'."
+        @logger.debug "Domain '#{@name}' does not exist in '#{region}'."
         false
       end
     end

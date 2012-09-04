@@ -34,8 +34,6 @@ module Heirloom
 
       add_git_commit if args[:git]
 
-      @logger.info "Build complete."
-
       @local_build
     end
 
@@ -70,7 +68,7 @@ module Heirloom
                      'encrypted' => encrypted?,
                      'base'      => @base,
                      'id'        => @id }
-      @logger.info "Create artifact record #{@id}."
+      @logger.info "Adding entry #{@id}."
       sdb.put_attributes @domain, @id, attributes
     end
 

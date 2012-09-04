@@ -164,9 +164,8 @@ describe Heirloom do
                                :id      => '123').
                           and_return destroyer_mock
       destroyer_mock.should_receive(:destroy).
-                     with(:regions     => ['us-west-1', 'us-west-2'],
-                          :keep_domain => false)
-      @archive.destroy :keep_domain => false
+                     with :regions => ['us-west-1', 'us-west-2']
+      @archive.destroy
     end
 
     it "should call the regions method for an archive" do
@@ -190,5 +189,26 @@ describe Heirloom do
       mock.should_receive(:count)
       @archive.count
     end
+
+    it "should call the delete_buckets on teardowner" do
+      mock = double('Mock')
+      Heirloom::Teardowner.should_receive(:new).
+                            with(:config => @config_mock,
+                                 :name   => 'chef').
+                          and_return mock
+      mock.should_receive(:delete_buckets).with :regions => ['us-west-1']
+      @archive.delete_buckets :regions => ['us-west-1']
+    end
+    
+    it "should call the delete_domain on teardowner" do
+      mock = double('Mock')
+      Heirloom::Teardowner.should_receive(:new).
+                            with(:config => @config_mock,
+                                 :name   => 'chef').
+                          and_return mock
+      mock.should_receive(:delete_domain)
+      @archive.delete_domain
+    end
+
   end
 end

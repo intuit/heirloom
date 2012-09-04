@@ -27,6 +27,11 @@ describe Heirloom do
     @s3.get_bucket 'bucket'
   end
 
+  it "should delete a bucket from s3" do
+    @fog_mock.should_receive(:delete_bucket).with 'bucket'
+    @s3.delete_bucket 'bucket'
+  end
+
   it "should get an object from s3" do
     body_mock = mock 'body'
     @fog_mock.should_receive(:get_object).

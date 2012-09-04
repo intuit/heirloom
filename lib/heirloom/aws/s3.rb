@@ -8,10 +8,10 @@ module Heirloom
         @config = args[:config]
         @region = args[:region]
 
-        @s3 = Fog::Storage.new :provider                 => 'AWS',
-                               :aws_access_key_id        => @config.access_key,
-                               :aws_secret_access_key    => @config.secret_key,
-                               :region                   => @region
+        @s3 = Fog::Storage.new :provider              => 'AWS',
+                               :aws_access_key_id     => @config.access_key,
+                               :aws_secret_access_key => @config.secret_key,
+                               :region                => @region
       end
 
       def delete_object(bucket_name, object_name, options = {})
@@ -20,6 +20,10 @@ module Heirloom
 
       def get_bucket(bucket)
         @s3.directories.get bucket
+      end
+
+      def delete_bucket(bucket)
+        @s3.delete_bucket bucket
       end
 
       def get_object(bucket_name, object_name)

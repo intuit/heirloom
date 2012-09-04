@@ -12,9 +12,8 @@ module Heirloom
 
     def destroy(args)
       regions = args[:regions]
-      keep_domain = args[:keep_domain]
 
-      @logger.info "Destroying #{@name} - #{@id}"
+      @logger.info "Destroying #{@name} #{@id}"
 
       regions.each do |region|
         bucket = reader.get_bucket :region => region
@@ -22,7 +21,7 @@ module Heirloom
         key = "#{@id}.tar.gz"
 
         if bucket
-          @logger.info "Destroying 's3://#{bucket}/#{@name}/#{key}'."
+          @logger.debug "Destroying 's3://#{bucket}/#{@name}/#{key}'."
 
           s3_destroyer = Destroyer::S3.new :config => @config,
                                            :region => region
@@ -34,25 +33,9 @@ module Heirloom
       end
 
       sdb.delete @domain, @id
-
-      destroy_domain unless keep_domain
     end
 
     private
-
-    def destroy_domain
-
-      # Simple DB is eventually consisten
-      # Sleep for 3 sec for changes to reflect
-      Kernel.sleep 3
-
-      if sdb.domain_empty? @domain
-        @logger.info "Domain #{@domain} empty. Destroying."
-        sdb.delete_domain @domain
-      end
-
-      @logger.info "Destroy complete."
-    end
 
     def sdb
       @sdb ||= AWS::SimpleDB.new :config => @config

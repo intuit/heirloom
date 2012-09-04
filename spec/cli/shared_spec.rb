@@ -141,12 +141,6 @@ describe Heirloom do
                         and_return @archive_mock
     end
 
-    it "should ensure the domain for a given archive exists" do
-      @archive_mock.stub :domain_exists? => true
-      @object.ensure_domain_exists :config => @config_stub, 
-                                   :name   => 'test'
-    end
-
     it "should exit if the domain does not exist" do
       @archive_mock.stub :domain_exists? => false
       lambda { @object.ensure_domain_exists :config => @config_stub,
@@ -165,11 +159,6 @@ describe Heirloom do
       @object.extend Heirloom::CLI::Shared
     end
 
-    it "should ensure the metadata domain is included in the upload domains" do
-      options = { :config => @config_stub, :regions => ['us-west-1', 'us-east-1'] }
-      @object.ensure_metadata_in_upload_region options
-    end
-
     it "should exit if the metadata region is not in an upload region" do
       options = { :config => @config_stub, :regions => ['us-west-2', 'us-east-1'] }
       lambda { @object.ensure_metadata_in_upload_region options }.
@@ -184,11 +173,6 @@ describe Heirloom do
                                     :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
-    end
-
-    it "should ensure the metadata domain is included in the upload domains" do
-      options = { :config => @config_stub, :regions => ['us-west-2', 'us-east-1'] }
-      @object.ensure_valid_regions options
     end
 
     it "should exit if the region is not valid" do
@@ -209,12 +193,6 @@ describe Heirloom do
       @object.extend Heirloom::CLI::Shared
     end
 
-    it "should ensure the archive exists" do
-      @archive_mock.should_receive(:exists?).and_return true
-      options = { :config => @config_stub, :archive => @archive_mock }
-      @object.ensure_archive_exists options
-    end
-
     it "should exit if the archive does not exist" do
       @archive_mock.should_receive(:exists?).and_return false
       options = { :config => @config_stub, :archive => @archive_mock }
@@ -223,5 +201,62 @@ describe Heirloom do
     end
   end
 
+  context "testing ensure archive domain empty" do
+    before do
+      @archive_stub = stub 'archive'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @options = { :config => @config_stub, :archive => @archive_stub }
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should exit if the domain is not empty" do
+      @archive_stub.stub :count => 200
+      lambda { @object.ensure_archive_domain_empty @options }.
+                       should raise_error SystemExit
+    end
+  end
+
+  context "testing ensure catalog domain exists" do
+    before do
+      @catalog_mock = mock 'catalog'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @options = { :config => @config_stub, :catalog => @catalog_mock }
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should exit if the catlog domain does not exist" do
+      @catalog_mock.stub :catalog_domain_exists? => false
+      lambda { @object.ensure_catalog_domain_exists @options }.
+                       should raise_error SystemExit
+    end
+  end
+
+  context "testing ensure entry exists in catalog" do
+    before do
+      @catalog_mock = mock 'catalog'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @options = { :config  => @config_stub, 
+                   :catalog => @catalog_mock,
+                   :entry   => 'entry' }
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should exit if the entry does not exist in catalog" do
+      @catalog_mock.should_receive(:entry_exists_in_catalog?).
+                    with('entry').
+                    and_return false
+      lambda { @object.ensure_entry_exists_in_catalog @options }.
+                       should raise_error SystemExit
+    end
+  end
 
 end

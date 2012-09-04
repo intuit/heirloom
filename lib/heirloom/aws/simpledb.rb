@@ -44,8 +44,13 @@ module Heirloom
       end
 
       def count(domain)
-        body = @sdb.select("SELECT count(*) FROM #{domain}").body
+        body = @sdb.select("SELECT count(*) FROM `#{domain}`").body
         body['Items']['Domain']['Count'].first.to_i
+      end
+
+      def item_count(domain, item)
+        query = "SELECT count(*) FROM `#{domain}` WHERE itemName() = '#{item}'"
+        @sdb.select(query).body['Items']['Domain']['Count'].first.to_i
       end
 
     end

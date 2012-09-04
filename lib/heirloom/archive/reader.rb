@@ -57,7 +57,7 @@ module Heirloom
     end
 
     def show
-      query = sdb.select "select * from #{@domain} where itemName() = '#{@id}'"
+      query = sdb.select "select * from `#{@domain}` where itemName() = '#{@id}'"
       items = query[@id] ? query[@id] : {}
       Hash.new.tap do |hash|
         items.each_pair.map do |key,value|

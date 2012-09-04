@@ -1,3 +1,7 @@
+## v0.7.1:
+
+* Truncate long commit messages.
+
 ## v0.7.0:
 
 * Adding catalog which will contain all heirloom regions & bases.

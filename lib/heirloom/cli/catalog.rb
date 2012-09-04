@@ -31,7 +31,7 @@ module Heirloom
       private
 
       def catalog_with_heirloom_prefix_removed
-        Hash[@catalog.all.map { |k, v| [k.sub(/heirloom_/, ''), v] }]
+        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, ''), v] }]
       end
 
       def read_options

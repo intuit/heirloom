@@ -1,6 +1,6 @@
 module Heirloom
   module CLI
-    class Show
+    class Catalog
 
       include Heirloom::CLI::Shared
 
@@ -11,29 +11,27 @@ module Heirloom
                               :opts   => @opts
 
         ensure_valid_options :provided => @opts,
-                             :required => [:name],
+                             :required => [],
                              :config   => @config
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
-        ensure_domain_exists :name => @opts[:name], :config => @config
-        id = @opts[:id] ? @opts[:id] : latest_id
-        @archive = Archive.new :name   => @opts[:name],
-                               :config => @config,
-                               :id     => id
-        ensure_archive_exists :archive => @archive,
-                              :config => @config
+        @catalog = Heirloom::Catalog.new :config  => @config
+        ensure_catalog_domain_exists :config  => @config,
+                                     :catalog => @catalog
       end
       
-      def show
-        jj @archive.show
+      def all
+        if @opts[:details]
+          jj catalog_with_heirloom_prefix_removed
+        else
+          jj catalog_with_heirloom_prefix_removed.keys
+        end
       end
 
       private
 
-      def latest_id
-        @archive = Archive.new :name   => @opts[:name],
-                               :config => @config
-        @archive.list(1).first
+      def catalog_with_heirloom_prefix_removed
+        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, ''), v] }]
       end
 
       def read_options
@@ -41,22 +39,19 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Show Heirloom.
+Show catalog of Heirlooms.
 
 Usage:
 
-heirloom show -n NAME -i ID
-
-If -i is ommited, latest ID is displayed.
+heirloom catalog
 
 EOS
           opt :help, "Display Help"
-          opt :id, "ID of the Heirloom to display.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
+          opt :details, "Include details."
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
                                                                           :default => 'us-west-1'
-          opt :name, "Name of Heirloom.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

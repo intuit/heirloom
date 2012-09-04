@@ -105,7 +105,6 @@ module Heirloom
         unless archive.buckets_exist? :regions       => regions,
                                       :bucket_prefix => base
           logger.error "Required buckets for '#{base}' do not exist."
-          logger.error "Run 'heirloom setup -h' for help setting up new region."
           exit 1
         end
       end
@@ -119,8 +118,7 @@ module Heirloom
                               :config => config
 
         unless archive.domain_exists?
-          logger.error "Metadata domain '#{name}' does not exist in '#{config.metadata_region}'."
-          logger.error "Run 'heirloom setup -h' for help setting up new region."
+          logger.error "'#{name}' does not exist in '#{config.metadata_region}' catalog."
           exit 1
         end
       end
@@ -132,6 +130,42 @@ module Heirloom
 
         unless archive.exists?
           logger.error "Archive does not exist."
+          exit 1
+        end
+      end
+
+      def ensure_archive_domain_empty(args)
+        config  = args[:config]
+        archive = args[:archive]
+        logger  = config.logger
+
+        unless archive.count.zero?
+          logger.error "Not empty."
+          exit 1
+        end
+      end
+
+      def ensure_catalog_domain_exists(args)
+        config  = args[:config]
+        catalog = args[:catalog]
+        logger  = config.logger
+        region  = config.metadata_region
+
+        unless catalog.catalog_domain_exists?
+          logger.error "Catalog does not exist in #{region}."
+          exit 1
+        end
+      end
+
+      def ensure_entry_exists_in_catalog(args)
+        config  = args[:config]
+        catalog = args[:catalog]
+        entry   = args[:entry]
+        logger  = config.logger
+        region  = config.metadata_region
+
+        unless catalog.entry_exists_in_catalog? entry
+          logger.error "Entry for #{entry} does not exist in #{region} catalog."
           exit 1
         end
       end

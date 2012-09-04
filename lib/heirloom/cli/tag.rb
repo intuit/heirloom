@@ -40,7 +40,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Tag an archive with an attribute and value.
+Tag an Heirloom with an attribute and value.
 
 Usage:
 
@@ -49,12 +49,12 @@ heirloom tag -n NAME -i ID -a ATTRIBUTE -u VALUE
 EOS
           opt :attribute, "Attribute to update.", :type => :string
           opt :help, "Display Help"
-          opt :id, "ID of the archive to display.", :type => :string
+          opt :id, "ID of the Heirloom to tag.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
                                                                           :default => 'us-west-1'
-          opt :name, "Name of archive.", :type => :string
+          opt :name, "Name of Heirloom.", :type => :string
           opt :value, "Value of attribute.", :type  => :string,
                                              :short => 'u'
           opt :aws_access_key, "AWS Access Key ID", :type  => :string, 

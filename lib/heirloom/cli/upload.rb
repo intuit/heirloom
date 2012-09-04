@@ -9,38 +9,40 @@ module Heirloom
         @logger = HeirloomLogger.new :log_level => @opts[:level]
         @config = load_config :logger => @logger,
                               :opts   => @opts
-
+        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
+                                         :config  => @config
         ensure_valid_options :provided => @opts, 
-                             :required => [:name, :id, :region, 
-                                           :base, :directory],
+                             :required => [:name, :id, :directory],
                              :config   => @config
-
+        ensure_catalog_domain_exists :config  => @config,
+                                     :catalog => @catalog
+        ensure_entry_exists_in_catalog :config  => @config,
+                                       :catalog => @catalog,
+                                       :entry   => @opts[:name]
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config
+        @regions = @catalog.regions
+        @base    = @catalog.base
       end
 
       def upload
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
-        ensure_valid_regions :regions => @opts[:region],
-                             :config  => @config
         ensure_domain_exists :name   => @opts[:name], 
                              :config => @config
-        ensure_buckets_exist :base    => @opts[:base],
+        ensure_buckets_exist :base    => @base,
                              :name    => @opts[:name],
-                             :regions => @opts[:region],
+                             :regions => @regions,
                              :config  => @config
         ensure_directory :path   => @opts[:directory], 
                          :config => @config
         ensure_valid_secret :secret => @opts[:secret], 
                             :config => @config
-        ensure_metadata_in_upload_region :config  => @config, 
-                                         :regions => @opts[:region]
 
-        @archive.destroy :keep_domain => true if @archive.exists?
+        @archive.destroy if @archive.exists?
                           
-        build = @archive.build :base       => @opts[:base],
+        build = @archive.build :base       => @base,
                                :directory  => @opts[:directory],
                                :exclude    => @opts[:exclude],
                                :git        => @opts[:git],
@@ -51,8 +53,8 @@ module Heirloom
           exit 1
         end
 
-        @archive.upload :bucket_prefix   => @opts[:base],
-                        :regions         => @opts[:region],
+        @archive.upload :bucket_prefix   => @base,
+                        :regions         => @regions,
                         :public_readable => @opts[:public],
                         :file            => build
       end
@@ -68,29 +70,22 @@ Upload a directory to Heirloom.
 
 Usage:
 
-heirloom upload -n NAME -i ID -b BASE -r REGION1 -r REGION2 -d DIRECTORY_TO_UPLOAD
+heirloom upload -n NAME -i ID -d DIRECTORY_TO_UPLOAD
 
 EOS
-          opt :base, "Base prefix which will be combined with region. \
-For example: -b 'test' -r 'us-west-1'  will expect bucket 'test-us-west-1' \
-to be present", :type => :string
           opt :directory, "Source directory of build.", :type  => :string
           opt :exclude, "File(s) or directorie(s) to exclude. \
 Can be specified multiple times.", :type  => :string, :multi => true
-          opt :git, "Read git commit information from directory and set as archive attributes."
+          opt :git, "Read git commit information from directory and set as Heirloom attributes."
           opt :help, "Display Help"
-          opt :id, "ID for archive (when -g specified, assumed to be GIT sha).", :type => :string
+          opt :id, "ID for Heirloom (when -g specified, assumed to be GIT sha).", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
                                                                           :default => 'us-west-1'
-          opt :name, "Name of archive.", :type => :string
-          opt :public, "Set this archive as public readable?"
-          opt :region, "Region(s) to upload archive. \
-Can be specified multiple times.", :type  => :string, 
-                                   :multi => true,
-                                   :default => 'us-west-1'
-          opt :secret, "Encrypt the archive with given secret.", :type => :string
+          opt :name, "Name of Heirloom.", :type => :string
+          opt :public, "Set this Heirloom as public readable?"
+          opt :secret, "Encrypt the Heirloom with given secret.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

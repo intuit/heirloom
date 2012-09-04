@@ -1,6 +1,6 @@
 module Heirloom
   module CLI
-    class List
+    class Teardown
 
       include Heirloom::CLI::Shared
 
@@ -10,20 +10,39 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        ensure_valid_options :provided => @opts,
+        ensure_valid_options :provided => @opts, 
                              :required => [:name],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
-        ensure_domain_exists :name => @opts[:name], :config => @config
 
+        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
+                                         :config  => @config
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
+
+        ensure_catalog_domain_exists :config  => @config,
+                                     :catalog => @catalog
+        ensure_entry_exists_in_catalog :config  => @config,
+                                       :catalog => @catalog,
+                                       :entry   => @opts[:name]
       end
-      
-      def list(count = @opts[:count])
-        @logger.debug "#{@archive.count} archives found."
-        jj @archive.list(count)
+
+      def teardown
+        ensure_domain_exists :name   => @opts[:name],
+                             :config => @config
+
+        ensure_archive_domain_empty :archive => @archive,
+                                    :config  => @config
+
+        @regions = @catalog.regions
+        @base    = @catalog.base
+
+        unless @opts[:keep_buckets]
+          @archive.delete_buckets :regions       => @regions,
+                                  :bucket_prefix => @base
+        end
+
+        @archive.delete_domain
+        @catalog.delete_from_catalog
       end
 
       private
@@ -33,21 +52,22 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-List Heirloom IDs.
+Teardown S3 buckets and SimpleDB domain for a given Heirloom name.
 
 Usage:
 
-heirloom list -n NAME
+heirloom teardown -n NAME
+
+Note: All Heirlooms must be destroyed.
 
 EOS
-          opt :count, "Number of IDs to return.", :type    => :integer,
-                                                  :default => 10
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
                                                                           :default => 'us-west-1'
           opt :name, "Name of Heirloom.", :type => :string
+          opt :keep_buckets, "Do not delete S3 buckets."
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

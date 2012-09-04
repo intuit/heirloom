@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Heirloom do
   before do
     @config_mock = double 'config'
-    @logger_mock = double 'logger'
-    @config_mock.should_receive(:logger).and_return(@logger_mock)
+    @logger_stub = stub 'logger', :info => true, :debug => true
+    @config_mock.stub :logger => @logger_stub
 
     @s3 = Heirloom::ACL::S3.new :config  => @config_mock,
                                 :region  => 'us-west-1'
@@ -24,11 +24,6 @@ describe Heirloom do
 
     s3_mock.should_receive(:get_bucket_acl).with('bucket').
                                             and_return acls
-
-    @logger_mock.should_receive(:info).
-                 with 'Authorizing acct1@test.com to s3://bucket/key-folder/key.tar.gz.'
-    @logger_mock.should_receive(:info).
-                 with 'Authorizing acct2@test.com to s3://bucket/key-folder/key.tar.gz.'
 
     s3_mock.should_receive(:put_object_acl).
             with("bucket", "key-folder/key.tar.gz", {"Owner"=>{"DisplayName"=>"Brett", "ID"=>"123"}, "AccessControlList"=>[{"Grantee"=>{"EmailAddress"=>"acct1@test.com"}, "Permission"=>"READ"}, {"Grantee"=>{"EmailAddress"=>"acct2@test.com"}, "Permission"=>"READ"}, {"Grantee"=>{"DisplayName"=>"Brett", "ID"=>"123"}, "Permission"=>"FULL_CONTROL"}]})

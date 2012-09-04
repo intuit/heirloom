@@ -14,18 +14,32 @@ module Heirloom
                              :required => [:metadata_region, :region, 
                                            :name, :base],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
-        ensure_valid_regions :regions => @opts[:region],
-                             :config  => @config
 
+        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
+                                         :config  => @config
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
       end
 
       def setup
+        ensure_valid_region :region => @opts[:metadata_region],
+                            :config => @config
+        ensure_valid_regions :regions => @opts[:region],
+                             :config  => @config
         ensure_metadata_in_upload_region :config  => @config, 
                                          :regions => @opts[:region]
+
+        @catalog.create_catalog_domain
+        unless @catalog.add_to_catalog :regions => @opts[:region],
+                                       :base    => @opts[:base]
+           if @opts[:force]
+             @logger.warn "#{@opts[:name]} already exists."
+           else
+             @logger.warn "#{@opts[:name]} already exists, exiting."
+             exit 1
+           end
+        end
+
         @archive.setup :regions       => @opts[:region],
                        :bucket_prefix => @opts[:base]
       end
@@ -48,12 +62,13 @@ EOS
 region. For example: '-b test -r us-west-1 -r us-east-1' will create bucket test-us-west-1 \
 in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
           opt :help, "Display Help"
+          opt :force, "Force setup even if entry already exists in catalog."
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
                                                                           :default => 'us-west-1'
-          opt :name, "Name of archive.", :type => :string
-          opt :region, "AWS Region(s) to upload archive. \
+          opt :name, "Name of Heirloom.", :type => :string
+          opt :region, "AWS Region(s) to upload Heirloom. \
 Can be specified multiple times.", :type  => :string, 
                                    :multi => true,
                                    :default => 'us-west-1'

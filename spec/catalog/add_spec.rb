@@ -19,8 +19,7 @@ describe Heirloom::Catalog::Add do
     @sdb_mock.should_receive(:put_attributes).
               with 'heirloom',
                    'heirloom_new_archive',
-                   { "regions" => @regions,
-                     "base"    => @base }
+                   "regions" => @regions, "base" => @base
     @add.add_to_catalog :regions => @regions,
                         :base    => @base
   end

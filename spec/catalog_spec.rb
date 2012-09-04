@@ -12,12 +12,11 @@ describe Heirloom::Catalog do
 
   context "testing add" do
     it "should call setup to create catalog_domain" do
-      @catalog_setup_mock = mock 'setup'
+      @catalog_setup_stub = stub 'setup'
+      @catalog_setup_stub.stub :create_catalog_domain => true
       Heirloom::Catalog::Setup.should_receive(:new).
                                with(:config => @config_mock).
-                               and_return @catalog_setup_mock
-      @catalog_setup_mock.should_receive(:create_catalog_domain).
-                          and_return true
+                               and_return @catalog_setup_stub
       @catalog.create_catalog_domain.should be_true
     end
   end
@@ -41,21 +40,19 @@ describe Heirloom::Catalog do
 
   context "testing show" do
     before do
-      @catalog_show_mock = mock 'show'
+      @catalog_show_stub = stub 'show', :regions => @regions,
+                                        :base    => @base
       Heirloom::Catalog::Show.should_receive(:new).
                               with(:config => @config_mock,
                                    :name   => 'new_archive').
-                              and_return @catalog_show_mock
+                              and_return @catalog_show_stub
     end
+
     it "should call regions from show object" do
-      @catalog_show_mock.should_receive(:regions).
-                         and_return @regions
       @catalog.regions.should == @regions
     end
 
     it "should call base from the show object" do
-      @catalog_show_mock.should_receive(:base).
-                         and_return @base
       @catalog.base.should == @base
     end
   end

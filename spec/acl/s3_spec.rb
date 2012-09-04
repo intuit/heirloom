@@ -4,7 +4,7 @@ describe Heirloom do
   before do
     @config_mock = double 'config'
     @logger_stub = stub 'logger', :info => true, :debug => true
-    @config_mock.should_receive(:logger).and_return(@logger_stub)
+    @config_mock.stub :logger => @logger_stub
 
     @s3 = Heirloom::ACL::S3.new :config  => @config_mock,
                                 :region  => 'us-west-1'

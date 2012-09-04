@@ -70,6 +70,23 @@ describe Heirloom::Builder do
                          :git       => 'true').should == '/var/tmp/file.tar.gz'
         end
 
+        it "should truncate commit message to 1024 chars" do
+          long_commit_message = 'long commit message' * 100
+          truncated_commit_attributes = { 'sha'             => '123',
+                                          'abbreviated_sha' => 'abc123',
+                                          'message'         => long_commit_message[0..1023],
+                                          'author'          => 'weaver' }
+          @simpledb_mock.should_receive(:put_attributes).
+                         with('heirloom_tim', '123', truncated_commit_attributes)
+          @git_commit_stub = stub :id_abbrev => "abc123",
+                                  :message   => long_commit_message,
+                                  :author    => @author_stub
+          @git_dir_mock.stub :commit => @git_commit_stub
+          @builder.build(:exclude   => ['.dir_to_exclude'],
+                         :directory => 'path_to_build',
+                         :git       => 'true').should == '/var/tmp/file.tar.gz'
+        end
+
       end
 
       context "without git dir" do

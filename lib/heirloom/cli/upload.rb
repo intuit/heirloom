@@ -9,12 +9,16 @@ module Heirloom
         @logger = HeirloomLogger.new :log_level => @opts[:level]
         @config = load_config :logger => @logger,
                               :opts   => @opts
-
+        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
+                                         :config  => @config
         ensure_valid_options :provided => @opts, 
                              :required => [:name, :id, :directory],
                              :config   => @config
-        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
-                                         :config  => @config
+        ensure_catalog_domain_exists :config  => @config,
+                                     :catalog => @catalog
+        ensure_entry_exists_in_catalog :config  => @config,
+                                       :catalog => @catalog,
+                                       :entry   => @opts[:name]
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
                                :config => @config

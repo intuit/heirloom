@@ -141,12 +141,6 @@ describe Heirloom do
                         and_return @archive_mock
     end
 
-    it "should ensure the domain for a given archive exists" do
-      @archive_mock.stub :domain_exists? => true
-      @object.ensure_domain_exists :config => @config_stub, 
-                                   :name   => 'test'
-    end
-
     it "should exit if the domain does not exist" do
       @archive_mock.stub :domain_exists? => false
       lambda { @object.ensure_domain_exists :config => @config_stub,
@@ -165,11 +159,6 @@ describe Heirloom do
       @object.extend Heirloom::CLI::Shared
     end
 
-    it "should ensure the metadata domain is included in the upload domains" do
-      options = { :config => @config_stub, :regions => ['us-west-1', 'us-east-1'] }
-      @object.ensure_metadata_in_upload_region options
-    end
-
     it "should exit if the metadata region is not in an upload region" do
       options = { :config => @config_stub, :regions => ['us-west-2', 'us-east-1'] }
       lambda { @object.ensure_metadata_in_upload_region options }.
@@ -184,11 +173,6 @@ describe Heirloom do
                                     :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
-    end
-
-    it "should ensure the metadata domain is included in the upload domains" do
-      options = { :config => @config_stub, :regions => ['us-west-2', 'us-east-1'] }
-      @object.ensure_valid_regions options
     end
 
     it "should exit if the region is not valid" do
@@ -246,11 +230,6 @@ describe Heirloom do
       @object.extend Heirloom::CLI::Shared
     end
 
-    it "should ensure the catlog domain exists" do
-      @catalog_mock.stub :catalog_domain_exists? => true
-      @object.ensure_catalog_domain_exists @options
-    end
-
     it "should exit if the catlog domain does not exist" do
       @catalog_mock.stub :catalog_domain_exists? => false
       lambda { @object.ensure_catalog_domain_exists @options }.
@@ -269,13 +248,6 @@ describe Heirloom do
                    :entry   => 'entry' }
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
-    end
-
-    it "should ensure the entry exists catalog" do
-      @catalog_mock.should_receive(:entry_exists_in_catalog?).
-                    with('entry').
-                    and_return true
-      @object.ensure_entry_exists_in_catalog @options
     end
 
     it "should exit if the entry does not exist in catalog" do

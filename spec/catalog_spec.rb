@@ -59,20 +59,18 @@ describe Heirloom::Catalog do
 
   context "testing catalog_domain_exists?" do
     before do
-      @catalog_verify_mock = mock 'show'
+      @catalog_verify_stub = stub 'show'
       Heirloom::Catalog::Verify.should_receive(:new).
                                 with(:config => @config_mock).
-                                and_return @catalog_verify_mock
+                                and_return @catalog_verify_stub
     end
     it "should return true if the catalog domain exists" do
-      @catalog_verify_mock.should_receive(:catalog_domain_exists?).
-                           and_return true
+      @catalog_verify_stub.stub :catalog_domain_exists? => true
       @catalog.catalog_domain_exists?.should be_true
     end
 
     it "should return false if the catalog domain does not exist" do
-      @catalog_verify_mock.should_receive(:catalog_domain_exists?).
-                           and_return false
+      @catalog_verify_stub.stub :catalog_domain_exists? => false
       @catalog.catalog_domain_exists?.should be_false
     end
   end

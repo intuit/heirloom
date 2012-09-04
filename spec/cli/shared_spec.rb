@@ -209,12 +209,6 @@ describe Heirloom do
       @object.extend Heirloom::CLI::Shared
     end
 
-    it "should ensure the archive exists" do
-      @archive_mock.should_receive(:exists?).and_return true
-      options = { :config => @config_stub, :archive => @archive_mock }
-      @object.ensure_archive_exists options
-    end
-
     it "should exit if the archive does not exist" do
       @archive_mock.should_receive(:exists?).and_return false
       options = { :config => @config_stub, :archive => @archive_mock }
@@ -225,22 +219,17 @@ describe Heirloom do
 
   context "testing ensure archive domain empty" do
     before do
-      @archive_mock = mock 'archive'
+      @archive_stub = stub 'archive'
       @logger_stub = stub 'logger', :error => true
       @config_stub = stub 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
-      @options = { :config => @config_stub, :archive => @archive_mock }
+      @options = { :config => @config_stub, :archive => @archive_stub }
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
     end
 
-    it "should ensure the domain is empty" do
-      @archive_mock.should_receive(:count).and_return 0
-      @object.ensure_archive_domain_empty @options 
-    end
-
     it "should exit if the domain is not empty" do
-      @archive_mock.should_receive(:count).and_return 200
+      @archive_stub.stub :count => 200
       lambda { @object.ensure_archive_domain_empty @options }.
                        should raise_error SystemExit
     end

@@ -21,6 +21,10 @@ module Heirloom
       verify.catalog_domain_exists?
     end
 
+    def entry_exists_in_catalog?(entry)
+      verify.entry_exists_in_catalog? entry
+    end
+
     def delete_from_catalog
       delete.delete_from_catalog
     end

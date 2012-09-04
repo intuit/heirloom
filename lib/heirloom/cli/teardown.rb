@@ -19,6 +19,11 @@ module Heirloom
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
 
+        ensure_catalog_domain_exists :config  => @config,
+                                     :catalog => @catalog
+        ensure_entry_exists_in_catalog :config  => @config,
+                                       :catalog => @catalog,
+                                       :entry   => @opts[:name]
       end
 
       def teardown

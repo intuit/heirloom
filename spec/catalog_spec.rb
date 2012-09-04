@@ -80,4 +80,26 @@ describe Heirloom::Catalog do
     end
   end
 
+  context "testing entry_exists_in_catalog?" do
+    before do
+      @catalog_verify_mock = mock 'show'
+      Heirloom::Catalog::Verify.should_receive(:new).
+                                with(:config => @config_mock).
+                                and_return @catalog_verify_mock
+    end
+    it "should return true if the entry exists in the catalog" do
+      @catalog_verify_mock.should_receive(:entry_exists_in_catalog?).
+                           with('entry').
+                           and_return true
+      @catalog.entry_exists_in_catalog?('entry').should be_true
+    end
+
+    it "should return false if the entry does not exists in the catalog" do
+      @catalog_verify_mock.should_receive(:entry_exists_in_catalog?).
+                           with('entry').
+                           and_return false
+      @catalog.entry_exists_in_catalog?('entry').should be_false
+    end
+  end
+
 end

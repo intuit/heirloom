@@ -269,4 +269,33 @@ describe Heirloom do
     end
   end
 
+  context "testing ensure entry exists in catalog" do
+    before do
+      @catalog_mock = mock 'catalog'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @options = { :config  => @config_stub, 
+                   :catalog => @catalog_mock,
+                   :entry   => 'entry' }
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should ensure the entry exists catalog" do
+      @catalog_mock.should_receive(:entry_exists_in_catalog?).
+                    with('entry').
+                    and_return true
+      @object.ensure_entry_exists_in_catalog @options
+    end
+
+    it "should exit if the entry does not exist in catalog" do
+      @catalog_mock.should_receive(:entry_exists_in_catalog?).
+                    with('entry').
+                    and_return false
+      lambda { @object.ensure_entry_exists_in_catalog @options }.
+                       should raise_error SystemExit
+    end
+  end
+
 end

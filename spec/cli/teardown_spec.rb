@@ -17,7 +17,10 @@ describe Heirloom do
     @archive_mock = mock 'archive'
     @catalog_mock = mock 'catalog'
     @catalog_mock.stub :regions => ['us-west-1', 'us-west-2']
-    @catalog_mock.stub :base => 'base'
+    @catalog_mock.stub :base => 'base', :catalog_domain_exists? => true
+    @catalog_mock.should_receive(:entry_exists_in_catalog?).
+                  with('archive_name').
+                  and_return true
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_stub

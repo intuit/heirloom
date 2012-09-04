@@ -157,6 +157,19 @@ module Heirloom
         end
       end
 
+      def ensure_entry_exists_in_catalog(args)
+        config  = args[:config]
+        catalog = args[:catalog]
+        entry   = args[:entry]
+        logger  = config.logger
+        region  = config.metadata_region
+
+        unless catalog.entry_exists_in_catalog? entry
+          logger.error "Entry for #{entry} does not exist in #{region} catalog."
+          exit 1
+        end
+      end
+
     end
   end
 end

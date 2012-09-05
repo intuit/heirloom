@@ -16,7 +16,8 @@ module Heirloom
 
         @catalog = Heirloom::Catalog.new :name    => @opts[:name],
                                          :config  => @config
-        id = @opts[:id] ? @opts[:id] : latest_id
+
+        id = @opts.fetch(:id) { latest_id }
 
         @archive = Archive.new :name   => @opts[:name],
                                :id     => id,

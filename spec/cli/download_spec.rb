@@ -21,7 +21,7 @@ describe Heirloom do
                       and_return @archive_mock
   end
 
-  context "with region and base specified" do
+  context "with id, region and base specified" do
     before do
       options = { :name            => 'archive_name',
                   :id              => '1.0.0',
@@ -54,12 +54,11 @@ describe Heirloom do
     end
   end
 
-  context "region and base not specified" do
+  context "id, region and base not specified" do
     before do
       @catalog_stub = stub 'catalog', :regions => ['us-east-1', 'us-west-1'],
                                       :base    => 'base'
       options = { :name            => 'archive_name',
-                  :id              => '1.0.0',
                   :level           => 'info',
                   :output          => '/tmp/test123',
                   :extract         => false,
@@ -73,10 +72,15 @@ describe Heirloom do
                         with(:name   => 'archive_name',
                              :config => @config_mock).
                         and_return @catalog_stub
+      archive_stub_to_lookup_latest = stub 'latest', :list => ['1.0.0']
+      Heirloom::Archive.should_receive(:new).
+                        with(:name => 'archive_name',
+                             :config => @config_mock).
+                        and_return archive_stub_to_lookup_latest
       @cli_download = Heirloom::CLI::Download.new
     end
 
-    it "should download the archive from the first region" do
+    it "should download the latest archive from the first region" do
       @archive_mock.should_receive(:download).with(:output      => '/tmp/test123',
                                                    :region      => 'us-east-1',
                                                    :base_prefix => 'base',

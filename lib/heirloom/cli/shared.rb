@@ -170,6 +170,11 @@ module Heirloom
         end
       end
 
+      def latest_id
+        @archive = Archive.new :name   => @opts[:name],
+                               :config => @config
+        @archive.list(1).first
+      end
     end
   end
 end

@@ -30,12 +30,6 @@ module Heirloom
 
       private
 
-      def latest_id
-        @archive = Archive.new :name   => @opts[:name],
-                               :config => @config
-        @archive.list(1).first
-      end
-
       def read_options
         Trollop::options do
           version Heirloom::VERSION

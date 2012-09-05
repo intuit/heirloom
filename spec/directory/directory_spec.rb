@@ -15,9 +15,10 @@ describe Heirloom::Directory do
       output_mock  = double 'output mock'
       Dir.should_receive(:entries).with('/dir').
                                    exactly(2).times.
-                                   and_return(['pack_me', '.hidden', 'dont_pack_me'])
+                                   and_return ['pack_me', '.hidden', 
+                                               'with a space', 'dont_pack_me']
       Heirloom::Directory.any_instance.should_receive(:`).
-                          with("cd /dir && tar czf /tmp/file.tar.gz pack_me .hidden").
+                          with("cd /dir && tar czf /tmp/file.tar.gz 'pack_me' '.hidden' 'with a space'").
                           and_return output_mock
     end
 

@@ -11,13 +11,16 @@ module Heirloom
                               :opts   => @opts
 
         ensure_valid_options :provided => @opts,
-                             :required => [:name, :id, :output],
+                             :required => [:name, :output],
                              :config   => @config
 
         @catalog = Heirloom::Catalog.new :name    => @opts[:name],
                                          :config  => @config
+
+        id = @opts.fetch(:id) { latest_id }
+
         @archive = Archive.new :name   => @opts[:name],
-                               :id     => @opts[:id],
+                               :id     => id,
                                :config => @config
 
         # Lookup region & base from simpledb unless specified
@@ -48,9 +51,11 @@ Download Heirloom.
 
 Usage:
 
-heirloom download -n NAME -i ID -o OUTPUT_DIRECTORY
+heirloom download -n NAME -o OUTPUT_DIRECTORY
 
-To download Heirloom without looking up details in SimpleDB, specify region (-r) and base (-b) options.
+If id (-i) is not specified, the latest id will be downloaded.
+
+To download Heirloom without looking up details in SimpleDB, specify region (-r), ID (-i) and base (-b) options.
 
 EOS
           opt :base, "Base of the Heirloom to download.", :type => :string

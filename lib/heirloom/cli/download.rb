@@ -52,7 +52,7 @@ Usage:
 
 heirloom download -n NAME -o OUTPUT_DIRECTORY
 
-It id (-i) is not specified, the latest id will be downloaded.
+If id (-i) is not specified, the latest id will be downloaded.
 
 To download Heirloom without looking up details in SimpleDB, specify region (-r), ID (-i) and base (-b) options.
 

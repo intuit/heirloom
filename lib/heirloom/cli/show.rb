@@ -16,7 +16,9 @@ module Heirloom
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
         ensure_domain_exists :name => @opts[:name], :config => @config
-        id = @opts[:id] ? @opts[:id] : latest_id
+
+        id = @opts.fetch(:id) { latest_id }
+
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config,
                                :id     => id
@@ -29,12 +31,6 @@ module Heirloom
       end
 
       private
-
-      def latest_id
-        @archive = Archive.new :name   => @opts[:name],
-                               :config => @config
-        @archive.list(1).first
-      end
 
       def read_options
         Trollop::options do

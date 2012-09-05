@@ -45,7 +45,9 @@ module Heirloom
     end
 
     def files_to_pack
-      (Dir.entries(@path) - ['.', '..'] - @exclude).join(' ')
+      (Dir.entries(@path) - ['.', '..'] - @exclude).map do |file|
+        "'#{file}'"
+      end.join(' ')
     end
 
     def cipher_file

@@ -17,7 +17,10 @@ module Heirloom
                             :config => @config
         ensure_domain_exists :name => @opts[:name], :config => @config
 
-        id = @opts.fetch(:id) { latest_id }
+        id = @opts.fetch(:id) do 
+          latest_id :name   => @opts[:name],
+                    :config => @config 
+        end
 
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config,

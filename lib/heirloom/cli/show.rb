@@ -15,18 +15,18 @@ module Heirloom
                              :config   => @config
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
-        ensure_domain_exists :name => @opts[:name], :config => @config
+        ensure_domain_exists :name   => @opts[:name], 
+                             :config => @config
 
-        id = @opts.fetch(:id) do 
-          latest_id :name   => @opts[:name],
-                    :config => @config 
-        end
+        # Can't use fetch as Trollop sets :id to nil
+        id = @opts[:id] || (latest_id :name   => @opts[:name],
+                                      :config => @config)
 
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config,
                                :id     => id
         ensure_archive_exists :archive => @archive,
-                              :config => @config
+                              :config  => @config
       end
       
       def show

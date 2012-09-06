@@ -17,10 +17,9 @@ module Heirloom
         @catalog = Heirloom::Catalog.new :name    => @opts[:name],
                                          :config  => @config
 
-        id = @opts.fetch(:id) do
-          latest_id :name   => @opts[:name],
-                    :config => @config
-        end
+        # Can't use fetch as Trollop sets :id to nil
+        id = @opts[:id] ||( latest_id :name   => @opts[:name],                                              
+                                      :config => @config)
 
         @archive = Archive.new :name   => @opts[:name],
                                :id     => id,

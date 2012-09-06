@@ -170,10 +170,10 @@ module Heirloom
         end
       end
 
-      def latest_id
-        @archive = Archive.new :name   => @opts[:name],
-                               :config => @config
-        @archive.list(1).first
+      def latest_id(args)
+        archive = Archive.new :name   => args[:name],
+                              :config => args[:config]
+        archive.list(1).first
       end
     end
   end

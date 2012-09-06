@@ -259,4 +259,28 @@ describe Heirloom do
     end
   end
 
+  context "testing latest id" do
+    before do
+      @archive_mock = mock 'archive'
+      @config_stub = stub 'config'
+      @options = { :config => @config_stub, :archive => @archive_stub }
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should return the latest id" do
+      Heirloom::Archive.should_receive(:new).
+                        with(:name => 'test', 
+                             :config => @config_stub).
+                        and_return @archive_mock
+      @archive_mock.should_receive(:list).
+                    with(1).
+                    and_return ['id']
+      @object.latest_id(:name   => 'test',
+                        :config => @config_stub).
+              should == 'id'
+    end
+
+  end
+
 end

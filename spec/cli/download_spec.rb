@@ -62,6 +62,7 @@ describe Heirloom do
                   :level           => 'info',
                   :output          => '/tmp/test123',
                   :extract         => false,
+                  :id              => nil,
                   :metadata_region => 'us-west-1' }
       Trollop.stub(:options).and_return options
       Heirloom::CLI::Download.any_instance.should_receive(:load_config).

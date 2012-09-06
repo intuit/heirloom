@@ -1,3 +1,3 @@
 module Heirloom
-  VERSION = "0.7.3rc1"
+  VERSION = "0.7.3rc2"
 end

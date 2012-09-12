@@ -283,4 +283,38 @@ describe Heirloom do
 
   end
 
+  context "read secret from file" do
+    before do
+      @archive_mock = mock 'archive'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger => @logger_stub
+      @options = { :config => @config_stub, :opts => {} }
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should exit if the file does not exist" do
+      @options[:opts][:secret_file] = '/bad/file'
+      File.stub :exists? => false
+      lambda { @object.read_secret @options }.
+                       should raise_error SystemExit
+    end
+
+    it "should return the contents of the file with newline removed" do
+      file_mock = mock 'file'
+      @options[:opts][:secret_file] = '/good/file'
+      File.stub :exists? => true
+      File.should_receive(:read).
+           with('/good/file').
+           and_return "the-password\n"
+      @object.read_secret(@options).
+              should == 'the-password'
+    end
+
+    it "should return the password specified as secret" do
+      @options[:opts][:secret] = 'the-password'
+      @object.read_secret(@options).should == 'the-password'
+    end
+
+  end
 end

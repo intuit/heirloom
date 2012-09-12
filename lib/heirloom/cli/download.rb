@@ -33,12 +33,15 @@ module Heirloom
       
       def download
         ensure_directory :path => @opts[:output], :config => @config
-        ensure_valid_secret :secret => @opts[:secret], :config => @config
+        secret = read_secret :opts   => @opts,
+                             :config => @config
+        ensure_valid_secret :secret => secret, 
+                            :config => @config
         archive = @archive.download :output      => @opts[:output],
                                     :extract     => @opts[:extract],
-                                    :secret      => @opts[:secret],
                                     :region      => @region,
-                                    :base_prefix => @base
+                                    :base_prefix => @base,
+                                    :secret      => secret
         exit 1 unless archive
       end
 
@@ -73,6 +76,8 @@ EOS
           opt :region, "Region to download Heirloom.", :type    => :string,
                                                       :default => 'us-west-1'
           opt :secret, "Secret for ecrypted Heirloom.", :type => :string
+          opt :secret_file, "Read secret from file.", :type  => :string,
+                                                      :short => :none
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

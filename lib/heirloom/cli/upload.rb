@@ -37,16 +37,19 @@ module Heirloom
                              :config  => @config
         ensure_directory :path   => @opts[:directory], 
                          :config => @config
-        ensure_valid_secret :secret => @opts[:secret], 
+
+        secret = read_secret :opts   => @opts,
+                             :config => @config
+        ensure_valid_secret :secret => secret,
                             :config => @config
 
         @archive.destroy if @archive.exists?
                           
-        build = @archive.build :base       => @base,
-                               :directory  => @opts[:directory],
-                               :exclude    => @opts[:exclude],
-                               :git        => @opts[:git],
-                               :secret     => @opts[:secret]
+        build = @archive.build :base      => @base,
+                               :directory => @opts[:directory],
+                               :exclude   => @opts[:exclude],
+                               :git       => @opts[:git],
+                               :secret    => secret
 
         unless build
           @logger.error "Build failed."
@@ -86,9 +89,11 @@ Can be specified multiple times.", :type  => :string, :multi => true
           opt :name, "Name of Heirloom.", :type => :string
           opt :public, "Set this Heirloom as public readable?"
           opt :secret, "Encrypt the Heirloom with given secret.", :type => :string
-          opt :aws_access_key, "AWS Access Key ID", :type => :string, 
+          opt :secret_file, "Read secret from file.", :type  => :string,
+                                                      :short => :none
+          opt :aws_access_key, "AWS Access Key ID", :type  => :string, 
                                                     :short => :none
-          opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
+          opt :aws_secret_key, "AWS Secret Access Key", :type  => :string, 
                                                         :short => :none
         end
       end

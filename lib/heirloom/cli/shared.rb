@@ -175,6 +175,23 @@ module Heirloom
                               :config => args[:config]
         archive.list(1).first
       end
+
+      def read_secret(args)
+        opts   = args[:opts]
+        config = args[:config]
+        logger = config.logger
+
+        return nil unless opts[:secret] || opts[:secret_file]
+
+        return opts[:secret] if opts[:secret]
+
+        unless File.exists? opts[:secret_file]
+          logger.error "Unable to read #{opts[:secret_file]}."
+          exit 1
+        end
+
+        (File.read opts[:secret_file]).chomp
+      end
     end
   end
 end

@@ -57,9 +57,9 @@ Usage:
 heirloom setup -b BUCKET_PREFIX -n NAME -m REGION1 -r REGION1 -r REGION2
 
 EOS
-          opt :bucket_prefix, "Bucket prefix which will be combined with given regions \
-region to create required buckets. For example: '-b test -r us-west-1 -r us-east-1' will \
-create bucket test-us-west-1 in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
+          opt :bucket_prefix, "The bucket prefix will be combined with specified \
+regions to create the required buckets. For example: '-b test -r us-west-1 -r \
+us-east-1' will create bucket test-us-west-1 in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'

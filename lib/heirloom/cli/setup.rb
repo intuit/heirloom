@@ -11,8 +11,8 @@ module Heirloom
                               :opts   => @opts
 
         ensure_valid_options :provided => @opts, 
-                             :required => [:metadata_region, :region, 
-                                           :name, :base],
+                             :required => [:metadata_region, 
+                                           :region, :name],
                              :config   => @config
 
         @catalog = Heirloom::Catalog.new :name    => @opts[:name],
@@ -30,8 +30,11 @@ module Heirloom
                                          :regions => @opts[:region]
 
         @catalog.create_catalog_domain
+
+        base = @opts[:base] || @opts[:name] + (0...8).map{97.+(rand(25)).chr}.join
+
         unless @catalog.add_to_catalog :regions => @opts[:region],
-                                       :base    => @opts[:base]
+                                       :base    => base
            if @opts[:force]
              @logger.warn "#{@opts[:name]} already exists."
            else
@@ -41,7 +44,7 @@ module Heirloom
         end
 
         @archive.setup :regions       => @opts[:region],
-                       :bucket_prefix => @opts[:base]
+                       :bucket_prefix => base
       end
 
       private
@@ -56,6 +59,8 @@ Setup S3 and SimpleDB in the given regions.
 Usage:
 
 heirloom setup -b BASE -n NAME -m REGION1 -r REGION1 -r REGION2
+
+Base will be randomly generated if not specified.
 
 EOS
           opt :base, "Base prefix which will be combined with given regions \

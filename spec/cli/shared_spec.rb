@@ -237,7 +237,7 @@ describe Heirloom do
     end
   end
 
-  context "testing ensure entry exists in catalog" do
+  context "testing ensure entry (does not) exists in catalog" do
     before do
       @catalog_mock = mock 'catalog'
       @logger_stub = stub 'logger', :error => true
@@ -255,6 +255,14 @@ describe Heirloom do
                     with('entry').
                     and_return false
       lambda { @object.ensure_entry_exists_in_catalog @options }.
+                       should raise_error SystemExit
+    end
+
+    it "should exit if the entry exists in catalog" do
+      @catalog_mock.should_receive(:entry_exists_in_catalog?).
+                    with('entry').
+                    and_return true
+      lambda { @object.ensure_entry_does_not_exist_in_catalog @options }.
                        should raise_error SystemExit
     end
   end

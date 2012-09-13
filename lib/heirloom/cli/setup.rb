@@ -31,17 +31,14 @@ module Heirloom
 
         @catalog.create_catalog_domain
 
-        base = @opts[:base] || @opts[:name] + (0...8).map{97.+(rand(25)).chr}.join
+        ensure_entry_does_not_exist_in_catalog :config  => @config,
+                                               :catalog => @catalog,
+                                               :entry   => @opts[:name]
 
-        unless @catalog.add_to_catalog :regions => @opts[:region],
-                                       :base    => base
-           if @opts[:force]
-             @logger.warn "#{@opts[:name]} already exists."
-           else
-             @logger.warn "#{@opts[:name]} already exists, exiting."
-             exit 1
-           end
-        end
+        base = @opts[:base] || "#{@opts[:name]}-#{(0...8).map{97.+(rand(25)).chr}.join}"
+
+        @catalog.add_to_catalog :regions => @opts[:region],
+                                :base    => base
 
         @archive.setup :regions       => @opts[:region],
                        :bucket_prefix => base
@@ -67,7 +64,6 @@ EOS
 region. For example: '-b test -r us-west-1 -r us-east-1' will create bucket test-us-west-1 \
 in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
           opt :help, "Display Help"
-          opt :force, "Force setup even if entry already exists in catalog."
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,

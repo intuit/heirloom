@@ -39,6 +39,7 @@ describe Heirloom do
 
   it "should setup s3 buckets, catalog and simpledb domain" do
     @catalog_mock.should_receive(:create_catalog_domain)
+    @catalog_mock.stub :entry_exists_in_catalog? => false
     @catalog_mock.should_receive(:add_to_catalog).
                   with(:regions => @regions, 
                        :base    => 'base').

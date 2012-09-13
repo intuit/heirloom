@@ -170,6 +170,19 @@ module Heirloom
         end
       end
 
+      def ensure_entry_does_not_exist_in_catalog(args)
+        config  = args[:config]
+        catalog = args[:catalog]
+        entry   = args[:entry]
+        logger  = config.logger
+        region  = config.metadata_region
+
+        if catalog.entry_exists_in_catalog? entry
+          logger.error "Entry for #{entry} exists in #{region} catalog."
+          exit 1
+        end
+      end
+
       def latest_id(args)
         archive = Archive.new :name   => args[:name],
                               :config => args[:config]

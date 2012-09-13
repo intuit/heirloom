@@ -8,8 +8,8 @@ describe Heirloom do
                 :metadata_region => 'us-west-1',
                 :details         => true }
     @result = { 'heirloom_test' => 
-                { 'regions' => ['us-west-1'],
-                  'base'    => ['base'] } }
+                { 'regions'       => ['us-west-1'],
+                  'bucket_prefix' => ['bp'] } }
     @logger_stub = stub :debug => true
     @config_mock = mock 'config'
     @catalog_mock = mock 'catalog'
@@ -34,8 +34,8 @@ describe Heirloom do
   it "should list the details about all heirlooms in the catalog" do
     @catalog_mock.should_receive(:all).and_return @result
     formated_result = { 'test' => 
-                        { 'regions' => ['us-west-1'],
-                          'base'    => ['base'] } }
+                        { 'regions'       => ['us-west-1'],
+                          'bucket_prefix' => ['bp'] } }
     @cli_catalog.should_receive(:jj).with formated_result
     @cli_catalog.all
   end

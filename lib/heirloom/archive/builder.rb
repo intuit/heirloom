@@ -9,20 +9,20 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
-      @name = args[:name]
+      @name   = args[:name]
       @domain = "heirloom_#{@name}"
-      @id = args[:id]
+      @id     = args[:id]
       @logger = @config.logger
     end
 
     def build(args)
-      @source = args[:directory] ||= '.'
-      @secret = args[:secret]
-      @base = args[:base]
+      @source        = args[:directory] ||= '.'
+      @secret        = args[:secret]
+      @bucket_prefix = args[:bucket_prefix]
 
-      directory = Directory.new :path      => @source,
-                                :exclude   => args[:exclude],
-                                :config    => @config
+      directory = Directory.new :path    => @source,
+                                :exclude => args[:exclude],
+                                :config  => @config
 
       unless directory.build_artifact_from_directory :secret => @secret
         return false
@@ -63,11 +63,11 @@ module Heirloom
     end
 
     def create_artifact_record
-      attributes = { 'built_by'  => "#{user}@#{hostname}",
-                     'built_at'  => Time.now.utc.iso8601,
-                     'encrypted' => encrypted?,
-                     'base'      => @base,
-                     'id'        => @id }
+      attributes = { 'built_by'      => "#{user}@#{hostname}",
+                     'built_at'      => Time.now.utc.iso8601,
+                     'encrypted'     => encrypted?,
+                     'bucket_prefix' => @bucket_prefix,
+                     'id'            => @id }
       @logger.info "Adding entry #{@id}."
       sdb.put_attributes @domain, @id, attributes
     end

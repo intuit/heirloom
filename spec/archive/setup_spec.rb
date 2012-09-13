@@ -28,14 +28,14 @@ describe Heirloom do
       @verifier_mock.stub :domain_exists? => false
       @sdb_mock.should_receive(:create_domain).with 'heirloom_archive'
       @setuper.setup :regions       => ['us-west-1'],
-                     :bucket_prefix => 'base'
+                     :bucket_prefix => 'bp'
                      
     end
 
     it "should not create the domain if alrady exists" do
       @verifier_mock.stub :domain_exists? => true
       @setuper.setup :regions       => ['us-west-1'],
-                     :bucket_prefix => 'base'
+                     :bucket_prefix => 'bp'
     end
   end
 
@@ -46,10 +46,10 @@ describe Heirloom do
 
     it "should create required buckets that don't exist" do
       @verifier_mock.should_receive(:bucket_exists?).
-                     with(:region => "us-west-1", :bucket_prefix => "base").
+                     with(:region => "us-west-1", :bucket_prefix => "bp").
                      and_return true
       @verifier_mock.should_receive(:bucket_exists?).
-                     with(:region => "us-east-1", :bucket_prefix => "base").
+                     with(:region => "us-east-1", :bucket_prefix => "bp").
                      and_return false
       @s3_mock = mock 's3'
       Heirloom::AWS::S3.should_receive(:new).
@@ -57,9 +57,9 @@ describe Heirloom do
                              :region => 'us-east-1').
                         and_return @s3_mock
       @s3_mock.should_receive(:put_bucket).
-               with 'base-us-east-1', 'us-east-1'
+               with 'bp-us-east-1', 'us-east-1'
       @setuper.setup :regions       => ['us-west-1', 'us-east-1'],
-                     :bucket_prefix => 'base'
+                     :bucket_prefix => 'bp'
     end
   end
 

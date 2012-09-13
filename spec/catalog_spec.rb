@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Heirloom::Catalog do
 
   before do 
-    @config_mock = mock 'catalog'
-    @regions     = ['us-west-1', 'us-west-2']
-    @base        = 'thebase'
-    @catalog     = Heirloom::Catalog.new :config => @config_mock,
+    @config_mock   = mock 'catalog'
+    @regions       = ['us-west-1', 'us-west-2']
+    @bucket_prefix = 'bp'
+    @catalog       = Heirloom::Catalog.new :config => @config_mock,
                                          :name   => 'new_archive'
   end
 
@@ -29,19 +29,19 @@ describe Heirloom::Catalog do
                                   :name   => 'new_archive').
                              and_return @catalog_add_mock
       @catalog_add_mock.should_receive(:add_to_catalog).
-                        with(:base    => @base,
-                             :regions => @regions).
+                        with(:bucket_prefix => @bucket_prefix,
+                             :regions       => @regions).
                         and_return true
-      @catalog.add_to_catalog(:base    => @base,
-                              :regions => @regions).
+      @catalog.add_to_catalog(:bucket_prefix => @bucket_prefix,
+                              :regions       => @regions).
                should be_true
     end
   end
 
   context "testing show" do
     before do
-      @catalog_show_stub = stub 'show', :regions => @regions,
-                                        :base    => @base
+      @catalog_show_stub = stub 'show', :regions       => @regions,
+                                        :bucket_prefix => @bucket_prefix
       Heirloom::Catalog::Show.should_receive(:new).
                               with(:config => @config_mock,
                                    :name   => 'new_archive').
@@ -52,8 +52,8 @@ describe Heirloom::Catalog do
       @catalog.regions.should == @regions
     end
 
-    it "should call base from the show object" do
-      @catalog.base.should == @base
+    it "should call bucket_prefix from the show object" do
+      @catalog.bucket_prefix.should == @bucket_prefix
     end
   end
 

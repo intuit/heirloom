@@ -15,7 +15,7 @@ module Heirloom
 
         return data unless args[:secret]
 
-        @logger.info "Secret provided. Decrypting archive."
+        @logger.info "Secret provided. Decrypting Heirloom."
 
         @aes = OpenSSL::Cipher::AES256.new(:CBC)
         @aes.decrypt
@@ -25,9 +25,9 @@ module Heirloom
           @aes.update(data) + @aes.final
         rescue OpenSSL::Cipher::CipherError => e
           if e.message == 'wrong final block length'
-            @logger.error 'This archive does not appear to be encrypted.'
+            @logger.error 'This Heirloom does not appear to be encrypted.'
           end
-          @logger.error "Unable to decrypt archive: '#{e.message}'"
+          @logger.error "Unable to decrypt Heirloom: '#{e.message}'"
           false
         end
       end

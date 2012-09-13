@@ -29,7 +29,7 @@ describe Heirloom do
       Heirloom::Writer.any_instance.should_receive(:`).
                        with('tar xzf /tmp/tempfile -C /output')
       $?.stub :success? => false
-      @logger_mock.should_receive(:error).with "Error extracting archive."
+      @logger_mock.should_receive(:error)
       @writer.save_archive(:archive => 'archive_data', 
                            :output  => '/output',
                            :file    => 'id.tar.gz',

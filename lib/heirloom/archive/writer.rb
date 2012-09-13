@@ -26,7 +26,7 @@ module Heirloom
 
     def write_archive
       output_file = File.join @output, @file
-      @logger.info "Writing archive to '#{output_file}'."
+      @logger.info "Writing Heirloom to '#{output_file}'."
       File.open(output_file, 'w') { |local_file| local_file.write @archive }
     end
 
@@ -35,15 +35,15 @@ module Heirloom
     end
 
     def extract_tmp_archive
-      @logger.info "Extracting archive to '#{@output}'."
+      @logger.info "Extracting Heirloom to '#{@output}'."
       cmd = "tar xzf #{@tmp_archive} -C #{@output}"
       @logger.debug "Executing '#{cmd}'."
       `#{cmd}`
       if $?.success?
-        @logger.debug "Archive succesfully extracted."
+        @logger.debug "Heirloom succesfully extracted."
         true
       else
-        @logger.error "Error extracting archive."
+        @logger.error "Error extracting Heirloom."
         false
       end
     end

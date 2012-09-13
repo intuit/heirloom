@@ -22,7 +22,7 @@ module Heirloom
       end
       
       def list(count = @opts[:count])
-        @logger.debug "#{@archive.count} archives found."
+        @logger.debug "#{@archive.count} IDs found."
         jj @archive.list(count)
       end
 

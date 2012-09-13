@@ -29,7 +29,7 @@ describe Heirloom do
 
     it "should rescue bad key error and return false" do
       @logger_mock.should_receive(:error).
-                   with "Unable to decrypt archive: 'OpenSSL::Cipher::CipherError'"
+                   with "Unable to decrypt Heirloom: 'OpenSSL::Cipher::CipherError'"
       @aes_mock.should_receive(:decrypt)
       @aes_mock.should_receive(:key=).with Digest::SHA256.hexdigest 'badsecret'
       @aes_mock.should_receive(:iv=).with 'firstsixteenchar'

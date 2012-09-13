@@ -6,7 +6,7 @@ describe Heirloom do
   before do
     @regions = ['us-west-1', 'us-west-2']
     options = { :level           => 'info',
-                :base            => 'base',
+                :bucket_prefix   => 'bp',
                 :region          => @regions,
                 :name            => 'archive_name',
                 :metadata_region => 'us-west-1' }
@@ -41,12 +41,12 @@ describe Heirloom do
     @catalog_mock.should_receive(:create_catalog_domain)
     @catalog_mock.stub :entry_exists_in_catalog? => false
     @catalog_mock.should_receive(:add_to_catalog).
-                  with(:regions => @regions, 
-                       :base    => 'base').
+                  with(:regions       => @regions, 
+                       :bucket_prefix => 'bp').
                   and_return true
     @archive_mock.should_receive(:setup).
                   with(:regions       => @regions,
-                       :bucket_prefix => 'base')
+                       :bucket_prefix => 'bp')
     @setup.setup 
   end
 

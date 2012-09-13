@@ -37,8 +37,8 @@ module Heirloom
       show.regions
     end
 
-    def base
-      show.base
+    def bucket_prefix
+      show.bucket_prefix
     end
 
     def all

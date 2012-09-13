@@ -3,10 +3,11 @@ require 'spec_helper'
 describe Heirloom::Catalog::Add do
 
   before do
-    @regions     = ['us-west-1', 'us-west-2']
-    @base        = 'base'
-    @logger_stub = stub 'logger', :info => true
-    @config_stub = stub 'config', :logger => @logger_stub
+    @regions       = ['us-west-1', 'us-west-2']
+    @bucket_prefix = 'bucket_prefix'
+    @logger_stub   = stub 'logger', :info => true
+    @config_stub   = stub 'config', :logger => @logger_stub
+
     @add = Heirloom::Catalog::Add.new :config => @config_stub,
                                       :name   => 'new_archive'
   end
@@ -19,9 +20,9 @@ describe Heirloom::Catalog::Add do
     @sdb_mock.should_receive(:put_attributes).
               with 'heirloom',
                    'heirloom_new_archive',
-                   "regions" => @regions, "base" => @base
-    @add.add_to_catalog :regions => @regions,
-                        :base    => @base
+                   "regions" => @regions, "bucket_prefix" => @bucket_prefix
+    @add.add_to_catalog :regions       => @regions,
+                        :bucket_prefix => @bucket_prefix
   end
 
 end

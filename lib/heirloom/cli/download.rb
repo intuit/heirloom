@@ -25,10 +25,10 @@ module Heirloom
                                :id     => id,
                                :config => @config
 
-        # Lookup region & base from simpledb unless specified
+        # Lookup region & bucket_prefix from simpledb unless specified
         # To Do, valid validation message that simpledb exists
         @region = @opts[:region] || @catalog.regions.first
-        @base   = @opts[:base]   || @catalog.base
+        @bucket_prefix = @opts[:bucket_prefix] || @catalog.bucket_prefix
       end
       
       def download
@@ -37,11 +37,11 @@ module Heirloom
                              :config => @config
         ensure_valid_secret :secret => secret, 
                             :config => @config
-        archive = @archive.download :output      => @opts[:output],
-                                    :extract     => @opts[:extract],
-                                    :region      => @region,
-                                    :base_prefix => @base,
-                                    :secret      => secret
+        archive = @archive.download :output        => @opts[:output],
+                                    :extract       => @opts[:extract],
+                                    :region        => @region,
+                                    :bucket_prefix => @bucket_prefix,
+                                    :secret        => secret
         exit 1 unless archive
       end
 
@@ -60,10 +60,10 @@ heirloom download -n NAME -o OUTPUT_DIRECTORY
 
 If id (-i) is not specified, the latest id will be downloaded.
 
-To download Heirloom without looking up details in SimpleDB, specify region (-r), ID (-i) and base (-b) options.
+To download Heirloom without looking up details in SimpleDB, specify region (-r), ID (-i) and bucket_prefix (-b) options.
 
 EOS
-          opt :base, "Base of the Heirloom to download.", :type => :string
+          opt :bucket_prefix, "Bucket prefix of the Heirloom to download.", :type => :string
           opt :extract, "Extract the Heirloom into the given output path.", :short => "-x"
           opt :help, "Display Help"
           opt :id, "ID of the Heirloom to download.", :type => :string

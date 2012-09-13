@@ -34,11 +34,11 @@ module Heirloom
                                     :config  => @config
 
         @regions = @catalog.regions
-        @base    = @catalog.base
+        @bucket_prefix = @catalog.bucket_prefix
 
         unless @opts[:keep_buckets]
           @archive.delete_buckets :regions       => @regions,
-                                  :bucket_prefix => @base
+                                  :bucket_prefix => @bucket_prefix
         end
 
         @archive.delete_domain

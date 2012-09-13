@@ -12,12 +12,14 @@ describe Heirloom::Catalog::Show do
                                         :name   => 'a_archive'
   end
 
-  it "should return the base" do
-    result = { 'heirloom_a_archive' => { 'base' => [ 'thebase' ] } }
+  it "should return the bucket_prefix" do
+    result = { 'heirloom_a_archive' => 
+               { 'bucket_prefix' => [ 'bp' ] } 
+             }
     @sdb_mock.should_receive(:select).
-              with("select base from heirloom where itemName() = 'heirloom_a_archive'").
+              with("select bucket_prefix from heirloom where itemName() = 'heirloom_a_archive'").
               and_return result
-    @show.base.should == 'thebase'
+    @show.bucket_prefix.should == 'bp'
   end
 
   it "should return the regions" do

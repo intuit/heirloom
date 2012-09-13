@@ -11,8 +11,8 @@ module Heirloom
         lookup :name => @name, :attribute => 'regions'
       end
 
-      def base
-        lookup(:name => @name, :attribute => 'base').first
+      def bucket_prefix
+        lookup(:name => @name, :attribute => 'bucket_prefix').first
       end
 
       private

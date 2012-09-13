@@ -12,6 +12,7 @@ module Heirloom
 
         ensure_valid_options :provided => @opts, 
                              :required => [:metadata_region, 
+                                           :bucket_prefix,
                                            :region, :name],
                              :config   => @config
 
@@ -35,13 +36,11 @@ module Heirloom
                                                :catalog => @catalog,
                                                :entry   => @opts[:name]
 
-        base = @opts[:base] || "#{@opts[:name]}-#{(0...8).map{97.+(rand(25)).chr}.join}"
-
-        @catalog.add_to_catalog :regions => @opts[:region],
-                                :base    => base
+        @catalog.add_to_catalog :regions       => @opts[:region],
+                                :bucket_prefix => @opts[:bucket_prefix]
 
         @archive.setup :regions       => @opts[:region],
-                       :bucket_prefix => base
+                       :bucket_prefix => @opts[:bucket_prefix]
       end
 
       private
@@ -55,14 +54,12 @@ Setup S3 and SimpleDB in the given regions.
 
 Usage:
 
-heirloom setup -b BASE -n NAME -m REGION1 -r REGION1 -r REGION2
-
-Base will be randomly generated if not specified.
+heirloom setup -b BUCKET_PREFIX -n NAME -m REGION1 -r REGION1 -r REGION2
 
 EOS
-          opt :base, "Base prefix which will be combined with given regions \
-region. For example: '-b test -r us-west-1 -r us-east-1' will create bucket test-us-west-1 \
-in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
+          opt :bucket_prefix, "Bucket prefix which will be combined with given regions \
+region to create required buckets. For example: '-b test -r us-west-1 -r us-east-1' will \
+create bucket test-us-west-1 in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'

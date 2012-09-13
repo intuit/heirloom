@@ -21,11 +21,11 @@ describe Heirloom do
                       and_return @archive_mock
   end
 
-  context "with id, region and base specified" do
+  context "with id, region and bucket_prefix specified" do
     before do
       options = { :name            => 'archive_name',
                   :id              => '1.0.0',
-                  :base            => 'base',
+                  :bucket_prefix   => 'bp',
                   :region          => 'us-east-1',
                   :level           => 'info',
                   :output          => '/tmp/test123',
@@ -40,9 +40,9 @@ describe Heirloom do
     end
 
     it "should download an archive" do
-      @archive_mock.should_receive(:download).with(:output      => '/tmp/test123',
-                                                   :region      => 'us-east-1',
-                                                   :base_prefix => 'base',
+      @archive_mock.should_receive(:download).with(:output        => '/tmp/test123',
+                                                   :region        => 'us-east-1',
+                                                   :bucket_prefix => 'bp',
                                                    :extract     => false,
                                                    :secret      => nil).
                     and_return '/tmp/test123'
@@ -54,10 +54,10 @@ describe Heirloom do
     end
   end
 
-  context "id, region and base not specified" do
+  context "id, region and bucket prefix not specified" do
     before do
-      @catalog_stub = stub 'catalog', :regions => ['us-east-1', 'us-west-1'],
-                                      :base    => 'base'
+      @catalog_stub = stub 'catalog', :regions       => ['us-east-1', 'us-west-1'],
+                                      :bucket_prefix => 'bp'
       options = { :name            => 'archive_name',
                   :level           => 'info',
                   :output          => '/tmp/test123',
@@ -82,11 +82,11 @@ describe Heirloom do
     end
 
     it "should download the latest archive from the first region" do
-      @archive_mock.should_receive(:download).with(:output      => '/tmp/test123',
-                                                   :region      => 'us-east-1',
-                                                   :base_prefix => 'base',
-                                                   :extract     => false,
-                                                   :secret      => nil).
+      @archive_mock.should_receive(:download).with(:output        => '/tmp/test123',
+                                                   :region        => 'us-east-1',
+                                                   :bucket_prefix => 'bp',
+                                                   :extract       => false,
+                                                   :secret        => nil).
                     and_return '/tmp/test123'
       @cli_download.should_receive(:ensure_directory).
                     with(:config => @config_mock, 

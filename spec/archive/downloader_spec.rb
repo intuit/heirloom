@@ -42,10 +42,10 @@ describe Heirloom do
                         :file    => "123.tar.gz",
                         :output  => './',
                         :extract => false).and_return true
-      @downloader.download(:region      => 'us-west-1',
-                           :base_prefix => 'bucket',
-                           :extract     => false,
-                           :secret      => nil).should == './'
+      @downloader.download(:region        => 'us-west-1',
+                           :bucket_prefix => 'bucket',
+                           :extract       => false,
+                           :secret        => nil).should == './'
     end
 
     it "should download arhcive to specified output" do
@@ -54,11 +54,11 @@ describe Heirloom do
                         :file    => "123.tar.gz",
                         :output  => '/tmp/dir',
                         :extract => false).and_return true
-      @downloader.download(:output      => '/tmp/dir',
-                           :region      => 'us-west-1',
-                           :base_prefix => 'bucket',
-                           :extract     => false,
-                           :secret      => nil).should == '/tmp/dir'
+      @downloader.download(:output        => '/tmp/dir',
+                           :region        => 'us-west-1',
+                           :bucket_prefix => 'bucket',
+                           :extract       => false,
+                           :secret        => nil).should == '/tmp/dir'
     end
   end
 
@@ -87,10 +87,10 @@ describe Heirloom do
                           :file    => "123.tar.gz",
                           :output  => './',
                           :extract => false).and_return true
-        @downloader.download :region      => 'us-west-1',
-                             :base_prefix => 'bucket',
-                             :extract     => false,
-                             :secret      => 'supersecret'
+        @downloader.download :region        => 'us-west-1',
+                             :bucket_prefix => 'bucket',
+                             :extract       => false,
+                             :secret        => 'supersecret'
       end
 
       it "should decrypt and extract the downloaded file with secret" do
@@ -100,7 +100,7 @@ describe Heirloom do
                           :output  => './',
                           :extract => true).and_return true
         @downloader.download :region      => 'us-west-1',
-                             :base_prefix => 'bucket',
+                             :bucket_prefix => 'bucket',
                              :extract     => true,
                              :secret      => 'supersecret'
       end
@@ -115,7 +115,7 @@ describe Heirloom do
 
       it "should return false if the decrypt_data returns false" do
         @downloader.download(:region      => 'us-west-1',
-                             :base_prefix => 'bucket',
+                             :bucket_prefix => 'bucket',
                              :extract     => false,
                              :secret      => 'badsecret').should be_false
       end 

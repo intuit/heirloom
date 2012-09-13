@@ -1,3 +1,12 @@
+## v0.8.0:
+
+* Change base to bucket prefix through out code base
+* Prevent setup from overwriting existing heirlooms
+
+## v0.7.5:
+
+* Create random base if not specified by setup.
+
 ## v0.7.4:
 
 * Add support to read password from file

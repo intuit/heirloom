@@ -9,14 +9,15 @@ module Heirloom
       end
 
       def add_to_catalog(args)
-        regions = args[:regions]
-        base    = args[:base]
+        regions       = args[:regions]
+        bucket_prefix = args[:bucket_prefix]
 
         @logger.info "Adding #{@name} to catalog."
 
         sdb.put_attributes 'heirloom', 
                            "heirloom_#{@name}", 
-                           "regions" => regions, "base" => base
+                           { "regions" => regions, 
+                             "bucket_prefix" => bucket_prefix }
 
       end
 

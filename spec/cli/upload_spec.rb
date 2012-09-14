@@ -23,8 +23,8 @@ describe Heirloom do
                       :metadata_region => 'us-west-1'
     @archive_mock = mock 'archive'
     @catalog_mock = mock 'catalog'
-    @catalog_mock.stub :regions => @regions,
-                       :base    => 'base',
+    @catalog_mock.stub :regions                => @regions,
+                       :bucket_prefix          => 'bp',
                        :catalog_domain_exists? => true
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
@@ -53,10 +53,10 @@ describe Heirloom do
             with(:name   => 'archive_name',
                  :config => @config_mock)
     @upload.should_receive(:ensure_buckets_exist).
-            with(:base    => 'base',
-                 :name    => 'archive_name',
-                 :regions => @regions,
-                 :config  => @config_mock)
+            with(:bucket_prefix => 'bp',
+                 :name          => 'archive_name',
+                 :regions       => @regions,
+                 :config        => @config_mock)
     @upload.should_receive(:ensure_directory).
             with(:path   => '/buildme',
                  :config => @config_mock)
@@ -65,14 +65,14 @@ describe Heirloom do
                  :config => @config_mock)
     @archive_mock.stub :exists? => false
     @archive_mock.should_receive(:build).
-                  with(:base      => 'base',
-                       :directory => '/buildme',
-                       :exclude   => ["exclude1", "exclude2"],
-                       :git       => false,
-                       :secret    => 'secret12').
+                  with(:bucket_prefix => 'bp',
+                       :directory     => '/buildme',
+                       :exclude       => ["exclude1", "exclude2"],
+                       :git           => false,
+                       :secret        => 'secret12').
                   and_return '/tmp/build123.tar.gz'
     @archive_mock.should_receive(:upload).
-                  with(:bucket_prefix   => 'base',
+                  with(:bucket_prefix   => 'bp',
                        :regions         => @regions,
                        :public_readable => false,
                        :file            => '/tmp/build123.tar.gz')

@@ -23,7 +23,7 @@ module Heirloom
                                :id     => @opts[:id],
                                :config => @config
         @regions = @catalog.regions
-        @base    = @catalog.base
+        @bucket_prefix = @catalog.bucket_prefix
       end
 
       def upload
@@ -31,10 +31,10 @@ module Heirloom
                             :config => @config
         ensure_domain_exists :name   => @opts[:name], 
                              :config => @config
-        ensure_buckets_exist :base    => @base,
-                             :name    => @opts[:name],
-                             :regions => @regions,
-                             :config  => @config
+        ensure_buckets_exist :bucket_prefix => @bucket_prefix,
+                             :name          => @opts[:name],
+                             :regions       => @regions,
+                             :config        => @config
         ensure_directory :path   => @opts[:directory], 
                          :config => @config
 
@@ -45,18 +45,18 @@ module Heirloom
 
         @archive.destroy if @archive.exists?
                           
-        build = @archive.build :base      => @base,
-                               :directory => @opts[:directory],
-                               :exclude   => @opts[:exclude],
-                               :git       => @opts[:git],
-                               :secret    => secret
+        build = @archive.build :bucket_prefix => @bucket_prefix,
+                               :directory     => @opts[:directory],
+                               :exclude       => @opts[:exclude],
+                               :git           => @opts[:git],
+                               :secret        => secret
 
         unless build
           @logger.error "Build failed."
           exit 1
         end
 
-        @archive.upload :bucket_prefix   => @base,
+        @archive.upload :bucket_prefix   => @bucket_prefix,
                         :regions         => @regions,
                         :public_readable => @opts[:public],
                         :file            => build

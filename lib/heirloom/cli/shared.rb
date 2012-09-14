@@ -93,18 +93,18 @@ module Heirloom
       end
 
       def ensure_buckets_exist(args)
-        config  = args[:config]
-        base    = args[:base]
-        name    = args[:name]
-        regions = args[:regions]
-        logger  = config.logger
+        config        = args[:config]
+        bucket_prefix = args[:bucket_prefix]
+        name          = args[:name]
+        regions       = args[:regions]
+        logger        = config.logger
 
         archive = Archive.new :name   => name,
                               :config => config
 
         unless archive.buckets_exist? :regions       => regions,
-                                      :bucket_prefix => base
-          logger.error "Required buckets for '#{base}' do not exist."
+                                      :bucket_prefix => bucket_prefix
+          logger.error "Required buckets for '#{bucket_prefix}' do not exist."
           exit 1
         end
       end
@@ -166,6 +166,19 @@ module Heirloom
 
         unless catalog.entry_exists_in_catalog? entry
           logger.error "Entry for #{entry} does not exist in #{region} catalog."
+          exit 1
+        end
+      end
+
+      def ensure_entry_does_not_exist_in_catalog(args)
+        config  = args[:config]
+        catalog = args[:catalog]
+        entry   = args[:entry]
+        logger  = config.logger
+        region  = config.metadata_region
+
+        if catalog.entry_exists_in_catalog? entry
+          logger.error "Entry for #{entry} exists in #{region} catalog."
           exit 1
         end
       end

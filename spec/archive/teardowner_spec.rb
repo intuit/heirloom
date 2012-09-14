@@ -24,10 +24,10 @@ describe Heirloom::Teardowner do
                       with(:config => @config_stub,
                            :region => 'us-west-2').
                       and_return @s3_mock2
-    @s3_mock1.should_receive(:delete_bucket).with('base-us-west-1')
-    @s3_mock2.should_receive(:delete_bucket).with('base-us-west-2')
+    @s3_mock1.should_receive(:delete_bucket).with('bp-us-west-1')
+    @s3_mock2.should_receive(:delete_bucket).with('bp-us-west-2')
     @teardowner.delete_buckets :regions       => @regions,
-                               :bucket_prefix => 'base'
+                               :bucket_prefix => 'bp'
   end
 
   it "should delete the domain" do

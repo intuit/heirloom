@@ -4,17 +4,17 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
-      @name = args[:name]
-      @id = args[:id]
+      @name   = args[:name]
+      @id     = args[:id]
       @logger = @config.logger
     end
 
     def download(args)
-      @region = args[:region]
-      @base_prefix = args[:base_prefix]
-      extract = args[:extract]
-      secret = args[:secret]
-      output = args[:output] ||= './'
+      @region        = args[:region]
+      @bucket_prefix = args[:bucket_prefix]
+      extract        = args[:extract]
+      secret         = args[:secret]
+      output         = args[:output] ||= './'
 
       @logger.info "Downloading s3://#{bucket}/#{key} from #{@region}."
 
@@ -51,7 +51,7 @@ module Heirloom
     end
 
     def bucket
-      "#{@base_prefix}-#{@region}"
+      "#{@bucket_prefix}-#{@region}"
     end
 
     def writer

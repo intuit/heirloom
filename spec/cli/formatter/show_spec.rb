@@ -6,7 +6,6 @@ describe Heirloom do
   it "should remove reserved / endpoint attribs" do
     attributes = { 'id'                  => '123',
                    'another_data'        => 'more_data',
-                   'base'                => 'base',
                    'built_at'            => 'today',
                    'built_by'            => 'me',
                    'bucket_prefix'       => 'bp',

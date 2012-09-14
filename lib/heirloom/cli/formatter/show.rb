@@ -42,8 +42,8 @@ module Heirloom
         end
 
         def is_reserved?(attribute)
-          ['bucket_prefix', 'base',
-           'built_at', 'built_by'].include? attribute
+          ['bucket_prefix', 'built_at', 
+           'built_by'].include? attribute
         end
         
         def is_endpoint?(attribute)

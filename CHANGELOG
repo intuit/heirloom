@@ -2,6 +2,10 @@
 
 * Change base to bucket prefix through out code base
 * Prevent setup from overwriting existing heirlooms
+* Add human readable format as default for show
+* Included JSON option to show
+* Hide heirloom internal attribts in show
+* Added all option to display all attributes via show
 
 ## v0.7.5:
 

@@ -67,10 +67,11 @@ describe Heirloom do
         formatter_mock = mock 'format'
         Heirloom::CLI::Formatter::Show.should_receive(:new).
                                        and_return formatter_mock
-        formatter_mock.should_receive(:display).
+        formatter_mock.should_receive(:format).
                        with(:attributes => @attributes,
-                            :all        => true)
-
+                            :all        => true).
+                       and_return 'the attribs'
+        @cli_show.should_receive(:puts).with 'the attribs'
         @cli_show.show
       end
     end

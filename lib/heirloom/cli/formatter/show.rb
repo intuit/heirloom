@@ -3,19 +3,20 @@ module Heirloom
     module Formatter
       class Show
 
-        def display(args)
+        def format(args)
           @all        = args[:all]
           @attributes = args[:attributes]
-          puts_attributes
+          format_attributes
         end
 
         private
 
-        def puts_attributes
+        def format_attributes
           remove_internal_attributes unless @all
-          @attributes.each_pair do |key,value|
-            Kernel.puts "#{padded_key(key)}: #{value}"
-          end 
+          formated = @attributes.each_pair.map do |key,value|
+            "#{padded_key(key)}: #{value}"
+          end
+          formated.join("\n")
         end
 
         def padded_key(key)
@@ -42,8 +43,7 @@ module Heirloom
         end
 
         def is_reserved?(attribute)
-          ['bucket_prefix', 'built_at', 
-           'built_by'].include? attribute
+          ['bucket_prefix', 'built_at', 'built_by'].include? attribute
         end
         
         def is_endpoint?(attribute)

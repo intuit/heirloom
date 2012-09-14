@@ -35,8 +35,8 @@ module Heirloom
           jj data
         else
           formatter = Heirloom::CLI::Formatter::Show.new
-          formatter.display :attributes     => data,
-                            :all            => @opts[:all]
+          puts formatter.format :attributes => data,
+                                :all        => @opts[:all]
         end
       end
 

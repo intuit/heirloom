@@ -3,19 +3,27 @@ require 'heirloom/cli'
 
 describe Heirloom do
 
+  before do
+    @attributes = { 'id'                  => '123',
+                    'another_data'        => 'more_data',
+                    'built_at'            => 'today',
+                    'built_by'            => 'me',
+                    'bucket_prefix'       => 'bp',
+                    'us-west-1-s3-url'    => 's3',
+                    'us-west-1-http-url'  => 'http',
+                    'us-west-1-https-url' => 'https' }
+  end
+
   it "should remove reserved / endpoint attribs" do
-    attributes = { 'id'                  => '123',
-                   'another_data'        => 'more_data',
-                   'built_at'            => 'today',
-                   'built_by'            => 'me',
-                   'bucket_prefix'       => 'bp',
-                   'us-west-1-s3-url'    => 's3',
-                   'us-west-1-http-url'  => 'http',
-                   'us-west-1-https-url' => 'https' }
     formatter = Heirloom::CLI::Formatter::Show.new
-    Kernel.should_receive(:puts).with('id           : 123')
-    Kernel.should_receive(:puts).with('another_data : more_data')
-    formatter.display :attributes => attributes
+    formatter.format(:attributes => @attributes).
+              should_not match 'bucket_prefix|us-west-1-s3-url'
+  end
+
+  it "should format the id output correctly" do
+    formatter = Heirloom::CLI::Formatter::Show.new
+    formatter.format(:attributes => @attributes).
+              should == "id           : 123\nanother_data : more_data"
   end
 
 end

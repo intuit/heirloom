@@ -5,10 +5,10 @@ describe Heirloom do
 
   before do
     @options = { :name            => 'archive_name',
-                :json            => true,
-                :id              => '1.0.0',
-                :level           => 'info',
-                :metadata_region => 'us-west-1' }
+                 :json            => true,
+                 :id              => '1.0.0',
+                 :level           => 'info',
+                 :metadata_region => 'us-west-1' }
     @logger_stub = stub :debug => true
     @config_mock = mock 'config'
     @archive_mock = mock 'archive'
@@ -48,8 +48,7 @@ describe Heirloom do
 
       it "should show a given id as json" do
         @cli_show = Heirloom::CLI::Show.new
-        @archive_mock.should_receive(:show).
-                      and_return @attributes
+        @archive_mock.stub :show => @attributes
         @cli_show.should_receive(:jj).with @attributes
         @cli_show.show
       end
@@ -64,8 +63,7 @@ describe Heirloom do
 
       it "should show a given id using the show formatter" do
         @cli_show = Heirloom::CLI::Show.new
-        @archive_mock.should_receive(:show).
-                      and_return @attributes
+        @archive_mock.stub :show => @attributes
         formatter_mock = mock 'format'
         Heirloom::CLI::Formatter::Show.should_receive(:new).
                                        and_return formatter_mock

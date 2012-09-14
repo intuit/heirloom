@@ -19,16 +19,16 @@ module Heirloom
         end
 
         def padded_key(key)
-          max_length ||= longest_attribute
+          max_length ||= longest_attribute_length
           key + (" " * (max_length - key.length + 1))
         end
 
-        def longest_attribute
-          longest_key = 0
+        def longest_attribute_length
+          longest_length = 0
           @attributes.keys.each do |k|
-            longest_key = k.length if k.length > longest_key
+            longest_length = k.length if k.length > longest_length
           end
-          longest_key 
+          longest_length 
         end
 
         def remove_internal_attributes

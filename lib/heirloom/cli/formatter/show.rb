@@ -5,6 +5,7 @@ module Heirloom
 
         def display(args)
           @attributes = args[:attributes]
+          @system     = args[:system]
           remove_internal_attributes
           puts_attributes
         end
@@ -12,11 +13,14 @@ module Heirloom
         private
 
         def puts_attributes
-          max_length = longest_attribute
-          @attributes.each_pair do |k,v|
-            k = k + (" " * (max_length - k.length + 1))
-            puts "#{k}: #{v}"
+          @attributes.each_pair do |key,value|
+            Kernel.puts "#{padded_key(key)}: #{value}"
           end 
+        end
+
+        def padded_key(key)
+          max_length ||= longest_attribute
+          key + (" " * (max_length - key.length + 1))
         end
 
         def longest_attribute
@@ -28,20 +32,21 @@ module Heirloom
         end
 
         def remove_internal_attributes
-          @attributes.delete_if { |key| internal?(key) }
+          @attributes.delete_if { |key| internal_attribute?(key) }
         end
 
-        def internal?(attribute)
-          return true if reserved? attribute
-          return true if endpoint? attribute
+        def internal_attribute?(attribute)
+          return true if is_reserved? attribute
+          return true if is_endpoint? attribute
           false
         end
 
-        def reserved?(attribute)
-          ['bucket_prefix', 'built_at', 'built_by'].include? attribute
+        def is_reserved?(attribute)
+          ['bucket_prefix', 'base',
+           'built_at', 'built_by'].include? attribute
         end
         
-        def endpoint?(attribute)
+        def is_endpoint?(attribute)
           attribute.match('^.*-.*-\d*-s3|http|https-url$')
         end
       end

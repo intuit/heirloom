@@ -30,11 +30,12 @@ module Heirloom
       end
       
       def show
-        output = @archive.show
+        data = @archive.show
         if @opts[:json]
-          jj output
+          jj data
         else
-          Heirloom::CLI::Formatter::Show.new(output).display
+          formatter = Heirloom::CLI::Formatter::Show.new
+          formatter.display :attributes => data
         end
       end
 

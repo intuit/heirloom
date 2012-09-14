@@ -30,7 +30,12 @@ module Heirloom
       end
       
       def show
-        jj @archive.show
+        output = @archive.show
+        if @opts[:json]
+          jj output
+        else
+          Heirloom::CLI::Formatter::Show.new(output).display
+        end
       end
 
       private
@@ -51,6 +56,7 @@ If -i is ommited, latest ID is displayed.
 EOS
           opt :help, "Display Help"
           opt :id, "ID of the Heirloom to display.", :type => :string
+          opt :json, "Display output as raw JSON."
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   

@@ -12,6 +12,7 @@ require 'heirloom/cli/tag'
 require 'heirloom/cli/download'
 require 'heirloom/cli/destroy'
 require 'heirloom/cli/teardown'
+require 'heirloom/cli/formatter'
 
 module Heirloom
   module CLI

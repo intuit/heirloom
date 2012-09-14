@@ -5,6 +5,7 @@ describe Heirloom do
 
   before do
     options = { :name            => 'archive_name',
+                :json            => true,
                 :id              => '1.0.0',
                 :level           => 'info',
                 :metadata_region => 'us-west-1' }
@@ -36,7 +37,7 @@ describe Heirloom do
     @cli_show = Heirloom::CLI::Show.new
   end
 
-  it "should show a given id" do
+  it "should show a given id as json" do
     @archive_mock.should_receive(:show).and_return( { 'id' => '1.0.0' } )
     @cli_show.should_receive(:jj).with 'id' => '1.0.0'
     @cli_show.show

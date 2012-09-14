@@ -35,7 +35,8 @@ module Heirloom
           jj data
         else
           formatter = Heirloom::CLI::Formatter::Show.new
-          formatter.display :attributes => data
+          formatter.display :attributes     => data,
+                            :all            => @opts[:all]
         end
       end
 
@@ -56,6 +57,7 @@ If -i is ommited, latest ID is displayed.
 
 EOS
           opt :help, "Display Help"
+          opt :all, "Display all attributes (includes internal heirloom settings)."
           opt :id, "ID of the Heirloom to display.", :type => :string
           opt :json, "Display output as raw JSON."
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,

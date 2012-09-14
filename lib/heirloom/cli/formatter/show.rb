@@ -4,15 +4,15 @@ module Heirloom
       class Show
 
         def display(args)
+          @all        = args[:all]
           @attributes = args[:attributes]
-          @system     = args[:system]
-          remove_internal_attributes
           puts_attributes
         end
 
         private
 
         def puts_attributes
+          remove_internal_attributes unless @all
           @attributes.each_pair do |key,value|
             Kernel.puts "#{padded_key(key)}: #{value}"
           end 
@@ -32,10 +32,10 @@ module Heirloom
         end
 
         def remove_internal_attributes
-          @attributes.delete_if { |key| internal_attribute?(key) }
+          @attributes.delete_if { |key| is_internal_attribute? key }
         end
 
-        def internal_attribute?(attribute)
+        def is_internal_attribute?(attribute)
           return true if is_reserved? attribute
           return true if is_endpoint? attribute
           false

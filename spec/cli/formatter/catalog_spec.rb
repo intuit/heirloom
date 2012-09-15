@@ -15,20 +15,10 @@ describe Heirloom do
   end
 
   context "unfiltered" do
-    context "with details" do
-      it "should return the formated list" do
-        format = "test1\n  Regions       : us-west-1, us-east-1\n  Bucket Prefix : bp1\ntest2\n  Regions       : us-west-2\n  Bucket Prefix : bp2"
-        @formatter.format(:catalog => @catalog,
-                          :details => true,
-                          :name    => nil ).should == format
-      end
-    end
-    context "without details" do
-      it "should return the formated list" do
-        @formatter.format(:catalog => @catalog,
-                          :details => nil,
-                          :name    => nil ).should == "test1\ntest2"
-      end
+    it "should return the formated list" do
+      @formatter.format(:catalog => @catalog,
+                        :details => nil,
+                        :name    => nil ).should == "test1\ntest2"
     end
   end
 

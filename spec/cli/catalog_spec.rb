@@ -5,8 +5,7 @@ describe Heirloom do
 
   before do
     @options = { :level           => 'info',
-                 :metadata_region => 'us-west-1',
-                 :details         => true }
+                 :metadata_region => 'us-west-1' }
     @result = { 'heirloom_test' => 
                 { 'regions'       => ['us-west-1'],
                   'bucket_prefix' => ['bp'] } }
@@ -52,7 +51,7 @@ describe Heirloom do
       Trollop.stub :options => @options
     end
 
-    it "should list the details about all heirlooms in the catalog" do
+    it "should list all heirlooms in the catalog" do
       @cli_catalog = Heirloom::CLI::Catalog.new
       @catalog_mock.should_receive(:all).and_return @result
       formatter_mock = mock 'formatter'
@@ -62,8 +61,7 @@ describe Heirloom do
                       "regions"       => ["us-west-1"], 
                       "bucket_prefix" => ["bp"] 
                     }
-                  }, 
-                  :details => true, 
+                  },
                   :name => nil
                 }
       Heirloom::CLI::Formatter::Catalog.stub :new => formatter_mock

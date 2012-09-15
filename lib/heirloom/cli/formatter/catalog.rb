@@ -5,7 +5,6 @@ module Heirloom
         def format(args)
           @catalog = args[:catalog]
           @name    = args[:name]
-          @details = @name ? true : args[:details]
 
           if @name
             unless name_exists?
@@ -15,7 +14,7 @@ module Heirloom
             filter_by_name
           end
 
-          @details ? details : summary
+          @name ? details : summary
         end
 
         private

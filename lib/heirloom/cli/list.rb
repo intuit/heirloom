@@ -23,7 +23,12 @@ module Heirloom
       
       def list(count = @opts[:count])
         @logger.debug "#{@archive.count} IDs found."
-        jj @archive.list(count)
+        list = @archive.list count
+        if @opts[:json]
+          jj list
+        else
+          puts list.join "\n"
+        end
       end
 
       private
@@ -43,6 +48,7 @@ EOS
           opt :count, "Number of IDs to return.", :type    => :integer,
                                                   :default => 10
           opt :help, "Display Help"
+          opt :json, "Display output as raw JSON."
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   

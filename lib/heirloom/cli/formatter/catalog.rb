@@ -12,9 +12,10 @@ module Heirloom
             end
 
             filter_by_name
+            details
+          else
+            summary
           end
-
-          @name ? details : summary
         end
 
         private

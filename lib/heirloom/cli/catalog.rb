@@ -52,9 +52,9 @@ EOS
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :details, "Include details."
+          opt :details, "Include details in catalog list."
           opt :json, "Display output as raw JSON."
-          opt :name, "Filter by name of Heirloom.", :type => :string
+          opt :name, "Name of Heirloom to show full details.", :type => :string
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
                                                                           :default => 'us-west-1'
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 

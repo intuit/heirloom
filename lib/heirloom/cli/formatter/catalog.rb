@@ -4,17 +4,27 @@ module Heirloom
       class Catalog
         def format(args)
           @catalog = args[:catalog]
-          @details = args[:details]
           @name    = args[:name]
+          @details = @name ? true : args[:details]
 
-          filter if @name
+          if @name
+            unless name_exists?
+              return "Heirloom #{@name} not found in catalog."
+            end
+
+            filter_by_name
+          end
 
           @details ? details : summary
         end
 
         private
 
-        def filter
+        def name_exists?
+          @catalog.include? @name
+        end
+
+        def filter_by_name
           @catalog.select! {|k| @name == k }
         end
 

@@ -33,20 +33,16 @@ describe Heirloom do
   end
 
   context "filtered" do
-    context "with details" do
-      it "should return the formated list" do
-        format = "test1\n  Regions       : us-west-1, us-east-1\n  Bucket Prefix : bp1"
-        @formatter.format(:catalog => @catalog,
-                          :details => true,
-                          :name    => 'test1').should == format
-      end
+    it "should return the name with details" do
+      format = "test1\n  Regions       : us-west-1, us-east-1\n  Bucket Prefix : bp1"
+      @formatter.format(:catalog => @catalog,
+                        :name    => 'test1').should == format
     end
-    context "without details" do
-      it "should return the formated list" do
-        @formatter.format(:catalog => @catalog,
-                          :details => nil,
-                          :name    => 'test1').should == 'test1'
-      end
+
+    it "should return not found if name does not exist in catalog" do
+      format = "Heirloom not_here not found in catalog."
+      @formatter.format(:catalog => @catalog,
+                        :name    => 'not_here').should == format
     end
   end
 

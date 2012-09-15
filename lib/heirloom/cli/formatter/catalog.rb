@@ -29,7 +29,7 @@ module Heirloom
         end
 
         def summary
-          @catalog.keys.join("\n")
+          @catalog.keys.join "\n"
         end
 
         def details

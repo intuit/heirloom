@@ -9,11 +9,7 @@ module Heirloom
 
           filter if @name
 
-          if @details
-            details
-          else
-            summary
-          end
+          @details ? details : summary
         end
 
         private
@@ -27,11 +23,12 @@ module Heirloom
         end
 
         def details
-          @catalog.each_pair.map do |k,v|
-            data = k + "\n"
-            data << "  Regions       : " + @catalog[k]["regions"].join(", ") + "\n"
-            data << "  Bucket Prefix : " + @catalog[k]["bucket_prefix"].first
+          data = @catalog.each_pair.map do |k,v|
+            d = k + "\n"
+            d << "  Regions       : " + @catalog[k]["regions"].join(", ") + "\n"
+            d << "  Bucket Prefix : " + @catalog[k]["bucket_prefix"].first
           end
+          data.join "\n"
         end
       end
     end

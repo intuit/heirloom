@@ -7,10 +7,7 @@ module Heirloom
           @name    = args[:name]
 
           if @name
-            unless name_exists?
-              return "Heirloom #{@name} not found in catalog."
-            end
-
+            return "Heirloom #{@name} not found in catalog." unless name_exists?
             filter_by_name
             details
           else

@@ -6,13 +6,12 @@ module Heirloom
           @catalog = args[:catalog]
           @name    = args[:name]
 
-          if @name
-            return "Heirloom #{@name} not found in catalog." unless name_exists?
-            filter_by_name
-            details
-          else
-            summary
-          end
+          return summary unless @name
+
+          return "Heirloom #{@name} not found in catalog." unless name_exists?
+
+          filter_by_name
+          details
         end
 
         private

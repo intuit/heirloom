@@ -6,6 +6,11 @@
 * Included JSON option to show
 * Hide heirloom internal attribts in show
 * Added all option to display all attributes via show
+* Add human readable format as default for list
+* Included JSON option in list
+* Add human readable format as default for catalog
+* Included JSON option in catalog
+* Add name filter option to catalog
 
 ## v0.7.5:
 

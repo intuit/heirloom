@@ -21,10 +21,12 @@ module Heirloom
       end
       
       def all
-        if @opts[:details]
+        if @opts[:json]
           jj catalog_with_heirloom_prefix_removed
         else
-          jj catalog_with_heirloom_prefix_removed.keys
+          formatter = Heirloom::CLI::Formatter::Catalog.new 
+          puts formatter.format :catalog => catalog_with_heirloom_prefix_removed,
+                                :name    => @opts[:name]
         end
       end
 
@@ -49,7 +51,8 @@ EOS
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :details, "Include details."
+          opt :json, "Dump full catalog as raw JSON."
+          opt :name, "Name of Heirloom to show full details.", :type => :string
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
                                                                           :default => 'us-west-1'
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 

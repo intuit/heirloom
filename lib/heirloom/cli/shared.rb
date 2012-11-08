@@ -118,7 +118,7 @@ module Heirloom
                               :config => config
 
         unless archive.domain_exists?
-          logger.error "'#{name}' does not exist in '#{config.metadata_region}' catalog."
+          logger.error "'#{name}' metadata domain does not exist in '#{config.metadata_region}'."
           exit 1
         end
       end
@@ -166,19 +166,6 @@ module Heirloom
 
         unless catalog.entry_exists_in_catalog? entry
           logger.error "Entry for #{entry} does not exist in #{region} catalog."
-          exit 1
-        end
-      end
-
-      def ensure_entry_does_not_exist_in_catalog(args)
-        config  = args[:config]
-        catalog = args[:catalog]
-        entry   = args[:entry]
-        logger  = config.logger
-        region  = config.metadata_region
-
-        if catalog.entry_exists_in_catalog? entry
-          logger.error "Entry for #{entry} exists in #{region} catalog."
           exit 1
         end
       end

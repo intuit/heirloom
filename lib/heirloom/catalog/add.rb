@@ -12,12 +12,14 @@ module Heirloom
         regions       = args[:regions]
         bucket_prefix = args[:bucket_prefix]
 
-        @logger.info "Adding #{@name} to catalog."
+        unless verify.entry_exists_in_catalog? @name
+          @logger.info "Adding #{@name} to catalog."
 
-        sdb.put_attributes 'heirloom', 
-                           "heirloom_#{@name}", 
-                           { "regions" => regions, 
-                             "bucket_prefix" => bucket_prefix }
+          sdb.put_attributes 'heirloom', 
+                             "heirloom_#{@name}", 
+                             "regions"       => regions, 
+                             "bucket_prefix" => bucket_prefix
+        end
 
       end
 
@@ -25,6 +27,10 @@ module Heirloom
 
       def sdb
         @sdb ||= AWS::SimpleDB.new :config => @config
+      end
+
+      def verify
+        @verify ||= Catalog::Verify.new :config => @config
       end
 
     end

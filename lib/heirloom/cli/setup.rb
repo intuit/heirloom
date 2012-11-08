@@ -32,10 +32,6 @@ module Heirloom
 
         @catalog.create_catalog_domain
 
-        ensure_entry_does_not_exist_in_catalog :config  => @config,
-                                               :catalog => @catalog,
-                                               :entry   => @opts[:name]
-
         @catalog.add_to_catalog :regions       => @opts[:region],
                                 :bucket_prefix => @opts[:bucket_prefix]
 

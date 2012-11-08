@@ -1,3 +1,7 @@
+## HEAD:
+
+* Moving verification on entry exists into catalog class
+
 ## v0.8.0:
 
 * Change base to bucket prefix through out code base

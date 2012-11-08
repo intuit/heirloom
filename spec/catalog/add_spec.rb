@@ -31,7 +31,6 @@ describe Heirloom::Catalog::Add do
   end
 
   it "should not add the entry to the catalog if it's already there" do
-    @sdb_mock = mock 'sdb'
     @verify_stub.stub :entry_exists_in_catalog? => true
     Heirloom::AWS::SimpleDB.should_receive(:new).never
     @add.add_to_catalog :regions       => @regions,

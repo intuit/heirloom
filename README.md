@@ -10,7 +10,7 @@ Heirloom creates archives from directories. Their archives are versioned and hos
 Installation
 ------------
 
-First things first, install heirloom:
+Install the gem
 
 ```
 gem install heirloom
@@ -23,8 +23,6 @@ aws:
   access_key: UPDATE_ME
   secret_key: UPDATE_ME
 ```
-
-* **access_key / secret_key**: AWS account credentials where you would like the archives stored.
 
 Proxy Support
 -------------

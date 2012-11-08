@@ -258,13 +258,6 @@ describe Heirloom do
                        should raise_error SystemExit
     end
 
-    it "should exit if the entry exists in catalog" do
-      @catalog_mock.should_receive(:entry_exists_in_catalog?).
-                    with('entry').
-                    and_return true
-      lambda { @object.ensure_entry_does_not_exist_in_catalog @options }.
-                       should raise_error SystemExit
-    end
   end
 
   context "testing latest id" do

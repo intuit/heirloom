@@ -17,8 +17,8 @@ module Heirloom
 
           sdb.put_attributes 'heirloom', 
                              "heirloom_#{@name}", 
-                             { "regions" => regions, 
-                               "bucket_prefix" => bucket_prefix }
+                             "regions"       => regions, 
+                             "bucket_prefix" => bucket_prefix
         end
 
       end

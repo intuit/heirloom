@@ -29,6 +29,9 @@ module Heirloom
                              :config  => @config
         ensure_metadata_in_upload_region :config  => @config, 
                                          :regions => @opts[:region]
+        ensure_buckets_available :config        => @config,
+                                 :bucket_prefix => @opts[:bucket_prefix],
+                                 :regions       => @opts[:regions]
 
         @catalog.create_catalog_domain
 

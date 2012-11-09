@@ -170,6 +170,25 @@ module Heirloom
         end
       end
 
+      def ensure_buckets_available(args)
+        config        = args[:config]
+        regions       = args[:regions]
+        bucket_prefix = args[:bucket_prefix]
+        logger  = config.logger
+
+        checker = Heirloom::Checker.new :config => config
+
+        available = checker.bucket_name_available? :bucket_prefix => bucket_prefix,
+                                                   :regions       => regions,
+                                                   :config        => config
+        if available
+          true
+        else
+          logger.error "Bucket prefix #{bucket_prefix} not available across regions #{regions.join}."
+          exit 1
+        end
+      end
+
       def latest_id(args)
         archive = Archive.new :name   => args[:name],
                               :config => args[:config]

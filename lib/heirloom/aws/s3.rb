@@ -22,6 +22,16 @@ module Heirloom
         @s3.directories.get bucket
       end
 
+      def bucket_name_available_in_region?(bucket)
+        get_bucket bucket
+      rescue Excon::Errors::MovedPermanently
+        false
+      rescue Excon::Errors::Forbidden
+        false
+      rescue Excon::Errors::NotFound
+        true
+      end
+
       def delete_bucket(bucket)
         @s3.delete_bucket bucket
       end

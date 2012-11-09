@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Heirloom do
   before do
     @config_mock = mock 'config'
-    @config_mock.should_receive(:access_key).and_return 'the-key'
-    @config_mock.should_receive(:secret_key).and_return 'the-secret'
+    @config_mock.stub :access_key => 'the-key',
+                      :secret_key => 'the-secret'
     @fog_mock = mock 'fog'
     Fog::Storage.should_receive(:new).and_return @fog_mock
     @s3 = Heirloom::AWS::S3.new :config => @config_mock,
@@ -25,6 +25,41 @@ describe Heirloom do
               and_return directories_mock
     directories_mock.should_receive(:get).with 'bucket'
     @s3.get_bucket 'bucket'
+  end
+
+  context "testing bucket availability" do
+    before do
+      @dir_mock = mock 'dir'
+      @fog_mock.stub :directories => @dir_mock
+    end
+
+    it "should return false if the bucket is forbidden" do
+      @dir_mock.should_receive(:get).
+                with('bucket').
+                and_raise Excon::Errors::Forbidden.new('msg')
+      @s3.bucket_name_available_in_region?('bucket').should be_false
+    end
+
+    it "should return false if redirected to bucket in different region" do
+      @dir_mock.should_receive(:get).
+                with('bucket').
+                and_raise Excon::Errors::MovedPermanently.new('msg')
+      @s3.bucket_name_available_in_region?('bucket').should be_false
+    end
+
+    it "should return true if the bucket is owned by this account" do
+      @dir_mock.should_receive(:get).
+                with('bucket').
+                and_return @dir_mock
+      @s3.bucket_name_available_in_region?('bucket').should be_true
+    end
+
+    it "should return true if the bucket is available" do
+      @dir_mock.should_receive(:get).
+                with('bucket').
+                and_raise Excon::Errors::NotFound.new('msg')
+      @s3.bucket_name_available_in_region?('bucket').should be_true
+    end
   end
 
   it "should delete a bucket from s3" do

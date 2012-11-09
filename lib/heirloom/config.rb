@@ -3,8 +3,8 @@ module Heirloom
 
     attr_accessor :access_key, :secret_key, :metadata_region, :logger
 
-    def initialize(args = {:opts => Hash.new})
-      @opts       = args[:opts]
+    def initialize(args={})
+      @opts       = args[:opts] ||= Hash.new
       @config     = load_config_file
       self.logger = args[:logger] ||= HeirloomLogger.new
       load_config

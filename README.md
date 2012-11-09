@@ -43,4 +43,4 @@ Currently I support AWS S3 for object storage and AWS SimpleDB for metadata mana
 Documentation
 -------------
 
-For more information, please view the [Heirloom Wiki](https://github.com/live-community/heirloom/wiki).
+For more information, please view the [Heirloom Wiki](https://github.com/intuit/heirloom/wiki).

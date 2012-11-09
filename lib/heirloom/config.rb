@@ -3,26 +3,32 @@ module Heirloom
 
     attr_accessor :access_key, :secret_key, :metadata_region, :logger
 
-    def initialize(args = {})
-      @config = args.fetch :config, load_config_file
+    def initialize(args = {:opts => Hash.new})
+      @opts       = args[:opts]
+      @config     = load_config_file
       self.logger = args[:logger] ||= HeirloomLogger.new
       load_config
     end
 
     def load_config
-      aws = @config['aws']
-      self.access_key = aws['access_key']
-      self.secret_key = aws['secret_key']
-      self.metadata_region = aws['metadata_region']
+      self.access_key      = @opts.fetch :aws_access_key, 
+                                         @config['access_key']
+      self.secret_key      = @opts.fetch :aws_secret_key, 
+                                         @config['secret_key']
+      self.metadata_region = @opts.fetch :metadata_region, 
+                                         @config['metadata_region']
     end
+
+    private
 
     def load_config_file
       config_file = "#{ENV['HOME']}/.heirloom.yml"
 
       if File.exists? config_file
-        YAML::load File.open(config_file)
+        data = YAML::load File.open(config_file)
+        data['aws']
       else
-        { 'aws' => Hash.new }
+        { }
       end
     end
 

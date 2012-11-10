@@ -31,7 +31,7 @@ module Heirloom
                                          :regions => @opts[:region]
         ensure_buckets_available :config        => @config,
                                  :bucket_prefix => @opts[:bucket_prefix],
-                                 :regions       => @opts[:regions]
+                                 :regions       => @opts[:region]
 
         @catalog.create_catalog_domain
 

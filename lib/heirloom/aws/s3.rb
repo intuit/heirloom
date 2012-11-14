@@ -7,6 +7,7 @@ module Heirloom
       def initialize(args)
         @config = args[:config]
         @region = args[:region]
+        @logger = @config.logger
 
         @s3 = Fog::Storage.new :provider              => 'AWS',
                                :aws_access_key_id     => @config.access_key,
@@ -23,12 +24,26 @@ module Heirloom
       end
 
       def bucket_name_available_in_region?(bucket)
-        get_bucket bucket
-      rescue Excon::Errors::MovedPermanently
-        false
-      rescue Excon::Errors::Forbidden
-        false
-      rescue Excon::Errors::NotFound
+
+        @logger.info "Checking for #{bucket} availability in #{@region}."
+
+        begin
+          bucket_object = get_bucket bucket
+        rescue Excon::Errors::Forbidden
+          @logger.warn "#{bucket} owned by another account."
+          return false
+        end
+
+        if bucket_object.nil?
+          @logger.debug "#{bucket} available."
+          return true
+        end
+
+        if bucket_object.location != @region
+          @logger.warn "#{bucket} already exists in another region."
+          return false
+        end
+
         true
       end
 

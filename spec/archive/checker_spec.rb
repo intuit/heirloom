@@ -4,7 +4,9 @@ describe Heirloom do
 
   before do
     @config_mock = double 'config'
-    @logger_stub = stub 'logger', :debug => true, :info => true
+    @logger_stub = stub 'logger', :debug => true, 
+                                  :info  => true,
+                                  :warn  => true
     @config_mock.stub :logger => @logger_stub
     @checker = Heirloom::Checker.new :config => @config_mock
     @regions = ['us-west-1', 'us-west-2']

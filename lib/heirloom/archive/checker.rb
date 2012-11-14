@@ -18,7 +18,7 @@ module Heirloom
         bucket = "#{bucket_prefix}-#{region}"
 
         unless s3.bucket_name_available_in_region? bucket
-          @logger.debug "Bucket '#{bucket}' unavailable in '#{region}'."
+          @logger.warn "#{bucket} unavailable in #{region}."
           result = false
         end
       end

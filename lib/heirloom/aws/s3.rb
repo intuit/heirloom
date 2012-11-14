@@ -35,7 +35,7 @@ module Heirloom
         end
 
         if bucket_object.nil?
-          @logger.debug "#{bucket} available."
+          @logger.info "#{bucket} available."
           return true
         end
 

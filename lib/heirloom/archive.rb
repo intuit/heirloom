@@ -10,6 +10,7 @@ require 'heirloom/archive/writer.rb'
 require 'heirloom/archive/authorizer.rb'
 require 'heirloom/archive/destroyer.rb'
 require 'heirloom/archive/verifier.rb'
+require 'heirloom/archive/checker.rb'
 
 module Heirloom
 

@@ -7,6 +7,7 @@ module Heirloom
       def initialize(args)
         @config = args[:config]
         @region = args[:region]
+        @logger = @config.logger
 
         @s3 = Fog::Storage.new :provider              => 'AWS',
                                :aws_access_key_id     => @config.access_key,
@@ -22,8 +23,46 @@ module Heirloom
         @s3.directories.get bucket
       end
 
+      def bucket_exists?(bucket)
+        get_bucket(bucket) != nil
+      rescue Excon::Errors::Forbidden
+        false
+      end
+
+      def bucket_exists_in_another_region?(bucket)
+        if bucket_exists? bucket
+          get_bucket(bucket).location != @region
+        else
+          false
+        end
+      rescue Excon::Errors::Forbidden
+        false
+      end
+
+      def bucket_owned_by_another_account?(bucket)
+        get_bucket bucket
+        false
+      rescue Excon::Errors::Forbidden
+        @logger.warn "#{bucket} owned by another account."
+        true
+      end
+
+      def bucket_name_available?(bucket)
+        @logger.info "Checking for #{bucket} availability in #{@region}."
+
+        if bucket_owned_by_another_account?(bucket) ||
+           bucket_exists_in_another_region?(bucket)
+           false
+        else
+          true
+        end
+      end
+
       def delete_bucket(bucket)
         @s3.delete_bucket bucket
+      rescue Excon::Errors::NotFound
+        @logger.info "#{bucket} already destroyed."
+        true
       end
 
       def get_object(bucket_name, object_name)

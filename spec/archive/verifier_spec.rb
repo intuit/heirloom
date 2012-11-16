@@ -22,6 +22,7 @@ describe Heirloom do
                              :region => 'us-east-1').
                         and_return @s3_mock
     end
+
     it "should return false if a bucket does not exist in a region" do
       @s3_mock.should_receive(:get_bucket).with('bucket123-us-west-1').
                and_return nil

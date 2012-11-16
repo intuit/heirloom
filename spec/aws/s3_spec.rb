@@ -73,6 +73,13 @@ describe Heirloom do
     @s3.delete_bucket 'bucket'
   end
 
+  it "should return true if Excon::Errors::NotFound raised when deleting bucket" do
+    @fog_mock.should_receive(:delete_bucket).
+              with('bucket').
+              and_raise Excon::Errors::NotFound.new 'Bucket does not exist.'
+    @s3.delete_bucket 'bucket'
+  end
+
   it "should get an object from s3" do
     body_mock = mock 'body'
     @fog_mock.should_receive(:get_object).

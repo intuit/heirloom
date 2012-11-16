@@ -49,6 +49,9 @@ module Heirloom
 
       def delete_bucket(bucket)
         @s3.delete_bucket bucket
+      rescue Excon::Errors::NotFound
+        @logger.info "#{bucket} already destroyed."
+        true
       end
 
       def get_object(bucket_name, object_name)

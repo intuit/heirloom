@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe Heirloom do
   before do
+    @directories_mock = mock 'directories'
+    @bucket_mock = mock 'bucket'
     @logger_stub = stub 'logger', :debug => true, 
                                   :info  => true,
                                   :warn  => true
@@ -10,11 +12,79 @@ describe Heirloom do
                       :secret_key => 'the-secret',
                       :logger     => @logger_stub
     @fog_mock = mock 'fog'
+    @fog_mock.stub :directories => @directories_mock
     Fog::Storage.should_receive(:new).and_return @fog_mock
     @s3 = Heirloom::AWS::S3.new :config => @config_mock,
                                 :region => 'us-west-1'
+  end
 
+  context "bucket_exists?" do
+    it "should return true if the bucket exists" do
+      @directories_mock.should_receive(:get).
+                        with('bucket').and_return @bucket_mock
+      @s3.bucket_exists?('bucket').should be_true
+    end
 
+    it "should return false if the bucket does not exist" do
+      @directories_mock.should_receive(:get).
+                        with('bucket').and_return nil
+      @s3.bucket_exists?('bucket').should be_false
+    end
+
+    it "should return false if bucket owned by another account" do
+      @directories_mock.should_receive(:get).
+                        with('bucket').
+                        and_raise Excon::Errors::Forbidden.new('msg')
+      @s3.bucket_exists?('bucket').should be_false
+    end
+  end
+
+  context "bucket_exists_in_another_region?" do
+    it "should return true if the bucket exists in another region" do
+      @bucket_mock.stub :location => 'us-east-1'
+      @directories_mock.should_receive(:get).
+                        with('bucket').at_least(:once).
+                        and_return @bucket_mock
+      @s3.bucket_exists_in_another_region?('bucket').should be_true
+    end
+
+    it "should return false if the bucket exists in the curren region" do
+      @bucket_mock.stub :location => 'us-west-1'
+      @directories_mock.should_receive(:get).
+                        with('bucket').at_least(:once).
+                        and_return @bucket_mock
+      @s3.bucket_exists_in_another_region?('bucket').should be_false
+    end
+
+    it "should return false if bucket owned by another account" do
+      @directories_mock.should_receive(:get).
+                        with('bucket').
+                        and_raise Excon::Errors::Forbidden.new('msg')
+      @s3.bucket_exists_in_another_region?('bucket').should be_false
+    end
+  end
+
+  context "bucket_owned_by_another_account?" do
+    it "should return false if bucket owned by this account" do
+      @directories_mock.should_receive(:get).
+                        with('bucket').
+                        and_return @bucket_mock
+      @s3.bucket_owned_by_another_account?('bucket').should be_false
+    end
+
+    it "should return false if bucket does not exist" do
+      @directories_mock.should_receive(:get).
+                        with('bucket').
+                        and_return nil
+      @s3.bucket_owned_by_another_account?('bucket').should be_false
+    end
+
+    it "should return true if bucket is not owned by another account" do
+      @directories_mock.should_receive(:get).
+                        with('bucket').
+                        and_raise Excon::Errors::Forbidden.new('msg')
+      @s3.bucket_owned_by_another_account?('bucket').should be_true
+    end
   end
 
   it "should delete an object from s3" do
@@ -24,10 +94,7 @@ describe Heirloom do
   end
 
   it "should get a bucket from s3" do
-    directories_mock = mock 'directories'
-    @fog_mock.should_receive(:directories).
-              and_return directories_mock
-    directories_mock.should_receive(:get).with 'bucket'
+    @directories_mock.should_receive(:get).with 'bucket'
     @s3.get_bucket 'bucket'
   end
 
@@ -42,29 +109,30 @@ describe Heirloom do
       @dir_mock.should_receive(:get).
                 with('bucket').
                 and_raise Excon::Errors::Forbidden.new('msg')
-      @s3.bucket_name_available_in_region?('bucket').should be_false
+      @s3.bucket_name_available?('bucket').should be_false
     end
 
     it "should return false if bucket in different region" do
       @dir_mock.should_receive(:get).
-                with('bucket').and_return @bucket_mock
+                with('bucket').at_least(:once).
+                and_return @bucket_mock
       @bucket_mock.stub :location => 'us-east-1'
-      @s3.bucket_name_available_in_region?('bucket').should be_false
+      @s3.bucket_name_available?('bucket').should be_false
     end
 
     it "should return true if the bucket is in this account / region" do
       @dir_mock.should_receive(:get).
-                with('bucket').
+                with('bucket').at_least(:once).
                 and_return @bucket_mock
       @bucket_mock.stub :location => 'us-west-1'
-      @s3.bucket_name_available_in_region?('bucket').should be_true
+      @s3.bucket_name_available?('bucket').should be_true
     end
 
     it "should return true if the bucket is not found" do
       @dir_mock.should_receive(:get).
-                with('bucket').
+                with('bucket').at_least(:once).
                 and_return nil
-      @s3.bucket_name_available_in_region?('bucket').should be_true
+      @s3.bucket_name_available?('bucket').should be_true
     end
   end
 

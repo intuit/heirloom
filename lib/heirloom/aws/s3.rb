@@ -23,28 +23,39 @@ module Heirloom
         @s3.directories.get bucket
       end
 
-      def bucket_name_available_in_region?(bucket)
+      def bucket_exists?(bucket)
+        get_bucket(bucket) != nil
+      rescue Excon::Errors::Forbidden
+        false
+      end
 
+      def bucket_exists_in_another_region?(bucket)
+        if bucket_exists? bucket
+          get_bucket(bucket).location != @region
+        else
+          false
+        end
+      rescue Excon::Errors::Forbidden
+        false
+      end
+
+      def bucket_owned_by_another_account?(bucket)
+        get_bucket bucket
+        false
+      rescue Excon::Errors::Forbidden
+        @logger.warn "#{bucket} owned by another account."
+        true
+      end
+
+      def bucket_name_available?(bucket)
         @logger.info "Checking for #{bucket} availability in #{@region}."
 
-        begin
-          bucket_object = get_bucket bucket
-        rescue Excon::Errors::Forbidden
-          @logger.warn "#{bucket} owned by another account."
-          return false
+        if bucket_owned_by_another_account?(bucket) ||
+           bucket_exists_in_another_region?(bucket)
+           false
+        else
+          true
         end
-
-        if bucket_object.nil?
-          @logger.info "#{bucket} available."
-          return true
-        end
-
-        if bucket_object.location != @region
-          @logger.warn "#{bucket} already exists in another region."
-          return false
-        end
-
-        true
       end
 
       def delete_bucket(bucket)

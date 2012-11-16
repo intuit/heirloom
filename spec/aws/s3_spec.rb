@@ -99,29 +99,24 @@ describe Heirloom do
   end
 
   context "testing bucket availability" do
-    before do
-      @dir_mock = mock 'dir'
-      @bucket_mock = mock 'bucket'
-      @fog_mock.stub :directories => @dir_mock
-    end
 
     it "should return false if the bucket is forbidden" do
-      @dir_mock.should_receive(:get).
-                with('bucket').
-                and_raise Excon::Errors::Forbidden.new('msg')
+      @directories_mock.should_receive(:get).
+                  with('bucket').
+                  and_raise Excon::Errors::Forbidden.new('msg')
       @s3.bucket_name_available?('bucket').should be_false
     end
 
     it "should return false if bucket in different region" do
-      @dir_mock.should_receive(:get).
-                with('bucket').at_least(:once).
-                and_return @bucket_mock
+      @directories_mock.should_receive(:get).
+                  with('bucket').at_least(:once).
+                  and_return @bucket_mock
       @bucket_mock.stub :location => 'us-east-1'
       @s3.bucket_name_available?('bucket').should be_false
     end
 
     it "should return true if the bucket is in this account / region" do
-      @dir_mock.should_receive(:get).
+      @directories_mock.should_receive(:get).
                 with('bucket').at_least(:once).
                 and_return @bucket_mock
       @bucket_mock.stub :location => 'us-west-1'
@@ -129,11 +124,12 @@ describe Heirloom do
     end
 
     it "should return true if the bucket is not found" do
-      @dir_mock.should_receive(:get).
-                with('bucket').at_least(:once).
-                and_return nil
+      @directories_mock.should_receive(:get).
+                        with('bucket').at_least(:once).
+                        and_return nil
       @s3.bucket_name_available?('bucket').should be_true
     end
+
   end
 
   it "should delete a bucket from s3" do

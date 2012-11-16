@@ -1,4 +1,4 @@
-## HEAD:
+## 0.8.2:
 
 * Updated docs based on feedback from mint.
 * Added check for other account owning a given bucket.

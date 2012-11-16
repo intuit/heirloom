@@ -22,10 +22,10 @@ describe Heirloom do
                       with(:config => @config_mock,
                            :region => 'us-west-2').
                       and_return s3_mock
-    s3_mock.should_receive(:bucket_name_available_in_region?).
+    s3_mock.should_receive(:bucket_name_available?).
             with('bp-us-west-1').
             and_return true
-    s3_mock.should_receive(:bucket_name_available_in_region?).
+    s3_mock.should_receive(:bucket_name_available?).
             with('bp-us-west-2').
             and_return true
     @checker.bucket_name_available?(:bucket_prefix => 'bp',
@@ -43,10 +43,10 @@ describe Heirloom do
                       with(:config => @config_mock,
                            :region => 'us-west-2').
                       and_return s3_mock
-    s3_mock.should_receive(:bucket_name_available_in_region?).
+    s3_mock.should_receive(:bucket_name_available?).
             with('bp-us-west-1').
             and_return false
-    s3_mock.should_receive(:bucket_name_available_in_region?).
+    s3_mock.should_receive(:bucket_name_available?).
             with('bp-us-west-2').
             and_return true
     @checker.bucket_name_available?(:bucket_prefix => 'bp',

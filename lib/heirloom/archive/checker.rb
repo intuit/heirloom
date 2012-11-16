@@ -17,7 +17,7 @@ module Heirloom
                          :region => region
         bucket = "#{bucket_prefix}-#{region}"
 
-        unless s3.bucket_name_available_in_region? bucket
+        unless s3.bucket_name_available? bucket
           @logger.warn "#{bucket} unavailable in #{region}."
           result = false
         end

@@ -318,4 +318,39 @@ describe Heirloom do
     end
 
   end
+
+  context "ensure buckets are available or owned by account" do
+    before do
+      @logger_stub  = stub 'logger', :error => true
+      @config_stub  = stub 'config', :logger => @logger_stub
+      @checker_mock = mock 'checker'
+      @args = { :config        => @config_stub,
+                :bucket_prefix => 'intu-lc',
+                :regions       => ['us-west-1', 'us-west-2'] }
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+      Heirloom::Checker.should_receive(:new).
+                        with(:config => @config_stub).
+                        and_return @checker_mock
+    end
+
+    it "should return true if buckets available in all regions" do
+      @checker_mock.should_receive(:bucket_name_available?).
+                    with(:bucket_prefix => 'intu-lc', 
+                         :regions       => ['us-west-1', 'us-west-2'],
+                         :config        => @config_stub).
+                    and_return true
+      @object.ensure_buckets_available(@args).should be_true
+    end
+
+    it "should return raise and error if any bucket un-available in all regions" do
+      @checker_mock.should_receive(:bucket_name_available?).
+                    with(:bucket_prefix => 'intu-lc', 
+                         :regions       => ['us-west-1', 'us-west-2'],
+                         :config        => @config_stub).
+                    and_return false
+      lambda { @object.ensure_buckets_available(@args) }.
+               should raise_error SystemExit
+    end
+  end
 end

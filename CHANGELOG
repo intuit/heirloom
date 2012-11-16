@@ -1,3 +1,10 @@
+## HEAD:
+
+* Updated docs based on feedback from mint.
+* Added check for other account owning a given bucket.
+* Fixed config to read CLI variables and override file config.
+* When delete bucket raise not found, return true (eventually consistent)
+
 ## v0.8.1:
 
 * Moving verification on entry exists into catalog class

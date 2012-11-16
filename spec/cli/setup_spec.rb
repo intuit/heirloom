@@ -19,6 +19,7 @@ describe Heirloom do
                       :metadata_region => 'us-west-1'
     @archive_mock = mock 'archive'
     @catalog_mock = mock 'catalog'
+    @checker_mock = mock 'checker'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_stub
@@ -34,10 +35,18 @@ describe Heirloom do
                       with(:name => 'archive_name',
                            :config => @config_mock).
                       and_return @catalog_mock
+    Heirloom::Checker.should_receive(:new).
+                      with(:config => @config_mock).
+                      and_return @checker_mock
     @setup = Heirloom::CLI::Setup.new
   end
 
   it "should setup s3 buckets, catalog and simpledb domain" do
+    @checker_mock.should_receive(:bucket_name_available?).
+                  with(:bucket_prefix => "bp", 
+                       :regions       => @regions, 
+                       :config        => @config_mock).
+                  and_return true
     @catalog_mock.should_receive(:create_catalog_domain)
     @catalog_mock.stub :entry_exists_in_catalog? => false
     @catalog_mock.should_receive(:add_to_catalog).

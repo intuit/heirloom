@@ -29,6 +29,10 @@ module Heirloom
         false
       end
 
+      def bucket_empty?(bucket)
+        get_bucket_object_versions(bucket)["Versions"].count == 0
+      end
+
       def bucket_exists_in_another_region?(bucket)
         if bucket_exists? bucket
           get_bucket(bucket).location != @region
@@ -59,7 +63,12 @@ module Heirloom
       end
 
       def delete_bucket(bucket)
-        @s3.delete_bucket bucket
+        if bucket_empty? bucket
+          @s3.delete_bucket bucket
+        else
+          @logger.warn "#{bucket} not empty, not destroying."
+          false
+        end
       rescue Excon::Errors::NotFound
         @logger.info "#{bucket} already destroyed."
         true
@@ -71,6 +80,10 @@ module Heirloom
 
       def get_bucket_acl(bucket)
         @s3.get_bucket_acl(bucket).body
+      end
+
+      def get_bucket_object_versions(bucket)
+        @s3.get_bucket_object_versions(bucket).body
       end
 
       def put_object_acl(bucket, key, grants)

@@ -132,16 +132,62 @@ describe Heirloom do
 
   end
 
-  it "should delete a bucket from s3" do
-    @fog_mock.should_receive(:delete_bucket).with 'bucket'
-    @s3.delete_bucket 'bucket'
+  it "should return object versions for a given bucket" do
+    body_mock = mock 'body'
+    @fog_mock.should_receive(:get_bucket_object_versions).
+              with('bucket').
+              and_return body_mock
+    body_mock.stub :body => 'body_hash'
+    @s3.get_bucket_object_versions('bucket').should == 'body_hash'
   end
 
-  it "should return true if Excon::Errors::NotFound raised when deleting bucket" do
-    @fog_mock.should_receive(:delete_bucket).
-              with('bucket').
-              and_raise Excon::Errors::NotFound.new 'Bucket does not exist.'
-    @s3.delete_bucket 'bucket'
+  context "testing bucket deletion" do
+    it "should return true if the bucket has 0 objects" do
+      body_mock = mock 'body'
+      @fog_mock.should_receive(:get_bucket_object_versions).
+                with('bucket').
+                and_return body_mock
+      body_mock.stub :body => { "Versions" => [ ] }
+      @s3.bucket_empty?('bucket').should be_true
+    end
+
+    it "should return false if the bucket has any objects" do
+      body_mock = mock 'body'
+      @fog_mock.should_receive(:get_bucket_object_versions).
+                with('bucket').
+                and_return body_mock
+      body_mock.stub :body => { "Versions" => [ 'obj1', 'obj2' ] }
+      @s3.bucket_empty?('bucket').should be_false
+    end
+
+    it "should delete a bucket from s3 if empty" do
+      body_mock = mock 'body'
+      @fog_mock.should_receive(:get_bucket_object_versions).
+                with('bucket').
+                and_return body_mock
+      body_mock.stub :body => { "Versions" => [ ] }
+      @fog_mock.should_receive(:delete_bucket).
+                with('bucket').and_return true
+      @s3.delete_bucket('bucket').should be_true
+    end
+
+    it "should return false and not attempt to delete a non empty s3 bucket" do
+      body_mock = mock 'body'
+      @fog_mock.should_receive(:get_bucket_object_versions).
+                with('bucket').
+                and_return body_mock
+      body_mock.stub :body => { "Versions" => [ 'obj1', 'obj2' ] }
+      @fog_mock.should_receive(:delete_bucket).never
+      @s3.delete_bucket('bucket').should be_false
+    end
+
+    it "should return true if Excon::Errors::NotFound raised when deleting bucket" do
+      @fog_mock.should_receive(:get_bucket_object_versions).
+                with('bucket').
+                and_raise Excon::Errors::NotFound.new 'Bucket does not exist.'
+      @fog_mock.should_receive(:delete_bucket).never
+      @s3.delete_bucket('bucket').should be_true
+    end
   end
 
   it "should get an object from s3" do
@@ -149,8 +195,8 @@ describe Heirloom do
     @fog_mock.should_receive(:get_object).
               with('bucket', 'object').
               and_return body_mock
-    body_mock.should_receive(:body)
-    @s3.get_object('bucket', 'object')
+    body_mock.stub :body => 'body_hash'
+    @s3.get_object('bucket', 'object').should == 'body_hash'
   end
 
   it "should get a buckets acl from s3" do

@@ -29,6 +29,10 @@ module Heirloom
         false
       end
 
+      def bucket_empty?(bucket)
+        get_bucket_object_versions(bucket)["Versions"].count == 0
+      end
+
       def bucket_exists_in_another_region?(bucket)
         if bucket_exists? bucket
           get_bucket(bucket).location != @region
@@ -71,6 +75,10 @@ module Heirloom
 
       def get_bucket_acl(bucket)
         @s3.get_bucket_acl(bucket).body
+      end
+
+      def get_bucket_object_versions(bucket)
+        @s3.get_bucket_object_versions(bucket).body
       end
 
       def put_object_acl(bucket, key, grants)

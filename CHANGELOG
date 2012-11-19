@@ -1,3 +1,7 @@
+## 0.8.3:
+
+* Teardown does not try to delete buckets if they are not empty.
+
 ## 0.8.2:
 
 * Updated docs based on feedback from mint.

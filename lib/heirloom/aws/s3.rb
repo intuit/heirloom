@@ -63,7 +63,12 @@ module Heirloom
       end
 
       def delete_bucket(bucket)
-        @s3.delete_bucket bucket
+        if bucket_empty? bucket
+          @s3.delete_bucket bucket
+        else
+          @logger.warn "#{bucket} not empty, not destroying."
+          false
+        end
       rescue Excon::Errors::NotFound
         @logger.info "#{bucket} already destroyed."
         true

@@ -159,16 +159,33 @@ describe Heirloom do
     @s3.bucket_empty?('bucket').should be_false
   end
 
-  it "should delete a bucket from s3" do
-    @fog_mock.should_receive(:delete_bucket).with 'bucket'
-    @s3.delete_bucket 'bucket'
+  it "should delete a bucket from s3 if empty" do
+    body_mock = mock 'body'
+    @fog_mock.should_receive(:get_bucket_object_versions).
+              with('bucket').
+              and_return body_mock
+    body_mock.stub :body => { "Versions" => [ ] }
+    @fog_mock.should_receive(:delete_bucket).
+              with('bucket').and_return true
+    @s3.delete_bucket('bucket').should be_true
+  end
+
+  it "should return false and not attempt to delete a non empty s3 bucket" do
+    body_mock = mock 'body'
+    @fog_mock.should_receive(:get_bucket_object_versions).
+              with('bucket').
+              and_return body_mock
+    body_mock.stub :body => { "Versions" => [ 'obj1', 'obj2' ] }
+    @fog_mock.should_receive(:delete_bucket).never
+    @s3.delete_bucket('bucket').should be_false
   end
 
   it "should return true if Excon::Errors::NotFound raised when deleting bucket" do
-    @fog_mock.should_receive(:delete_bucket).
+    @fog_mock.should_receive(:get_bucket_object_versions).
               with('bucket').
               and_raise Excon::Errors::NotFound.new 'Bucket does not exist.'
-    @s3.delete_bucket 'bucket'
+    @fog_mock.should_receive(:delete_bucket).never
+    @s3.delete_bucket('bucket').should be_true
   end
 
   it "should get an object from s3" do

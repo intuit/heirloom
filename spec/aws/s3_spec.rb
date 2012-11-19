@@ -150,7 +150,7 @@ describe Heirloom do
     @s3.bucket_empty?('bucket').should be_true
   end
 
-  it "should return true if the bucket has any objects" do
+  it "should return false if the bucket has any objects" do
     body_mock = mock 'body'
     @fog_mock.should_receive(:get_bucket_object_versions).
               with('bucket').

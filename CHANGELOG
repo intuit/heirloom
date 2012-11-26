@@ -1,3 +1,9 @@
+## HEAD:
+
+* Updated tempfile logic to fix GC issues.
+* Removed git support.
+* Only setup existing buckets if forced.
+
 ## 0.8.3:
 
 * Teardown does not try to delete buckets if they are not empty.

@@ -353,4 +353,49 @@ describe Heirloom do
                should raise_error SystemExit
     end
   end
+
+  context "testing ensure entry does not exist in catalog unless forced" do
+    before do
+      @catalog_mock = mock 'catalog'
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should exit if the entry exists in catalog and not forced" do
+      options = { :config  => @config_stub, 
+                  :catalog => @catalog_mock,
+                  :entry   => 'entry', 
+                  :force   => false }
+      @catalog_mock.should_receive(:entry_exists_in_catalog?).
+                    with('entry').
+                    and_return true
+      lambda { @object.ensure_entry_does_not_exist_in_catalog options }.
+                       should raise_error SystemExit
+    end
+
+    it "should not exit if the entry exists in catalog and forced" do
+      options = { :config  => @config_stub, 
+                  :catalog => @catalog_mock,
+                  :entry   => 'entry', 
+                  :force   => true }
+      @catalog_mock.should_receive(:entry_exists_in_catalog?).
+                    with('entry').
+                    and_return true
+      @object.ensure_entry_does_not_exist_in_catalog options
+    end
+
+    it "should not exit if the does not exists in catalog" do
+      options = { :config  => @config_stub, 
+                  :catalog => @catalog_mock,
+                  :entry   => 'entry', 
+                  :force   => false }
+      @catalog_mock.should_receive(:entry_exists_in_catalog?).
+                    with('entry').
+                    and_return false
+      @object.ensure_entry_does_not_exist_in_catalog options
+    end
+  end
 end

@@ -157,6 +157,9 @@ module Heirloom
         end
       end
 
+      def ensure_entry_does_not_exist_in_catalog_unless_forced(args)
+      end
+
       def ensure_entry_exists_in_catalog(args)
         config  = args[:config]
         catalog = args[:catalog]
@@ -185,6 +188,20 @@ module Heirloom
           true
         else
           logger.error "Bucket prefix #{bucket_prefix} not available across regions #{regions.join}."
+          exit 1
+        end
+      end
+
+      def ensure_entry_does_not_exist_in_catalog(args)
+        config  = args[:config]
+        catalog = args[:catalog]
+        entry   = args[:entry]
+        force   = args[:force]
+        logger  = config.logger
+        region  = config.metadata_region
+
+        if catalog.entry_exists_in_catalog?(entry) && !force
+          logger.error "Entry #{entry} exists in catalog. Use --force to overwrite."
           exit 1
         end
       end

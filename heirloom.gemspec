@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", '~> 2.11.0'
   s.add_development_dependency "rake"
 
-  s.add_runtime_dependency 'fog', '~> 1.5.0'
+  s.add_runtime_dependency 'fog', '~> 1.6.0'
   s.add_runtime_dependency 'grit', '~> 2.5.0' 
   s.add_runtime_dependency 'trollop', '= 2.0'
   s.add_runtime_dependency 'xml-simple', '~> 1.1.2'

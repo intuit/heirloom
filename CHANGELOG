@@ -5,6 +5,7 @@
 * Only setup existing buckets if forced.
 * Ensure valid bucket name and heirloom name on setup.
 * Return friendly error when bucket or heirloom does not exist.
+* Updating to fog 1.6.0
 
 ## 0.8.3:
 

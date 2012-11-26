@@ -3,6 +3,7 @@
 * Updated tempfile logic to fix GC issues.
 * Removed git support.
 * Only setup existing buckets if forced.
+* Ensure valid bucket name and heirloom name on setup.
 
 ## 0.8.3:
 

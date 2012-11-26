@@ -206,6 +206,27 @@ module Heirloom
         end
       end
 
+      def ensure_valid_name(args)
+        config = args[:config]
+        name   = args[:name]
+        logger = config.logger
+        unless name =~ /^[0-9a-z\-\_]+$/
+          logger.error "Invalid name '#{name}'. Can only contain letters, numbers, dashes and underscores."
+          exit 1
+        end
+      end
+
+      def ensure_valid_bucket_prefix(args)
+        config        = args[:config]
+        bucket_prefix = args[:bucket_prefix]
+        logger        = config.logger
+
+        unless bucket_prefix =~ /^[0-9a-z\-]+$/
+          logger.error "Invalid bucket prefix '#{bucket_prefix}'. Can only contain letters, numbers and dashes."
+          exit 1
+        end
+      end
+
       def latest_id(args)
         archive = Archive.new :name   => args[:name],
                               :config => args[:config]

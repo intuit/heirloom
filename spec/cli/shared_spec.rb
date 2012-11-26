@@ -398,4 +398,58 @@ describe Heirloom do
       @object.ensure_entry_does_not_exist_in_catalog options
     end
   end
+
+  context "testing ensure valid name" do
+    before do
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should not exit if name is valid" do
+      @object.ensure_valid_name :config => @config_stub,
+                                :name   => 'test-123'
+    end
+
+    it "should exit if name contains a space" do
+      lambda { @object.ensure_valid_name :config => @config_stub,
+                                         :name   => 'test 123' }.
+                       should raise_error SystemExit
+    end
+
+    it "should exit if name contains invalid characters" do
+      lambda { @object.ensure_valid_name :config => @config_stub,
+                                         :name   => 'test,123' }.
+                       should raise_error SystemExit
+    end
+  end
+
+  context "testing ensure valid bucket prefix" do
+    before do
+      @logger_stub = stub 'logger', :error => true
+      @config_stub = stub 'config', :logger          => @logger_stub,
+                                    :metadata_region => 'us-west-1'
+      @object = Object.new
+      @object.extend Heirloom::CLI::Shared
+    end
+
+    it "should not exit if bucket_prefix is valid" do
+      @object.ensure_valid_bucket_prefix :config        => @config_stub,
+                                         :bucket_prefix => 'test-123'
+    end
+
+    it "should exit if bucket_prefix contains a space" do
+      lambda { @object.ensure_valid_bucket_prefix :config        => @config_stub,
+                                                  :bucket_prefix => 'test 123' }.
+                       should raise_error SystemExit
+    end
+
+    it "should exit if bucket_prefix contains invalid characters" do
+      lambda { @object.ensure_valid_bucket_prefix :config        => @config_stub,
+                                                  :bucket_prefix => 'test,123' }.
+                       should raise_error SystemExit
+    end
+  end
 end

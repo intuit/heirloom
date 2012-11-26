@@ -413,6 +413,12 @@ describe Heirloom do
                                 :name   => 'test-123_test'
     end
 
+    it "should exit if name contains a upper case" do
+      lambda { @object.ensure_valid_name :config => @config_stub,
+                                         :name   => 'TEST-123' }.
+                       should raise_error SystemExit
+    end
+
     it "should exit if name contains a space" do
       lambda { @object.ensure_valid_name :config => @config_stub,
                                          :name   => 'test 123' }.
@@ -438,6 +444,12 @@ describe Heirloom do
     it "should not exit if bucket_prefix is valid" do
       @object.ensure_valid_bucket_prefix :config        => @config_stub,
                                          :bucket_prefix => 'test-123'
+    end
+
+    it "should exit if bucket_prefix contains uppercase" do
+      lambda { @object.ensure_valid_bucket_prefix :config        => @config_stub,
+                                                  :bucket_prefix => 'TEST-123' }.
+                       should raise_error SystemExit
     end
 
     it "should exit if bucket_prefix contains a space" do

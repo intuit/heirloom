@@ -1,5 +1,6 @@
 require 'openssl'
 require 'tempfile'
+require 'fileutils'
 
 module Heirloom
   module Cipher
@@ -11,10 +12,10 @@ module Heirloom
       end
 
       def encrypt_file(args)
-        file   = args[:file]
-        secret = args[:secret]
-        output = Tempfile.new('archive.tar.gz.enc')
-        iv     = @aes.random_iv
+        @file           = args[:file]
+        @encrypted_file = Tempfile.new('archive.tar.gz.enc')
+        secret          = args[:secret]
+        iv              = @aes.random_iv
 
         @aes.encrypt
         @aes.iv = iv
@@ -22,9 +23,9 @@ module Heirloom
 
         # Need to refactor to be less complex
         # Additionally tests to do fully cover logic
-        ::File.open(output,'w') do |enc|
+        ::File.open(@encrypted_file,'w') do |enc|
           enc << iv
-          ::File.open(file) do |f|
+          ::File.open(@file) do |f|
             loop do
               r = f.read(4096)
               break unless r
@@ -33,7 +34,15 @@ module Heirloom
           end
           enc << @aes.final
         end
-        output.path
+
+        replace_file
+      end
+
+      private
+
+      def replace_file
+        FileUtils.mv @encrypted_file.path, @file
+        @encrypted_file.close!
       end
 
     end

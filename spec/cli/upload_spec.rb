@@ -6,7 +6,6 @@ describe Heirloom do
   before do
     @regions = ['us-west-1', 'us-west-2']
     options = { :level           => 'info',
-                :git             => false,
                 :exclude         => ['exclude1', 'exclude2'],
                 :directory       => '/buildme',
                 :public          => false,
@@ -27,6 +26,10 @@ describe Heirloom do
                        :bucket_prefix          => 'bp',
                        :catalog_domain_exists? => true
     Trollop.stub(:options).and_return options
+    tempfile_stub = stub 'tempfile', :path   => '/tmp/file.tar.gz',
+                                     :close! => true
+    Tempfile.stub :new => tempfile_stub
+    
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_stub
     Heirloom::CLI::Upload.any_instance.should_receive(:load_config).
@@ -68,14 +71,14 @@ describe Heirloom do
                   with(:bucket_prefix => 'bp',
                        :directory     => '/buildme',
                        :exclude       => ["exclude1", "exclude2"],
-                       :git           => false,
-                       :secret        => 'secret12').
-                  and_return '/tmp/build123.tar.gz'
+                       :secret        => 'secret12',
+                       :file          => '/tmp/file.tar.gz').
+                  and_return true
     @archive_mock.should_receive(:upload).
                   with(:bucket_prefix   => 'bp',
                        :regions         => @regions,
                        :public_readable => false,
-                       :file            => '/tmp/build123.tar.gz')
+                       :file            => '/tmp/file.tar.gz')
     @upload.upload
   end
 

@@ -10,8 +10,8 @@ module Heirloom
     def initialize(args)
       @config = args[:config]
       @name   = args[:name]
-      @domain = "heirloom_#{@name}"
       @id     = args[:id]
+      @domain = "heirloom_#{@name}"
       @logger = @config.logger
     end
 
@@ -19,48 +19,22 @@ module Heirloom
       @source        = args[:directory] ||= '.'
       @secret        = args[:secret]
       @bucket_prefix = args[:bucket_prefix]
+      @file          = args[:file]
+      @exclude       = args[:exclude]
 
       directory = Directory.new :path    => @source,
-                                :exclude => args[:exclude],
+                                :file    => @file,
+                                :exclude => @exclude,
                                 :config  => @config
 
       unless directory.build_artifact_from_directory :secret => @secret
         return false
       end
 
-      @local_build = directory.local_build
-
       create_artifact_record
-
-      add_git_commit if args[:git]
-
-      @local_build
     end
 
     private
-
-    def add_git_commit
-      git = GitDirectory.new(:path => @source)
-      commit = git.commit @id
-      if commit
-        add_git_commit_to_artifact_record commit
-      else
-        @logger.warn "Could not load Git sha '#{@id}' in '#{@source}'."
-      end
-    end
-
-    def add_git_commit_to_artifact_record(commit)
-      attributes = { 'sha'             => @id,
-                     'abbreviated_sha' => commit.id_abbrev,
-                     'message'         => commit.message.gsub("\n"," ")[0..1023],
-                     'author'          => commit.author.name }
-
-      attributes.each_pair do |k, v|
-        @logger.info "Git #{k}: #{v}"
-      end
-
-      sdb.put_attributes @domain, @id, attributes
-    end
 
     def create_artifact_record
       attributes = { 'built_by'      => "#{user}@#{hostname}",

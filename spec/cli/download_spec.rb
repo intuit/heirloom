@@ -58,6 +58,7 @@ describe Heirloom do
     before do
       @catalog_stub = stub 'catalog', :regions       => ['us-east-1', 'us-west-1'],
                                       :bucket_prefix => 'bp'
+      @archive_mock.stub :exists? => true
       options = { :name            => 'archive_name',
                   :level           => 'info',
                   :output          => '/tmp/test123',

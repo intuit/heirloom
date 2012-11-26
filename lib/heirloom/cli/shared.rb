@@ -157,9 +157,6 @@ module Heirloom
         end
       end
 
-      def ensure_entry_does_not_exist_in_catalog_unless_forced(args)
-      end
-
       def ensure_entry_exists_in_catalog(args)
         config  = args[:config]
         catalog = args[:catalog]

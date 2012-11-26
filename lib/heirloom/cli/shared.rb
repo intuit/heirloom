@@ -208,7 +208,7 @@ module Heirloom
         name   = args[:name]
         logger = config.logger
         unless name =~ /^[0-9a-z\-\_]+$/
-          logger.error "Invalid name '#{name}'. Can only contain letters, numbers, dashes and underscores."
+          logger.error "Invalid name '#{name}'. Can only contain lower case letters, numbers, dashes and underscores."
           exit 1
         end
       end
@@ -219,7 +219,7 @@ module Heirloom
         logger        = config.logger
 
         unless bucket_prefix =~ /^[0-9a-z\-]+$/
-          logger.error "Invalid bucket prefix '#{bucket_prefix}'. Can only contain letters, numbers and dashes."
+          logger.error "Invalid bucket prefix '#{bucket_prefix}'. Can only contain lower case letters, numbers and dashes."
           exit 1
         end
       end

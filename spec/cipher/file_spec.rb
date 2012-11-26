@@ -6,7 +6,8 @@ describe Heirloom do
     @logger_mock.stub :info => true
     @config_mock = mock 'config'
     @config_mock.stub :logger => @logger_mock
-    @tempfile_stub = stub 'tempfile', :path => '/path_to_encrypted_archive'
+    @tempfile_stub = stub 'tempfile', :path   => '/path_to_encrypted_archive', 
+                                      :close! => true
     Tempfile.stub :new => @tempfile_stub
     @aes_mock = mock 'aes'
     @aes_mock.stub :random_iv => 'firstsixteenchar'
@@ -20,9 +21,10 @@ describe Heirloom do
     @aes_mock.should_receive(:iv=).with 'firstsixteenchar'
     @aes_mock.should_receive(:key=).with Digest::SHA256.hexdigest 'mysecret'
     ::File.should_receive(:open)
+    FileUtils.should_receive(:mv).
+              with('/path_to_encrypted_archive', '/file')
     @file.encrypt_file(:file   => '/file',
-                       :secret => 'mysecret').
-          should == '/path_to_encrypted_archive'
+                       :secret => 'mysecret').should be_true
   end
 
 end

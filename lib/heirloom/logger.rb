@@ -1,3 +1,5 @@
+require 'logger'
+
 module Heirloom
   class HeirloomLogger
     

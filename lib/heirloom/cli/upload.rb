@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module Heirloom
   module CLI
     class Upload
@@ -45,13 +47,14 @@ module Heirloom
 
         @archive.destroy if @archive.exists?
                           
-        build = @archive.build :bucket_prefix => @bucket_prefix,
-                               :directory     => @opts[:directory],
-                               :exclude       => @opts[:exclude],
-                               :git           => @opts[:git],
-                               :secret        => secret
+        @file = Tempfile.new('archive.tar.gz')
 
-        unless build
+        unless @archive.build :bucket_prefix => @bucket_prefix,
+                              :directory     => @opts[:directory],
+                              :exclude       => @opts[:exclude],
+                              :file          => @file.path,
+                              :secret        => secret
+
           @logger.error "Build failed."
           exit 1
         end
@@ -59,7 +62,9 @@ module Heirloom
         @archive.upload :bucket_prefix   => @bucket_prefix,
                         :regions         => @regions,
                         :public_readable => @opts[:public],
-                        :file            => build
+                        :file            => @file.path
+
+        @file.close!
       end
 
       private
@@ -76,12 +81,11 @@ Usage:
 heirloom upload -n NAME -i ID -d DIRECTORY_TO_UPLOAD
 
 EOS
-          opt :directory, "Source directory of build.", :type  => :string
+          opt :directory, "Source directory to upload.", :type  => :string
           opt :exclude, "File(s) or directorie(s) to exclude. \
 Can be specified multiple times.", :type  => :string, :multi => true
-          opt :git, "Read git commit information from directory and set as Heirloom attributes."
           opt :help, "Display Help"
-          opt :id, "ID for Heirloom (when -g specified, assumed to be GIT sha).", :type => :string
+          opt :id, "ID for Heirloom.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   

@@ -124,8 +124,8 @@ module Heirloom
       end
 
       def ensure_archive_exists(args)
-        config  = args[:config]
         archive = args[:archive]
+        config  = args[:config]
         logger  = config.logger
 
         unless archive.exists?
@@ -185,6 +185,41 @@ module Heirloom
           true
         else
           logger.error "Bucket prefix #{bucket_prefix} not available across regions #{regions.join}."
+          exit 1
+        end
+      end
+
+      def ensure_entry_does_not_exist_in_catalog(args)
+        config  = args[:config]
+        catalog = args[:catalog]
+        entry   = args[:entry]
+        force   = args[:force]
+        logger  = config.logger
+        region  = config.metadata_region
+
+        if catalog.entry_exists_in_catalog?(entry) && !force
+          logger.error "Entry #{entry} exists in catalog. Use --force to overwrite."
+          exit 1
+        end
+      end
+
+      def ensure_valid_name(args)
+        config = args[:config]
+        name   = args[:name]
+        logger = config.logger
+        unless name =~ /^[0-9a-z\-\_]+$/
+          logger.error "Invalid name '#{name}'. Can only contain lower case letters, numbers, dashes and underscores."
+          exit 1
+        end
+      end
+
+      def ensure_valid_bucket_prefix(args)
+        config        = args[:config]
+        bucket_prefix = args[:bucket_prefix]
+        logger        = config.logger
+
+        unless bucket_prefix =~ /^[0-9a-z\-]+$/
+          logger.error "Invalid bucket prefix '#{bucket_prefix}'. Can only contain lower case letters, numbers and dashes."
           exit 1
         end
       end

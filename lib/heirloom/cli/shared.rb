@@ -124,8 +124,8 @@ module Heirloom
       end
 
       def ensure_archive_exists(args)
-        config  = args[:config]
         archive = args[:archive]
+        config  = args[:config]
         logger  = config.logger
 
         unless archive.exists?

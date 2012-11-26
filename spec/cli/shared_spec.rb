@@ -410,7 +410,7 @@ describe Heirloom do
 
     it "should not exit if name is valid" do
       @object.ensure_valid_name :config => @config_stub,
-                                :name   => 'test-123'
+                                :name   => 'test-123_test'
     end
 
     it "should exit if name contains a space" do

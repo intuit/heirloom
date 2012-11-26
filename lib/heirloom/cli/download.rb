@@ -35,8 +35,6 @@ module Heirloom
         ensure_directory :path => @opts[:output], :config => @config
         secret = read_secret :opts   => @opts,
                              :config => @config
-        ensure_valid_secret :secret => secret, 
-                            :config => @config
         archive = @archive.download :output        => @opts[:output],
                                     :extract       => @opts[:extract],
                                     :region        => @region,

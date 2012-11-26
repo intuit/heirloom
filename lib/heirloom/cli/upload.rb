@@ -81,7 +81,7 @@ Usage:
 heirloom upload -n NAME -i ID -d DIRECTORY_TO_UPLOAD
 
 EOS
-          opt :directory, "Source directory of build.", :type  => :string
+          opt :directory, "Source directory to upload.", :type  => :string
           opt :exclude, "File(s) or directorie(s) to exclude. \
 Can be specified multiple times.", :type  => :string, :multi => true
           opt :help, "Display Help"

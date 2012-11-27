@@ -22,8 +22,13 @@ module Heirloom
                                       :config => @config)
 
         @archive = Archive.new :name   => @opts[:name],
-                               :id     => id,
-                               :config => @config
+                               :config => @config,
+                               :id     => id
+
+        unless @opts[:bucket_prefix]
+          ensure_archive_exists :archive => @archive,
+                                :config  => @config
+        end
 
         # Lookup region & bucket_prefix from simpledb unless specified
         # To Do, valid validation message that simpledb exists
@@ -35,8 +40,6 @@ module Heirloom
         ensure_directory :path => @opts[:output], :config => @config
         secret = read_secret :opts   => @opts,
                              :config => @config
-        ensure_valid_secret :secret => secret, 
-                            :config => @config
         archive = @archive.download :output        => @opts[:output],
                                     :extract       => @opts[:extract],
                                     :region        => @region,
@@ -74,7 +77,7 @@ EOS
           opt :name, "Name of Heirloom.", :type => :string
           opt :output, "Path to output downloaded Heirloom. Must be existing directory.", :type => :string
           opt :region, "Region to download Heirloom.", :type    => :string,
-                                                      :default => 'us-west-1'
+                                                       :default => 'us-west-1'
           opt :secret, "Secret for ecrypted Heirloom.", :type => :string
           opt :secret_file, "Read secret from file.", :type  => :string,
                                                       :short => :none

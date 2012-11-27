@@ -29,9 +29,18 @@ module Heirloom
                              :config  => @config
         ensure_metadata_in_upload_region :config  => @config, 
                                          :regions => @opts[:region]
+        ensure_valid_name :config => @config,
+                          :name   => @opts[:name]
+        ensure_valid_bucket_prefix :config        => @config,
+                                   :bucket_prefix => @opts[:bucket_prefix]
+        ensure_entry_does_not_exist_in_catalog :config  => @config,
+                                               :catalog => @catalog,
+                                               :entry   => @opts[:name],
+                                               :force   => @opts[:force]
         ensure_buckets_available :config        => @config,
                                  :bucket_prefix => @opts[:bucket_prefix],
                                  :regions       => @opts[:region]
+
 
         @catalog.create_catalog_domain
 
@@ -59,6 +68,7 @@ EOS
           opt :bucket_prefix, "The bucket prefix will be combined with specified \
 regions to create the required buckets. For example: '-b test -r us-west-1 -r \
 us-east-1' will create bucket test-us-west-1 in us-west-1 and test-us-east-1 in us-east-1.", :type => :string
+          opt :force, "Overwrite existing catalog entries."
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'

@@ -16,49 +16,68 @@ describe Heirloom do
                                   :region => 'us-west-1').
                              and_return @s3_downloader_mock
     @cipher_mock = mock 'cipher'
-    Heirloom::Cipher::Data.should_receive(:new).
-                           with(:config => @config_mock).
-                           and_return @cipher_mock
   end
 
   context "no secret given" do
-    before do
-      @writer_mock = mock 'writer'
-      Heirloom::Writer.should_receive(:new).
-                       with(:config => @config_mock).
-                       and_return @writer_mock
-      @s3_downloader_mock.should_receive(:download_file).
-                          with(:bucket => 'bucket-us-west-1',
-                               :key    => 'tim/123.tar.gz').
-                          and_return 'plaintext'
-      @cipher_mock.should_receive(:decrypt_data).
-                   with(:secret => nil,
-                        :data   => 'plaintext').and_return 'plaintext'
+    context "when succesful" do
+      before do
+        @writer_mock = mock 'writer'
+        Heirloom::Writer.should_receive(:new).
+                         with(:config => @config_mock).
+                         and_return @writer_mock
+        @s3_downloader_mock.should_receive(:download_file).
+                            with(:bucket => 'bucket-us-west-1',
+                                 :key    => 'tim/123.tar.gz').
+                            and_return 'plaintext'
+        @cipher_mock.should_receive(:decrypt_data).
+                     with(:secret => nil,
+                          :data   => 'plaintext').and_return 'plaintext'
+        Heirloom::Cipher::Data.should_receive(:new).
+                               with(:config => @config_mock).
+                               and_return @cipher_mock
+      end
+
+      it "should download to the current path if output is not specified" do
+        @writer_mock.should_receive(:save_archive).
+                     with(:archive => 'plaintext',
+                          :file    => "123.tar.gz",
+                          :output  => './',
+                          :extract => false).and_return true
+        @downloader.download(:region        => 'us-west-1',
+                             :bucket_prefix => 'bucket',
+                             :extract       => false,
+                             :secret        => nil).should == './'
+      end
+
+      it "should download arhcive to specified output" do
+        @writer_mock.should_receive(:save_archive).
+                     with(:archive => 'plaintext',
+                          :file    => "123.tar.gz",
+                          :output  => '/tmp/dir',
+                          :extract => false).and_return true
+        @downloader.download(:output        => '/tmp/dir',
+                             :region        => 'us-west-1',
+                             :bucket_prefix => 'bucket',
+                             :extract       => false,
+                             :secret        => nil).should == '/tmp/dir'
+      end
     end
 
-    it "should download to the current path if output is not specified" do
-      @writer_mock.should_receive(:save_archive).
-                   with(:archive => 'plaintext',
-                        :file    => "123.tar.gz",
-                        :output  => './',
-                        :extract => false).and_return true
-      @downloader.download(:region        => 'us-west-1',
-                           :bucket_prefix => 'bucket',
-                           :extract       => false,
-                           :secret        => nil).should == './'
-    end
+    context "when unsuccesful" do
+      before do
+        @s3_downloader_mock.should_receive(:download_file).
+                            with(:bucket => 'bucket-us-west-1',
+                                 :key    => 'tim/123.tar.gz').
+                            and_return false
+      end
 
-    it "should download arhcive to specified output" do
-      @writer_mock.should_receive(:save_archive).
-                   with(:archive => 'plaintext',
-                        :file    => "123.tar.gz",
-                        :output  => '/tmp/dir',
-                        :extract => false).and_return true
-      @downloader.download(:output        => '/tmp/dir',
-                           :region        => 'us-west-1',
-                           :bucket_prefix => 'bucket',
-                           :extract       => false,
-                           :secret        => nil).should == '/tmp/dir'
+      it "should return false if the archive is not downloaded" do
+        @downloader.download(:output        => '/tmp/dir',
+                             :region        => 'us-west-1',
+                             :bucket_prefix => 'bucket',
+                             :extract       => false,
+                             :secret        => nil).should be_false
+      end
     end
   end
 
@@ -68,6 +87,9 @@ describe Heirloom do
                           with(:bucket => 'bucket-us-west-1',
                                :key    => 'tim/123.tar.gz').
                           and_return 'encrypted_data'
+      Heirloom::Cipher::Data.should_receive(:new).
+                             with(:config => @config_mock).
+                             and_return @cipher_mock
     end
 
     context "valid secret" do

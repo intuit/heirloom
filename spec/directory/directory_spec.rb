@@ -9,9 +9,8 @@ describe Heirloom::Directory do
       @config_mock.stub(:logger).and_return(@logger_stub)
       @directory = Heirloom::Directory.new :config  => @config_mock,
                                            :exclude => ['.', '..', 'dont_pack_me'],
-                                           :path    => '/dir'
-      @tempfile_stub = stub 'tempfile', :path => '/tmp/file.tar.gz'
-      Tempfile.stub :new => @tempfile_stub
+                                           :path    => '/dir',
+                                           :file    => '/tmp/file.tar.gz'
       output_mock  = double 'output mock'
       Dir.should_receive(:entries).with('/dir').
                                    exactly(2).times.
@@ -46,7 +45,7 @@ describe Heirloom::Directory do
           @cipher_mock.should_receive(:encrypt_file).
                        with(:file => '/tmp/file.tar.gz', 
                             :secret => 'supersecret').
-                       and_return '/tmp/encrypted_file.tar.gz'
+                       and_return true
           @directory.build_artifact_from_directory(:secret => 'supersecret').
                      should be_true
        end

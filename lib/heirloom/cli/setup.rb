@@ -25,24 +25,29 @@ module Heirloom
       def setup
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
+
         ensure_valid_regions :regions => @opts[:region],
                              :config  => @config
+
         ensure_metadata_in_upload_region :config  => @config, 
                                          :regions => @opts[:region]
+
         ensure_valid_name :config => @config,
                           :name   => @opts[:name]
+
         ensure_valid_bucket_prefix :config        => @config,
                                    :bucket_prefix => @opts[:bucket_prefix]
+
+        @catalog.create_catalog_domain
+
         ensure_entry_does_not_exist_in_catalog :config  => @config,
                                                :catalog => @catalog,
                                                :entry   => @opts[:name],
                                                :force   => @opts[:force]
+
         ensure_buckets_available :config        => @config,
                                  :bucket_prefix => @opts[:bucket_prefix],
                                  :regions       => @opts[:region]
-
-
-        @catalog.create_catalog_domain
 
         @catalog.add_to_catalog :regions       => @opts[:region],
                                 :bucket_prefix => @opts[:bucket_prefix]

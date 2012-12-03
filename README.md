@@ -22,23 +22,13 @@ Install the gem
 gem install heirloom --no-ri --no-rdoc
 ```
 
-To get started copy the sample below into ~/.heirloom.yml and update the specified fields.
+To get started, copy the sample below to ~/.heirloom.yml and update the specified fields.
 
 ```
 aws:
   access_key: UPDATE_ME
   secret_key: UPDATE_ME
   metadata_region: us-west-1
-```
-
-Proxy Support
--------------
-
-Heirloom supports accessing AWS API endpoint throught a proxy.  This can be set via the http_proxy and https_proxy variables.
-
-```
-export http_proxy=http://1.2.3.4:80
-export http_proxys=http://1.2.3.4:80
 ```
 
 Documentation

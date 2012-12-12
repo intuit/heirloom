@@ -12,8 +12,8 @@ module Heirloom
     def download(args)
       @region        = args[:region]
       @bucket_prefix = args[:bucket_prefix]
+      @secret        = args[:secret]
       extract        = args[:extract]
-      secret         = args[:secret]
       output         = args[:output] ||= './'
 
       @logger.info "Downloading s3://#{bucket}/#{key} from #{@region}."
@@ -28,7 +28,7 @@ module Heirloom
       return false unless raw_archive
 
       archive = cipher_data.decrypt_data :data   => raw_archive,
-                                         :secret => secret
+                                         :secret => @secret
 
       return false unless archive
 
@@ -44,8 +44,8 @@ module Heirloom
 
     private
 
-    def file 
-      "#{@id}.tar.gz"
+    def file
+      @secret ? "#{@id}.tar.gz.gpg" :"#{@id}.tar.gz"
     end
 
     def key

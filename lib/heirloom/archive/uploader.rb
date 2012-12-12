@@ -4,16 +4,19 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
-      @name = args[:name]
-      @id = args[:id]
+      @name   = args[:name]
+      @id     = args[:id]
       @logger = @config.logger
     end
 
     def upload(args)
-      heirloom_file = args[:file]
-      bucket_prefix = args[:bucket_prefix]
-      regions = args[:regions]
+      heirloom_file   = args[:file]
+      bucket_prefix   = args[:bucket_prefix]
+      regions         = args[:regions]
       public_readable = args[:public_readable]
+      secret          = args[:secret]
+
+      key_name = secret ? "#{@id}.tar.gz.gpg" : "#{@id}.tar.gz"
 
       regions.each do |region|
         bucket = "#{bucket_prefix}-#{region}"
@@ -26,7 +29,7 @@ module Heirloom
                                 :file            => heirloom_file,
                                 :id              => @id,
                                 :key_folder      => @name,
-                                :key_name        => "#{@id}.tar.gz",
+                                :key_name        => key_name,
                                 :name            => @name,
                                 :public_readable => public_readable
 

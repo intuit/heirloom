@@ -18,19 +18,33 @@ module Heirloom
         @encrypted_file = Tempfile.new('archive.tar.gz.enc')
 
         return false unless gpg_in_path?
-
-        scrubed_command = "gpg -c --cipher-algo AES256 --passpharse XXXXXXXX --output #{@encrypted_file.path} #{@file}"
-        @logger.info scrubed_command
-
-        command         = "gpg -c --cipher-algo AES256 --passpharse #{@secret} --output #{@encrypted_file.path} #{@file}"
-        output          = `#{command}`
-
-        return false unless $?.success?
+        return false unless encrypt
 
         replace_file
       end
 
       private
+
+      def encrypt
+        @logger.info "Encrypting with: '#{scrubed_command}'"
+        output = `#{command}`
+        @logger.debug "Encryption output: '#{output}'"
+        $?.success?
+        if $?.success?
+          true
+        else
+          @logger.error "Encryption failed with output: '#{output}'"
+          false
+        end
+      end
+
+      def scrubed_command 
+        "gpg  --batch --yes -c --cipher-algo AES256 --passphrase XXXXXXXX --output #{@encrypted_file.path} #{@file} 2>&1"
+      end
+
+      def command
+        "gpg --batch --yes -c --cipher-algo AES256 --passphrase #{@secret} --output #{@encrypted_file.path} #{@file} 2>&1"
+      end
 
       def gpg_in_path?
         unless which('gpg')

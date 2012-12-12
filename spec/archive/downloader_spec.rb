@@ -85,7 +85,7 @@ describe Heirloom do
     before do
       @s3_downloader_mock.should_receive(:download_file).
                           with(:bucket => 'bucket-us-west-1',
-                               :key    => 'tim/123.tar.gz').
+                               :key    => 'tim/123.tar.gz.gpg').
                           and_return 'encrypted_data'
       Heirloom::Cipher::Data.should_receive(:new).
                              with(:config => @config_mock).
@@ -106,7 +106,7 @@ describe Heirloom do
       it "should decrypt and save the downloaded file with secret" do
         @writer_mock.should_receive(:save_archive).
                      with(:archive => 'plaintext',
-                          :file    => "123.tar.gz",
+                          :file    => "123.tar.gz.gpg",
                           :output  => './',
                           :extract => false).and_return true
         @downloader.download :region        => 'us-west-1',
@@ -118,7 +118,7 @@ describe Heirloom do
       it "should decrypt and extract the downloaded file with secret" do
         @writer_mock.should_receive(:save_archive).
                      with(:archive => 'plaintext',
-                          :file    => "123.tar.gz",
+                          :file    => "123.tar.gz.gpg",
                           :output  => './',
                           :extract => true).and_return true
         @downloader.download :region      => 'us-west-1',
@@ -136,10 +136,10 @@ describe Heirloom do
       end
 
       it "should return false if the decrypt_data returns false" do
-        @downloader.download(:region      => 'us-west-1',
+        @downloader.download(:region        => 'us-west-1',
                              :bucket_prefix => 'bucket',
-                             :extract     => false,
-                             :secret      => 'badsecret').should be_false
+                             :extract       => false,
+                             :secret        => 'badsecret').should be_false
       end 
 
     end

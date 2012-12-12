@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Heirloom do
   before do
     @logger_mock = mock 'logger', :info => true
-    @logger_mock.stub :info => true
+    @logger_mock.stub :info  => true,
+                      :debug => true
     @config_mock = mock 'config'
     @config_mock.stub :logger => @logger_mock
     @tempfile_stub = stub 'tempfile', :path   => '/path_to_encrypted_archive', 
@@ -14,7 +15,7 @@ describe Heirloom do
 
   it "should encrypt the given file" do
     @file.should_receive(:which).with('gpg').and_return true
-    command = 'gpg -c --cipher-algo AES256 --passpharse mysecret --output /path_to_encrypted_archive /file'
+    command = 'gpg --batch --yes -c --cipher-algo AES256 --passphrase mysecret --output /path_to_encrypted_archive /file 2>&1'
     @file.should_receive(:`).with command
     $?.stub :success? => true
     FileUtils.should_receive(:mv).
@@ -32,7 +33,8 @@ describe Heirloom do
 
   it "should return false if gpg returns non zero code" do
     @file.should_receive(:which).with('gpg').and_return true
-    command = 'gpg -c --cipher-algo AES256 --passpharse mysecret --output /path_to_encrypted_archive /file'
+    @logger_mock.should_receive(:error)
+    command = 'gpg --batch --yes -c --cipher-algo AES256 --passphrase mysecret --output /path_to_encrypted_archive /file 2>&1'
     @file.should_receive(:`).with command
     $?.stub :success? => false
     @file.encrypt_file(:file   => '/file',

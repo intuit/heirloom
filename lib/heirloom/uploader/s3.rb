@@ -17,12 +17,13 @@ module Heirloom
         name            = args[:name]
         public_readable = args[:public_readable]
 
+        body      = File.open file
         s3_bucket = s3.get_bucket bucket
 
         @logger.info "Uploading s3://#{bucket}/#{key_folder}/#{key_name}"
 
         s3_bucket.files.create :key    => "#{key_folder}/#{key_name}",
-                               :body   => File.open(file),
+                               :body   => body,
                                :public => public_readable
         if public_readable
           @logger.warn "File is readable by the public internet." 
@@ -36,19 +37,27 @@ module Heirloom
         key_name   = args[:key_name]
         domain     = "heirloom_#{name}"
         key_folder = name
+        endpoint   = endpoints[@region]
 
-        s3_endpoint    = "s3://#{bucket}/#{key_folder}/#{key_name}"
-        http_endpoint  = "http://#{endpoints[@region]}/#{bucket}/#{key_folder}/#{key_name}"
-        https_endpoint = "https://#{endpoints[@region]}/#{bucket}/#{key_folder}/#{key_name}"
+        path           = "#{bucket}/#{key_folder}/#{key_name}"
+        s3_endpoint    = "s3://#{path}"
+        http_endpoint  = "http://#{endpoint}/#{path}"
+        https_endpoint = "https://#{endpoint}/#{path}"
 
-        sdb.put_attributes domain, id, { "#{@region}-s3-url" => s3_endpoint }
-        @logger.info "Adding attribute #{s3_endpoint}."
+        s3_url = "#{@region}-s3-url"
+        sdb.put_attributes domain, id, { s3_url => s3_endpoint }
+        @logger.info "Adding tag #{s3_url}."
+        @logger.debug "Adding tag #{s3_endpoint}."
 
-        sdb.put_attributes domain, id, { "#{@region}-http-url" => http_endpoint }
-        @logger.debug "Adding attribute #{http_endpoint}."
+        http_url = "#{@region}-http-url"
+        sdb.put_attributes domain, id, { http_url => http_endpoint }
+        @logger.debug "Adding tag #{http_url}."
+        @logger.debug "Adding tag #{http_endpoint}."
 
-        sdb.put_attributes domain, id, { "#{@region}-https-url" => https_endpoint }
-        @logger.debug "Adding attribute #{https_endpoint}."
+        https_url = "#{@region}-https-url"
+        sdb.put_attributes domain, id, { "#{https_url}" => https_endpoint }
+        @logger.debug "Adding tag #{https_url}."
+        @logger.debug "Adding tag #{https_endpoint}."
       end
 
       private

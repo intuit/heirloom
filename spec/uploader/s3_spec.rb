@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe Heirloom::Uploader::S3 do
   before do
-    @logger_stub = stub 'logger stub', :info => true,
-                                       :warn => true
+    @logger_stub = stub 'logger stub', :info  => true,
+                                       :warn  => true,
+                                       :debug => true
     @config_stub = stub 'config stub', :logger => @logger_stub
     @s3 = Heirloom::Uploader::S3.new :config => @config_stub,
                                      :logger => @logger_stub,
@@ -39,5 +40,23 @@ describe Heirloom::Uploader::S3 do
   end
 
   it "should add endpoint attributes for the file to simpledb" do
+    simpledb_mock = mock 'simpledb mock'
+    options = { :bucket          => 'bucket',
+                :id              => 'id',
+                :key_name        => 'key_name',
+                :name            => 'name' }
+    Heirloom::AWS::SimpleDB.should_receive(:new).
+                            with(:config => @config_stub).
+                            and_return simpledb_mock
+    simpledb_mock.should_receive(:put_attributes).
+                  with("heirloom_name", "id", 
+                       { "us-west-1-s3-url" => "s3://bucket/name/key_name" } )
+    simpledb_mock.should_receive(:put_attributes).
+                  with("heirloom_name", "id", 
+                       { "us-west-1-http-url" => "http://s3-us-west-1.amazonaws.com/bucket/name/key_name" } )
+    simpledb_mock.should_receive(:put_attributes).
+                  with("heirloom_name", "id", 
+                       { "us-west-1-https-url" => "https://s3-us-west-1.amazonaws.com/bucket/name/key_name" } )
+    @s3.add_endpoint_attributes options
   end
 end

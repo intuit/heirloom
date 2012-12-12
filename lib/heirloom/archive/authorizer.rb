@@ -17,6 +17,8 @@ module Heirloom
 
       @logger.info "Authorizing #{@accounts.join(', ')}."
 
+      key_name = reader.key_name
+
       regions.each do |region|
         bucket = reader.get_bucket :region => region
 
@@ -34,10 +36,6 @@ module Heirloom
     end
 
     private
-
-    def key_name 
-      reader.key_name
-    end
 
     def validate_format_of_accounts
       @accounts.each do |account|

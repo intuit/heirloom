@@ -16,7 +16,7 @@ describe Heirloom do
       reader = double
       s3_acl = double
       accounts = [ "test@a.com", "a@test.com", "test@test.co", "test@test.co.uk" ]
-      @authorizer.should_receive(:reader).exactly(4).times.
+      @authorizer.should_receive(:reader).exactly(3).times.
                   and_return(reader)
       reader.should_receive(:get_bucket).exactly(2).times.
                       and_return('the-bucket')

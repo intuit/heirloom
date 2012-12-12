@@ -46,22 +46,21 @@ module Heirloom
         https_endpoint = "https://#{endpoint}/#{path}"
 
         s3_url = "#{@region}-s3-url"
-        sdb.put_attributes domain, id, { s3_url => s3_endpoint }
-        @logger.info "Adding tag #{s3_url}."
-        @logger.debug "Adding tag #{s3_endpoint}."
-
         http_url = "#{@region}-http-url"
-        sdb.put_attributes domain, id, { http_url => http_endpoint }
-        @logger.debug "Adding tag #{http_url}."
-        @logger.debug "Adding tag #{http_endpoint}."
-
         https_url = "#{@region}-https-url"
-        sdb.put_attributes domain, id, { "#{https_url}" => https_endpoint }
-        @logger.debug "Adding tag #{https_url}."
-        @logger.debug "Adding tag #{https_endpoint}."
+
+        add_endpoint_attribute domain, id, s3_url, s3_endpoint
+        add_endpoint_attribute domain, id, http_url, http_endpoint
+        add_endpoint_attribute domain, id, https_url, https_endpoint
       end
 
       private
+
+      def add_endpoint_attribute(domain, id, key, value)
+        sdb.put_attributes domain, id, { key => value }
+        @logger.info "Adding tag #{key}."
+        @logger.debug "Adding tag #{value}."
+      end
 
       def endpoints
         {

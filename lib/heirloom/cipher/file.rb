@@ -39,7 +39,7 @@ module Heirloom
       end
 
       def scrubed_command 
-        "gpg  --batch --yes -c --cipher-algo AES256 --passphrase XXXXXXXX --output #{@encrypted_file.path} #{@file} 2>&1"
+        "gpg --batch --yes -c --cipher-algo AES256 --passphrase XXXXXXXX --output #{@encrypted_file.path} #{@file} 2>&1"
       end
 
       def command

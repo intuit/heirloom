@@ -16,29 +16,9 @@ describe Heirloom do
                               with(:CBC).and_return @aes_mock
     end
 
-    it "should decrypt the given data" do
-      @aes_mock.should_receive(:decrypt)
-      @aes_mock.should_receive(:key=).with Digest::SHA256.hexdigest 'mysecret'
-      @aes_mock.should_receive(:iv=).with 'firstsixteenchar'
-      @aes_mock.should_receive(:update).with('crypteddata').and_return 'cleartext'
-      @aes_mock.stub :final => 'final'
-      @data.decrypt_data(:data => 'firstsixteencharcrypteddata',
-                         :secret => 'mysecret').
-            should == 'cleartextfinal'
-    end
+    it "should decrypt the given data"
 
-    it "should rescue bad key error and return false" do
-      @logger_mock.should_receive(:error).
-                   with "Unable to decrypt Heirloom: 'OpenSSL::Cipher::CipherError'"
-      @aes_mock.should_receive(:decrypt)
-      @aes_mock.should_receive(:key=).with Digest::SHA256.hexdigest 'badsecret'
-      @aes_mock.should_receive(:iv=).with 'firstsixteenchar'
-      @aes_mock.should_receive(:update).with('crypteddata').and_return 'crap'
-      @aes_mock.should_receive(:final).and_raise OpenSSL::Cipher::CipherError
-      @data.decrypt_data(:data => 'firstsixteencharcrypteddata',
-                         :secret => 'badsecret').
-            should be_false
-    end
+    it "should rescue bad key error and return false"
 
   end
 

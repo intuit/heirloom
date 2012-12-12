@@ -58,7 +58,7 @@ module Heirloom
 
       def add_endpoint_attribute(domain, id, key, value)
         sdb.put_attributes domain, id, { key => value }
-        @logger.info "Adding tag #{key}."
+        @logger.debug "Adding tag #{key}."
         @logger.debug "Adding tag #{value}."
       end
 

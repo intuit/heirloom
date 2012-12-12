@@ -9,22 +9,34 @@ describe Heirloom do
     @tempfile_stub = stub 'tempfile', :path   => '/path_to_encrypted_archive', 
                                       :close! => true
     Tempfile.stub :new => @tempfile_stub
-    @aes_mock = mock 'aes'
-    @aes_mock.stub :random_iv => 'firstsixteenchar'
-    OpenSSL::Cipher::AES256.should_receive(:new).
-                            with(:CBC).and_return @aes_mock
     @file = Heirloom::Cipher::File.new :config => @config_mock
   end
 
   it "should encrypt the given file" do
-    @aes_mock.should_receive(:encrypt)
-    @aes_mock.should_receive(:iv=).with 'firstsixteenchar'
-    @aes_mock.should_receive(:key=).with Digest::SHA256.hexdigest 'mysecret'
-    ::File.should_receive(:open)
+    @file.should_receive(:which).with('gpg').and_return true
+    command = 'gpg -c --cipher-algo AES256 --passpharse mysecret --output /path_to_encrypted_archive /file'
+    @file.should_receive(:`).with command
+    $?.stub :success? => true
     FileUtils.should_receive(:mv).
               with('/path_to_encrypted_archive', '/file')
     @file.encrypt_file(:file   => '/file',
                        :secret => 'mysecret').should be_true
+  end
+
+  it "should return false if gpg is not in the path" do
+    @file.should_receive(:which).with('gpg').and_return false
+    @logger_mock.should_receive(:error)
+    @file.encrypt_file(:file   => '/file',
+                       :secret => 'mysecret').should be_false
+  end
+
+  it "should return false if gpg returns non zero code" do
+    @file.should_receive(:which).with('gpg').and_return true
+    command = 'gpg -c --cipher-algo AES256 --passpharse mysecret --output /path_to_encrypted_archive /file'
+    @file.should_receive(:`).with command
+    $?.stub :success? => false
+    @file.encrypt_file(:file   => '/file',
+                       :secret => 'mysecret').should be_false
   end
 
 end

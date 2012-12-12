@@ -2,6 +2,8 @@ module Heirloom
 
   class Directory
 
+    include Heirloom::Utils::File
+
     def initialize(args)
       @config  = args[:config]
       @exclude = args[:exclude]
@@ -13,9 +15,11 @@ module Heirloom
     def build_artifact_from_directory(args)
       @secret = args[:secret]
 
+      @files_to_pack = files_to_pack
+
       @logger.debug "Building Heirloom '#{@file}' from '#{@path}'."
       @logger.debug "Excluding #{@exclude.to_s}."
-      @logger.debug "Adding #{files_to_pack}."
+      @logger.debug "Adding #{@files_to_pack}."
 
       return build_archive unless @secret
 
@@ -25,7 +29,8 @@ module Heirloom
     private
 
     def build_archive
-      command = "cd #{@path} && tar czf #{@file} #{files_to_pack}"
+      return false unless tar_in_path?
+      command = "cd #{@path} && tar czf #{@file} #{@files_to_pack}"
       @logger.info "Archiving with: `#{command}`"
       output = `#{command}`
       @logger.debug "Exited with status: '#{$?.exitstatus}' ouput: '#{output}'"
@@ -37,6 +42,14 @@ module Heirloom
       @logger.info "Secret provided. Encrypting."
       cipher_file.encrypt_file :file   => @file,
                                :secret => @secret
+    end
+
+    def tar_in_path?
+      unless which('tar')
+        @logger.error "tar not found in path."
+        return false
+      end
+      true
     end
 
     def files_to_pack

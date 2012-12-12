@@ -1,3 +1,5 @@
+require "heirloom/utils"
+
 require "heirloom/acl"
 require "heirloom/archive"
 require "heirloom/aws"

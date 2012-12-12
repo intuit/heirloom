@@ -1,4 +1,3 @@
-require 'openssl'
 require 'tempfile'
 require 'fileutils'
 
@@ -6,39 +5,40 @@ module Heirloom
   module Cipher
     class File
 
+      include Heirloom::Utils::File
+
       def initialize(args)
         @config = args[:config]
-        @aes = OpenSSL::Cipher::AES256.new(:CBC)
+        @logger = @config.logger
       end
 
       def encrypt_file(args)
         @file           = args[:file]
+        @secret         = args[:secret]
         @encrypted_file = Tempfile.new('archive.tar.gz.enc')
-        secret          = args[:secret]
-        iv              = @aes.random_iv
 
-        @aes.encrypt
-        @aes.iv = iv
-        @aes.key = Digest::SHA256.hexdigest secret
+        return false unless gpg_in_path?
 
-        # Need to refactor to be less complex
-        # Additionally tests to do fully cover logic
-        ::File.open(@encrypted_file,'w') do |enc|
-          enc << iv
-          ::File.open(@file) do |f|
-            loop do
-              r = f.read(4096)
-              break unless r
-              enc << @aes.update(r)
-            end
-          end
-          enc << @aes.final
-        end
+        scrubed_command = "gpg -c --cipher-algo AES256 --passpharse XXXXXXXX --output #{@encrypted_file.path} #{@file}"
+        @logger.info scrubed_command
+
+        command         = "gpg -c --cipher-algo AES256 --passpharse #{@secret} --output #{@encrypted_file.path} #{@file}"
+        output          = `#{command}`
+
+        return false unless $?.success?
 
         replace_file
       end
 
       private
+
+      def gpg_in_path?
+        unless which('gpg')
+          @logger.error "gpg not found in path."
+          return false
+        end
+        true
+      end
 
       def replace_file
         FileUtils.mv @encrypted_file.path, @file

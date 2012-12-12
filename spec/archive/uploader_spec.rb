@@ -27,9 +27,10 @@ describe Heirloom do
                   :name            => 'tim',
                   :public_readable => true)
     @s3_mock.should_receive(:add_endpoint_attributes).
-             with(:bucket => 'prefix-us-west-1',
-                  :id     => '123',
-                  :name   => 'tim')
+             with(:bucket   => 'prefix-us-west-1',
+                  :id       => '123',
+                  :key_name => '123.tar.gz',
+                  :name     => 'tim')
     @uploader.upload :file            => '/tmp/file',
                      :bucket_prefix   => 'prefix',
                      :regions         => ['us-west-1'],
@@ -52,9 +53,10 @@ describe Heirloom do
                   :name            => 'tim',
                   :public_readable => true)
     @s3_mock.should_receive(:add_endpoint_attributes).
-             with(:bucket => 'prefix-us-west-1',
-                  :id     => '123',
-                  :name   => 'tim')
+             with(:bucket   => 'prefix-us-west-1',
+                  :id       => '123',
+                  :key_name => '123.tar.gz.gpg',
+                  :name     => 'tim')
     @uploader.upload :file            => '/tmp/file',
                      :bucket_prefix   => 'prefix',
                      :regions         => ['us-west-1'],

@@ -33,9 +33,10 @@ module Heirloom
                                 :name            => @name,
                                 :public_readable => public_readable
 
-        s3_uploader.add_endpoint_attributes :bucket     => bucket,
-                                            :id         => @id,
-                                            :name       => @name
+        s3_uploader.add_endpoint_attributes :bucket   => bucket,
+                                            :id       => @id,
+                                            :name     => @name,
+                                            :key_name => key_name
       end
       @logger.info "Upload complete."
     end

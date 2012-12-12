@@ -52,7 +52,7 @@ describe Heirloom do
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' => 
                               { 'us-west-1-s3-url' => 
-                                [ 's3://the-bucket/the-buck/the-key' ]  
+                                [ 's3://the-bucket/the-name/123.tar.gz' ]  
                               }
                             } )
       @reader.get_bucket(:region => 'us-west-1').should == 'the-bucket'
@@ -80,10 +80,24 @@ describe Heirloom do
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' => 
                               { 'us-west-1-s3-url' => 
-                                ['s3://the-url/the-bucket/the-key'] 
+                                ['s3://the-url/the-bucket/123.tar.gz'] 
                               }
                             } )
-      @reader.get_key(:region => 'us-west-1').should == 'the-bucket/the-key'
+      @reader.get_key(:region => 'us-west-1').should == 'the-bucket/123.tar.gz'
+    end
+
+    it "should return the encrypted key name" do
+      @sdb_mock.should_receive(:select).
+                with("select * from `heirloom_tim` where itemName() = '123'").
+                and_return( { '123' => { 'encrypted' => [ 'true' ] } } )
+      @reader.key_name.should == '123.tar.gz.gpg'
+    end
+
+    it "should return the unencrypted key name" do
+      @sdb_mock.should_receive(:select).
+                with("select * from `heirloom_tim` where itemName() = '123'").
+                and_return( { '123' => { 'encrypted' => [ 'false' ] } } )
+      @reader.key_name.should == '123.tar.gz'
     end
 
     it "should return the regions the archive has been uploaded to" do
@@ -92,11 +106,11 @@ describe Heirloom do
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' => 
                               { 'us-west-1-s3-url' => 
-                                ['s3://the-url-us-west-1/the-bucket/the-key'],
+                                ['s3://the-url-us-west-1/the-bucket/123.tar.gz'],
                                 'build_by' => 
                                 ['user'], 
                                 'us-east-1-s3-url' => 
-                                ['s3://the-url-us-east-1/the-bucket/the-key'] 
+                                ['s3://the-url-us-east-1/the-bucket/123.tar.gz'] 
                               }
                             } )
       @reader.regions.should == ['us-west-1', 'us-east-1']

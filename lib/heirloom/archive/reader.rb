@@ -4,9 +4,9 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
-      @name = args[:name]
+      @name   = args[:name]
+      @id     = args[:id]
       @domain = "heirloom_#{@name}"
-      @id = args[:id]
       @logger = @config.logger
     end
 
@@ -66,21 +66,31 @@ module Heirloom
       end
     end
 
+    def key_name
+      encrypted? ? "#{@id}.tar.gz.gpg" : "#{@id}.tar.gz"
+    end
+
     private
+
+    def encrypted?
+      show['encrypted'] == 'true' ? true : false
+    end
 
     def domain_exists?
       sdb.domain_exists? @domain
     end
 
     def get_url(args)
+      region = args[:region]
+
       return nil unless exists?
-      @logger.debug "Looking for #{args[:region]} endpoint for #{@id}"
-      url = "#{args[:region]}-s3-url"
+      @logger.debug "Looking for #{region} endpoint for #{@id}"
+      url = "#{region}-s3-url"
       if show[url]
         @logger.debug "Found #{url} for #{@id}."
         show[url]
       else
-        @logger.debug "#{args[:region]} endpoint for #{@id} not found."
+        @logger.debug "#{region} endpoint for #{@id} not found."
         nil
       end
     end

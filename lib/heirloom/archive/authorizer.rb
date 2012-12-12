@@ -23,7 +23,7 @@ module Heirloom
         s3_acl = ACL::S3.new :config => @config,
                              :region => region
 
-        s3_acl.allow_read_access_from_accounts :key_name   => @id,
+        s3_acl.allow_read_access_from_accounts :key_name   => key_name,
                                                :key_folder => @name,
                                                :accounts   => @accounts,
                                                :bucket     => bucket
@@ -34,6 +34,10 @@ module Heirloom
     end
 
     private
+
+    def key_name 
+      reader.key_name
+    end
 
     def validate_format_of_accounts
       @accounts.each do |account|

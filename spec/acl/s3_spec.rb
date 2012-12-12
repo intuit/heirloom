@@ -29,7 +29,7 @@ describe Heirloom do
             with("bucket", "key-folder/key.tar.gz", {"Owner"=>{"DisplayName"=>"Brett", "ID"=>"123"}, "AccessControlList"=>[{"Grantee"=>{"EmailAddress"=>"acct1@test.com"}, "Permission"=>"READ"}, {"Grantee"=>{"EmailAddress"=>"acct2@test.com"}, "Permission"=>"READ"}, {"Grantee"=>{"DisplayName"=>"Brett", "ID"=>"123"}, "Permission"=>"FULL_CONTROL"}]})
 
     @s3.allow_read_access_from_accounts :bucket     => 'bucket', 
-                                        :key_name   => 'key',
+                                        :key_name   => 'key.tar.gz',
                                         :key_folder => 'key-folder',
                                         :accounts   => ['acct1@test.com', 'acct2@test.com']
   end

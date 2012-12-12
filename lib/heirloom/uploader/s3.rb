@@ -35,6 +35,7 @@ module Heirloom
         id         = args[:id]
         name       = args[:name]
         key_name   = args[:key_name]
+
         domain     = "heirloom_#{name}"
         key_folder = name
         endpoint   = endpoints[@region]

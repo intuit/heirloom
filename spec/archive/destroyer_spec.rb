@@ -17,7 +17,7 @@ describe Heirloom do
       @reader_mock.should_receive(:get_bucket).
                   with(:region => 'us-west-1').
                   and_return 'bucket-us-west-1'
-
+      @reader_mock.stub :key_name => '123.tar.gz'
 
       @s3_destroyer_mock = mock 's3 destroyer'
       Heirloom::Destroyer::S3.should_receive(:new).

@@ -106,7 +106,7 @@ describe Heirloom do
       it "should decrypt and save the downloaded file with secret" do
         @writer_mock.should_receive(:save_archive).
                      with(:archive => 'plaintext',
-                          :file    => "123.tar.gz.gpg",
+                          :file    => "123.tar.gz",
                           :output  => './',
                           :extract => false).and_return true
         @downloader.download :region        => 'us-west-1',
@@ -118,7 +118,7 @@ describe Heirloom do
       it "should decrypt and extract the downloaded file with secret" do
         @writer_mock.should_receive(:save_archive).
                      with(:archive => 'plaintext',
-                          :file    => "123.tar.gz.gpg",
+                          :file    => "123.tar.gz",
                           :output  => './',
                           :extract => true).and_return true
         @downloader.download :region      => 'us-west-1',

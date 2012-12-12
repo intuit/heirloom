@@ -45,11 +45,11 @@ module Heirloom
     private
 
     def file
-      @secret ? "#{@id}.tar.gz.gpg" :"#{@id}.tar.gz"
+      "#{@id}.tar.gz"
     end
 
     def key
-      "#{@name}/#{file}"
+      @secret ? "#{@name}/#{@id}.tar.gz.gpg" : "#{@name}/#{@id}.tar.gz"
     end
 
     def bucket

@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module Heirloom
   class Writer
 

@@ -29,8 +29,8 @@ module Heirloom
       private
 
       def decrypt
-        @logger.info "Secret provided. Decrypting with: '#{scrubed_command}'"
-        output = `#{command}`
+        @logger.info "Secret provided. Decrypting with: '#{command}'"
+        output = `#{command(@secret)}`
         @logger.debug "Decryption output: '#{output}'"
 
         if $?.success?
@@ -41,12 +41,8 @@ module Heirloom
         end
       end
 
-      def scrubed_command 
-        "gpg --batch --yes --cipher-algo AES256 --passphrase XXXXXXXX --output #{@decrypted_file.path} #{@encrypted_file.path} 2>&1"
-      end
-
-      def command 
-        "gpg --batch --yes --cipher-algo AES256 --passphrase #{@secret} --output #{@decrypted_file.path} #{@encrypted_file.path} 2>&1"
+      def command(secret='XXXXXXXX')
+        "gpg --batch --yes --cipher-algo AES256 --passphrase #{secret} --output #{@decrypted_file.path} #{@encrypted_file.path} 2>&1"
       end
 
       def gpg_in_path?

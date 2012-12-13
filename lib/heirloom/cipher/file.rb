@@ -26,24 +26,15 @@ module Heirloom
       private
 
       def encrypt
-        @logger.info "Encrypting with: '#{scrubed_command}'"
-        output = `#{command}`
+        @logger.info "Encrypting with: '#{command}'"
+        output = `#{command(@secret)}`
         @logger.debug "Encryption output: '#{output}'"
+        @logger.error "Encryption failed with output: '#{output}'" unless $?.success?
         $?.success?
-        if $?.success?
-          true
-        else
-          @logger.error "Encryption failed with output: '#{output}'"
-          false
-        end
       end
 
-      def scrubed_command 
-        "gpg --batch --yes -c --cipher-algo AES256 --passphrase XXXXXXXX --output #{@encrypted_file.path} #{@file} 2>&1"
-      end
-
-      def command
-        "gpg --batch --yes -c --cipher-algo AES256 --passphrase #{@secret} --output #{@encrypted_file.path} #{@file} 2>&1"
+      def command(secret="XXXXXXXX")
+        "gpg --batch --yes -c --cipher-algo AES256 --passphrase #{secret} --output #{@encrypted_file.path} #{@file} 2>&1"
       end
 
       def gpg_in_path?

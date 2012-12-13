@@ -73,7 +73,7 @@ module Heirloom
     private
 
     def encrypted?
-      show['encrypted'] == 'true' ? true : false
+      show['encrypted'] == 'true'
     end
 
     def domain_exists?

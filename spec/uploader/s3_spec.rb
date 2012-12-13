@@ -23,6 +23,7 @@ describe Heirloom::Uploader::S3 do
     @bucket_mock = mock 'bucket mock'
     @files_mock  = mock 'files mock'
     @file_mock   = mock 'file mock'
+    @body_mock   = mock 'body mock'
     Heirloom::AWS::S3.should_receive(:new).
                       with(:config => @config_stub,
                            :region => 'us-west-1').
@@ -31,11 +32,12 @@ describe Heirloom::Uploader::S3 do
              with('bucket').
              and_return @bucket_mock
     @bucket_mock.should_receive(:files).and_return(@files_mock)
-    File.should_receive(:open).with('file').and_return "body"
+    File.should_receive(:open).with('file').and_return @body_mock
     @files_mock.should_receive(:create).
                 with :key    => "key_folder/key_name",
-                     :body   => "body",
+                     :body   => @body_mock,
                      :public => true
+    @body_mock.should_receive(:close)
     @s3.upload_file @options
   end
 

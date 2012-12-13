@@ -5,7 +5,7 @@ describe Heirloom do
   before do
     @config_mock = mock 'config'
     @logger_stub = stub 'logger', :info => true
-    @config_mock.should_receive(:logger).and_return(@logger_stub)
+    @config_mock.stub :logger => @logger_stub
     @uploader = Heirloom::Uploader.new :config => @config_mock,
                                        :name   => 'tim',
                                        :id     => '123'

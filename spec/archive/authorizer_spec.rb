@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Heirloom do
 
     before do
-      @config_mock = double('config')
-      @logger_mock = double('logger')
+      @config_mock = mock 'config'
+      @logger_mock = mock 'logger'
       @logger_mock.stub :info => true, :debug => true
       @config_mock.should_receive(:logger).and_return(@logger_mock)
       @authorizer = Heirloom::Authorizer.new :config => @config_mock,
@@ -13,17 +13,28 @@ describe Heirloom do
     end
 
     it "should authorize access to an archive in all regions" do
-      reader = double
-      s3_acl = double
-      accounts = [ "test@a.com", "a@test.com", "test@test.co", "test@test.co.uk" ]
-      @authorizer.should_receive(:reader).exactly(3).times.
-                  and_return(reader)
-      reader.should_receive(:get_bucket).exactly(2).times.
+      s3_acl_mock = mock 's3 acl'
+      reader_mock = mock 'reader mock'
+      reader_mock.stub :key_name => '123.tar.gz'
+      reader_mock.should_receive(:get_bucket).exactly(2).times.
                       and_return('the-bucket')
-      reader.stub :key_name => '123.tar.gz'
-      Heirloom::ACL::S3.should_receive(:new).exactly(2).
-                        times.and_return(s3_acl)
-      s3_acl.should_receive(:allow_read_access_from_accounts).
+
+      accounts = [ "test@a.com", "a@test.com", "test@test.co", "test@test.co.uk" ]
+
+      Heirloom::Reader.should_receive(:new).
+                       with(:config => @config_mock,
+                            :name   => 'tim',
+                            :id     => '123.tar.gz').
+                       and_return reader_mock
+      Heirloom::ACL::S3.should_receive(:new).
+                        with(:config => @config_mock,
+                             :region   => 'us-west-1').
+                        and_return s3_acl_mock
+      Heirloom::ACL::S3.should_receive(:new).
+                        with(:config => @config_mock,
+                             :region   => 'us-west-2').
+                        and_return s3_acl_mock
+      s3_acl_mock.should_receive(:allow_read_access_from_accounts).
              exactly(2).times.
              with(:key_name   => '123.tar.gz',
                   :key_folder => 'tim',

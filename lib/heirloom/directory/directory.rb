@@ -15,11 +15,9 @@ module Heirloom
     def build_artifact_from_directory(args)
       @secret = args[:secret]
 
-      @files_to_pack = files_to_pack
-
       @logger.debug "Building Heirloom '#{@file}' from '#{@path}'."
       @logger.debug "Excluding #{@exclude.to_s}."
-      @logger.debug "Adding #{@files_to_pack}."
+      @logger.debug "Adding #{files_to_pack}."
 
       return build_archive unless @secret
 
@@ -30,7 +28,7 @@ module Heirloom
 
     def build_archive
       return false unless tar_in_path?
-      command = "cd #{@path} && tar czf #{@file} #{@files_to_pack}"
+      command = "cd #{@path} && tar czf #{@file} #{files_to_pack}"
       @logger.info "Archiving with: `#{command}`"
       output = `#{command}`
       @logger.debug "Exited with status: '#{$?.exitstatus}' ouput: '#{output}'"
@@ -53,7 +51,7 @@ module Heirloom
     end
 
     def files_to_pack
-      (Dir.entries(@path) - ['.', '..'] - @exclude).map do |file|
+      @files_to_pack ||= (Dir.entries(@path) - ['.', '..'] - @exclude).map do |file|
         "'#{file}'"
       end.join(' ')
     end

@@ -4,7 +4,7 @@ module Heirloom
   module Cipher
     class Data
 
-      include Heirloom::Utils::File
+      include Heirloom::Cipher::Shared
 
       def initialize(args)
         @config = args[:config]
@@ -16,7 +16,7 @@ module Heirloom
         @secret = args[:secret]
 
         return @data unless args[:secret]
-        return false unless gpg_in_path?
+        return false unless gpg_in_path? @logger
 
         @encrypted_file = Tempfile.new('archive.tar.gz.gpg')
         @decrypted_file = Tempfile.new('archive.tar.gz')
@@ -43,14 +43,6 @@ module Heirloom
 
       def command(secret='XXXXXXXX')
         "gpg --batch --yes --cipher-algo AES256 --passphrase #{secret} --output #{@decrypted_file.path} #{@encrypted_file.path} 2>&1"
-      end
-
-      def gpg_in_path?
-        unless which('gpg')
-          @logger.error "gpg not found in path."
-          return false
-        end
-        true
       end
 
     end

@@ -9,48 +9,59 @@ module Heirloom
       end
 
       def upload_file(args)
-        bucket = args[:bucket]
-        file = args[:file]
-        id = args[:id]
-        key_name = args[:key_name]
-        key_folder = args[:key_folder]
-        name = args[:name]
+        bucket          = args[:bucket]
+        file            = args[:file]
+        id              = args[:id]
+        key_name        = args[:key_name]
+        key_folder      = args[:key_folder]
+        name            = args[:name]
         public_readable = args[:public_readable]
 
+        body      = File.open file
         s3_bucket = s3.get_bucket bucket
 
         @logger.info "Uploading s3://#{bucket}/#{key_folder}/#{key_name}"
 
         s3_bucket.files.create :key    => "#{key_folder}/#{key_name}",
-                               :body   => File.open(file),
+                               :body   => body,
                                :public => public_readable
+        @logger.warn "File is readable by entire Internet." if public_readable
 
-        @logger.info "File is readable by the public internet." if public_readable
+        body.close
       end
 
       def add_endpoint_attributes(args)
-        bucket = args[:bucket]
-        id = args[:id]
-        name = args[:name]
-        domain = "heirloom_#{name}"
+        bucket     = args[:bucket]
+        id         = args[:id]
+        name       = args[:name]
+        key_name   = args[:key_name]
+
+        domain     = "heirloom_#{name}"
         key_folder = name
-        key_name = "#{id}.tar.gz"
+        endpoint   = endpoints[@region]
 
-        s3_endpoint = "s3://#{bucket}/#{key_folder}/#{key_name}"
-        http_endpoint = "http://#{endpoints[@region]}/#{bucket}/#{key_folder}/#{key_name}"
-        https_endpoint = "https://#{endpoints[@region]}/#{bucket}/#{key_folder}/#{key_name}"
+        path = "#{bucket}/#{key_folder}/#{key_name}"
 
-        sdb.put_attributes domain, id, { "#{@region}-s3-url" => s3_endpoint }
-        @logger.info "Adding attribute #{s3_endpoint}."
-
-        sdb.put_attributes domain, id, { "#{@region}-http-url" => http_endpoint }
-        @logger.debug "Adding attribute #{http_endpoint}."
-
-        sdb.put_attributes domain, id, { "#{@region}-https-url" => https_endpoint }
-        @logger.debug "Adding attribute #{https_endpoint}."
+        end_point_attributes(path).each_pair do |key, value|
+          add_endpoint_attribute domain, id, key, value
+        end
       end
 
       private
+
+      def end_point_attributes(path)
+        {
+          "#{@region}-s3-url"    => "s3://#{path}",
+          "#{@region}-http-url"  => "http://#{endpoints[@region]}/#{path}",
+          "#{@region}-https-url" => "https://#{endpoints[@region]}/#{path}"
+        }
+      end
+
+      def add_endpoint_attribute(domain, id, key, value)
+        sdb.put_attributes domain, id, { key => value }
+        @logger.debug "Adding tag #{key}."
+        @logger.debug "Adding tag #{value}."
+      end
 
       def endpoints
         {

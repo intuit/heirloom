@@ -1,8 +1,10 @@
-require 'openssl'
+require 'tempfile'
 
 module Heirloom
   module Cipher
     class Data
+
+      include Heirloom::Cipher::Shared
 
       def initialize(args)
         @config = args[:config]
@@ -10,27 +12,43 @@ module Heirloom
       end
 
       def decrypt_data(args)
-        data   = args[:data]
-        secret = args[:secret]
+        @data   = args[:data]
+        @secret = args[:secret]
 
-        return data unless args[:secret]
+        return @data unless args[:secret]
+        return false unless gpg_in_path?
 
-        @logger.info "Secret provided. Decrypting Heirloom."
+        @encrypted_file = Tempfile.new('archive.tar.gz.gpg')
+        @decrypted_file = Tempfile.new('archive.tar.gz')
 
-        @aes = OpenSSL::Cipher::AES256.new(:CBC)
-        @aes.decrypt
-        @aes.key = Digest::SHA256.hexdigest secret
-        @aes.iv = data.slice!(0,16)
-        begin
-          @aes.update(data) + @aes.final
-        rescue OpenSSL::Cipher::CipherError => e
-          if e.message == 'wrong final block length'
-            @logger.error 'This Heirloom does not appear to be encrypted.'
-          end
-          @logger.error "Unable to decrypt Heirloom: '#{e.message}'"
+        ::File.open(@encrypted_file, 'w') { |f| f.write @data }
+
+        decrypt
+      end
+
+      private
+
+      def decrypt
+        @logger.info "Secret provided. Decrypting with: '#{command}'"
+        output = `#{command(@secret)}`
+        @logger.debug "Decryption output: '#{output}'"
+
+        if $?.success?
+          @decrypted_file.read 
+        else
+          @logger.error "Decryption failed with output: '#{output}'"
           false
         end
       end
+
+      def command(secret='XXXXXXXX')
+        "gpg --batch --yes --cipher-algo AES256 --passphrase #{secret} --output #{@decrypted_file.path} #{@encrypted_file.path} 2>&1"
+      end
+
+      def logger
+        @logger
+      end
+
     end
   end
 end

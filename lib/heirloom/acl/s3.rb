@@ -11,20 +11,19 @@ module Heirloom
       end
 
       def allow_read_access_from_accounts(args)
-        bucket = args[:bucket]
-        key_name = args[:key_name]
+        bucket     = args[:bucket]
+        key_name   = args[:key_name]
         key_folder = args[:key_folder]
-        accounts = args[:accounts]
+        accounts   = args[:accounts]
 
-        key = "#{key_folder}/#{key_name}.tar.gz"
+        key          = "#{key_folder}/#{key_name}"
 
         current_acls = s3.get_bucket_acl bucket
+        name         = current_acls['Owner']['Name']
+        id           = current_acls['Owner']['ID']
 
-        name = current_acls['Owner']['Name']
-        id = current_acls['Owner']['ID']
-
-        grants = build_bucket_grants :id => id,
-                                     :name => name,
+        grants = build_bucket_grants :id       => id,
+                                     :name     => name,
                                      :accounts => accounts
 
         accounts.each do |a|

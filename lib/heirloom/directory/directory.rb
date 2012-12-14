@@ -2,6 +2,8 @@ module Heirloom
 
   class Directory
 
+    include Heirloom::Utils::File
+
     def initialize(args)
       @config  = args[:config]
       @exclude = args[:exclude]
@@ -25,6 +27,7 @@ module Heirloom
     private
 
     def build_archive
+      return false unless tar_in_path?
       command = "cd #{@path} && tar czf #{@file} #{files_to_pack}"
       @logger.info "Archiving with: `#{command}`"
       output = `#{command}`
@@ -39,8 +42,16 @@ module Heirloom
                                :secret => @secret
     end
 
+    def tar_in_path?
+      unless which('tar')
+        @logger.error "tar not found in path."
+        return false
+      end
+      true
+    end
+
     def files_to_pack
-      (Dir.entries(@path) - ['.', '..'] - @exclude).map do |file|
+      @files_to_pack ||= (Dir.entries(@path) - ['.', '..'] - @exclude).map do |file|
         "'#{file}'"
       end.join(' ')
     end

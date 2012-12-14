@@ -42,6 +42,10 @@ module Heirloom
         @encrypted_file.close!
       end
 
+      def logger
+        @logger
+      end
+
     end
   end
 end

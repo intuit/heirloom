@@ -14,10 +14,6 @@ module Heirloom
         true
       end
 
-      def logger
-        @logger
-      end
-
     end
   end
 end

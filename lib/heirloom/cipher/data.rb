@@ -45,6 +45,10 @@ module Heirloom
         "gpg --batch --yes --cipher-algo AES256 --passphrase #{secret} --output #{@decrypted_file.path} #{@encrypted_file.path} 2>&1"
       end
 
+      def logger
+        @logger
+      end
+
     end
   end
 end

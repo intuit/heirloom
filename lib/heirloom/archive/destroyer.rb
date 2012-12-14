@@ -18,15 +18,15 @@ module Heirloom
       regions.each do |region|
         bucket = reader.get_bucket :region => region
 
-        key = "#{@id}.tar.gz"
+        key_name = reader.key_name
 
         if bucket
-          @logger.debug "Destroying 's3://#{bucket}/#{@name}/#{key}'."
+          @logger.debug "Destroying 's3://#{bucket}/#{@name}/#{key_name}'."
 
           s3_destroyer = Destroyer::S3.new :config => @config,
                                            :region => region
 
-          s3_destroyer.destroy_file :key_name   => key,
+          s3_destroyer.destroy_file :key_name   => key_name,
                                     :bucket     => bucket,
                                     :key_folder => @name
         end

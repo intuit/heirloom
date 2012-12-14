@@ -1,3 +1,10 @@
+## HEAD:
+
+* Confirm tar and gpg executables are present when necessary
+* Switch to gpg for encryption
+* S3 key names will have gpg appended when encrypted
+* Switch rvm to 1.9.3-p327
+
 ## 0.9.0:
 
 * Updated tempfile logic to fix GC issues.

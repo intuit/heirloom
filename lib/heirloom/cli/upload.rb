@@ -62,7 +62,8 @@ module Heirloom
         @archive.upload :bucket_prefix   => @bucket_prefix,
                         :regions         => @regions,
                         :public_readable => @opts[:public],
-                        :file            => @file.path
+                        :file            => @file.path,
+                        :secret          => secret
 
         @file.close!
       end

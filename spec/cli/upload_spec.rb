@@ -78,6 +78,7 @@ describe Heirloom do
                   with(:bucket_prefix   => 'bp',
                        :regions         => @regions,
                        :public_readable => false,
+                       :secret          => 'secret12',
                        :file            => '/tmp/file.tar.gz')
     @upload.upload
   end

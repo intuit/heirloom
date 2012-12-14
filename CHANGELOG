@@ -1,4 +1,4 @@
-## HEAD:
+## 0.10.0:
 
 * Confirm tar and gpg executables are present when necessary
 * Switch to gpg for encryption

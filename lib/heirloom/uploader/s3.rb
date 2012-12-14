@@ -25,9 +25,7 @@ module Heirloom
         s3_bucket.files.create :key    => "#{key_folder}/#{key_name}",
                                :body   => body,
                                :public => public_readable
-        if public_readable
-          @logger.warn "File is readable by the public internet." 
-        end
+        @logger.warn "File is readable by entire Internet." if public_readable
 
         body.close
       end

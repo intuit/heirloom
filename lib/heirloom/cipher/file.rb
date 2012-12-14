@@ -17,7 +17,7 @@ module Heirloom
         @secret         = args[:secret]
         @encrypted_file = Tempfile.new('archive.tar.gz.enc')
 
-        return false unless gpg_in_path? @logger
+        return false unless gpg_in_path?
         return false unless encrypt
 
         replace_file

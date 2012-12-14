@@ -6,12 +6,16 @@ module Heirloom
 
       include Heirloom::Utils::File
 
-      def gpg_in_path?(logger)
+      def gpg_in_path?
         unless which('gpg')
-          logger.error "gpg not found in path."
+          @logger.error "gpg not found in path."
           return false
         end
         true
+      end
+
+      def logger
+        @logger
       end
 
     end

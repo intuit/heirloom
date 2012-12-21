@@ -8,7 +8,7 @@ module Heirloom
 
       def gpg_in_path?
         unless which('gpg')
-          @logger.error "gpg not found in path."
+          logger.error "gpg not found in path."
           return false
         end
         true

@@ -1,3 +1,7 @@
+## HEAD:
+
+* Switched lib/heirloom/cipher/shared.rb to call logger method, not ivar
+
 ## 0.10.0:
 
 * Confirm tar and gpg executables are present when necessary

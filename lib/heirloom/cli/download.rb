@@ -37,7 +37,8 @@ module Heirloom
       end
       
       def download
-        ensure_directory :path => @opts[:output], :config => @config
+        ensure_path_is_directory     :path => @opts[:output], :config => @config
+        ensure_directory_is_writable :path => @opts[:output], :config => @config
         secret = read_secret :opts   => @opts,
                              :config => @config
         archive = @archive.download :output        => @opts[:output],

@@ -115,15 +115,29 @@ describe Heirloom do
     it "should exit when path is not a directory" do
       File.should_receive(:directory?).with('/tmp/test').
                                        and_return false
-      lambda { @object.ensure_directory(:path => '/tmp/test', 
-                                        :config => @config_mock) }.
-                       should raise_error SystemExit
+      lambda { @object.ensure_path_is_directory(:path => '/tmp/test', 
+                                                :config => @config_mock) }.
+                                           should raise_error SystemExit
     end
 
     it "should not exit when path is a directory" do
       File.should_receive(:directory?).with('/tmp/test').
                                        and_return true
-      @object.ensure_directory :path => '/tmp/test', :config => @config_mock
+      @object.ensure_path_is_directory :path => '/tmp/test', :config => @config_mock
+    end
+
+    it "should exit when directory is not writable" do
+      File.should_receive(:writable?).with('/tmp/test').
+                                       and_return false
+      lambda { @object.ensure_directory_is_writable(:path => '/tmp/test',
+                                                    :config => @config_mock) }.
+                                                should raise_error SystemExit
+    end
+
+    it "should not exit when directory is writable" do
+      File.should_receive(:writable?).with('/tmp/test').
+                                       and_return true
+      @object.ensure_directory_is_writable :path => '/tmp/test', :config => @config_mock
     end
 
   end

@@ -37,8 +37,8 @@ module Heirloom
                              :name          => @opts[:name],
                              :regions       => @regions,
                              :config        => @config
-        ensure_directory :path   => @opts[:directory], 
-                         :config => @config
+        ensure_path_is_directory :path   => @opts[:directory], 
+                                 :config => @config
 
         secret = read_secret :opts   => @opts,
                              :config => @config

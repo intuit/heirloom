@@ -81,13 +81,24 @@ module Heirloom
         end
       end
 
-      def ensure_directory(args)
+      def ensure_path_is_directory(args)
         config = args[:config]
         path = args[:path]
         logger = config.logger
 
         unless File.directory? path
           logger.error "#{path} is not a directory."
+          exit 1
+        end
+      end
+
+      def ensure_directory_is_writable(args)
+        config = args[:config]
+        path = args[:path]
+        logger = config.logger
+
+        unless File.writable? path
+          logger.error "You don't have permissions to write to #{path}."
           exit 1
         end
       end

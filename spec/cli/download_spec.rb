@@ -46,8 +46,12 @@ describe Heirloom do
                                                    :extract     => false,
                                                    :secret      => nil).
                     and_return '/tmp/test123'
-      @cli_download.should_receive(:ensure_directory).
+      @cli_download.should_receive(:ensure_path_is_directory).
                     with(:config => @config_mock, 
+                         :path => '/tmp/test123').
+                    and_return true
+      @cli_download.should_receive(:ensure_directory_is_writable).
+                    with(:config => @config_mock,
                          :path => '/tmp/test123').
                     and_return true
       @cli_download.download
@@ -89,8 +93,12 @@ describe Heirloom do
                                                    :extract       => false,
                                                    :secret        => nil).
                     and_return '/tmp/test123'
-      @cli_download.should_receive(:ensure_directory).
+      @cli_download.should_receive(:ensure_path_is_directory).
                     with(:config => @config_mock, 
+                         :path => '/tmp/test123').
+                    and_return true
+      @cli_download.should_receive(:ensure_directory_is_writable).
+                    with(:config => @config_mock,
                          :path => '/tmp/test123').
                     and_return true
       @cli_download.download

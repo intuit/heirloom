@@ -1,6 +1,7 @@
 ## HEAD:
 
-* Switched lib/heirloom/cipher/shared.rb to call logger method, not ivar
+* Minor refactoring of lib/heirloom/cipher/shared.rb
+* Additional validation of download location
 
 ## 0.10.0:
 

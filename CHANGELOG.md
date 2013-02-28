@@ -1,5 +1,7 @@
 ## HEAD:
 
+## 0.10.1 (02/28/2013):
+
 * Minor refactoring of lib/heirloom/cipher/shared.rb
 * Additional validation of download location
 

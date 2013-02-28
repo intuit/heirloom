@@ -13,7 +13,7 @@ module Heirloom
                               :opts   => @opts
         @catalog = Heirloom::Catalog.new :name    => @opts[:name],
                                          :config  => @config
-        ensure_valid_options :provided => @opts, 
+        ensure_valid_options :provided => @opts,
                              :required => [:name, :id, :directory],
                              :config   => @config
         ensure_catalog_domain_exists :config  => @config,
@@ -31,14 +31,14 @@ module Heirloom
       def upload
         ensure_valid_region :region => @opts[:metadata_region],
                             :config => @config
-        ensure_domain_exists :name   => @opts[:name], 
+        ensure_domain_exists :name   => @opts[:name],
                              :config => @config
         ensure_buckets_exist :bucket_prefix => @bucket_prefix,
                              :name          => @opts[:name],
                              :regions       => @regions,
                              :config        => @config
-        ensure_directory :path   => @opts[:directory], 
-                         :config => @config
+        ensure_path_is_directory :path   => @opts[:directory],
+                                 :config => @config
 
         secret = read_secret :opts   => @opts,
                              :config => @config
@@ -46,7 +46,7 @@ module Heirloom
                             :config => @config
 
         @archive.destroy if @archive.exists?
-                          
+
         @file = Tempfile.new('archive.tar.gz')
 
         unless @archive.build :bucket_prefix => @bucket_prefix,
@@ -89,16 +89,16 @@ Can be specified multiple times.", :type  => :string, :multi => true
           opt :id, "ID for Heirloom.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
                                                                           :default => 'us-west-1'
           opt :name, "Name of Heirloom.", :type => :string
           opt :public, "Set this Heirloom as public readable?"
           opt :secret, "Encrypt the Heirloom with given secret.", :type => :string
           opt :secret_file, "Read secret from file.", :type  => :string,
                                                       :short => :none
-          opt :aws_access_key, "AWS Access Key ID", :type  => :string, 
+          opt :aws_access_key, "AWS Access Key ID", :type  => :string,
                                                     :short => :none
-          opt :aws_secret_key, "AWS Secret Access Key", :type  => :string, 
+          opt :aws_secret_key, "AWS Secret Access Key", :type  => :string,
                                                         :short => :none
         end
       end

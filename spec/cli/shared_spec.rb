@@ -8,8 +8,8 @@ describe Heirloom do
 
     before do
       @config_mock = mock 'config'
-      @logger_mock = mock 'logger' 
-      @config_mock.stub :logger          => @logger_mock, 
+      @logger_mock = mock 'logger'
+      @config_mock.stub :logger          => @logger_mock,
                         :access_key      => 'key',
                         :secret_key      => 'secret',
                         :metadata_region => 'us-west-1'
@@ -27,9 +27,9 @@ describe Heirloom do
 
     it "should return false if a required array is emtpy" do
       @logger_mock.should_receive(:error)
-      lambda { @object.ensure_valid_options(:provided => { 
+      lambda { @object.ensure_valid_options(:provided => {
                                               :array  => [],
-                                              :string => 'present' 
+                                              :string => 'present'
                                             },
                                             :required => [:array, :string],
                                             :config   => @config_mock) }.
@@ -38,9 +38,9 @@ describe Heirloom do
 
     it "should return false if a required string is nil" do
       @logger_mock.should_receive(:error)
-      lambda { @object.ensure_valid_options(:provided => { 
+      lambda { @object.ensure_valid_options(:provided => {
                                               :array  => ['present'],
-                                              :string => nil 
+                                              :string => nil
                                             },
                                             :required => [:array, :string],
                                             :config   => @config_mock) }.
@@ -49,9 +49,9 @@ describe Heirloom do
 
     it "should return false if a require string is nil & array is empty" do
       @logger_mock.should_receive(:error).exactly(2).times
-      lambda { @object.ensure_valid_options(:provided => { 
+      lambda { @object.ensure_valid_options(:provided => {
                                               :array  => [],
-                                              :string => nil 
+                                              :string => nil
                                             },
                                             :required => [:array, :string],
                                             :config   => @config_mock) }.
@@ -115,15 +115,29 @@ describe Heirloom do
     it "should exit when path is not a directory" do
       File.should_receive(:directory?).with('/tmp/test').
                                        and_return false
-      lambda { @object.ensure_directory(:path => '/tmp/test', 
-                                        :config => @config_mock) }.
+      lambda { @object.ensure_path_is_directory(:path => '/tmp/test',
+                                                :config => @config_mock) }.
                        should raise_error SystemExit
     end
 
     it "should not exit when path is a directory" do
       File.should_receive(:directory?).with('/tmp/test').
                                        and_return true
-      @object.ensure_directory :path => '/tmp/test', :config => @config_mock
+      @object.ensure_path_is_directory :path => '/tmp/test', :config => @config_mock
+    end
+
+    it "should exit when directory is not writable" do
+      File.should_receive(:writable?).with('/tmp/test').
+                                       and_return false
+      lambda { @object.ensure_directory_is_writable(:path => '/tmp/test',
+                                                    :config => @config_mock) }.
+                       should raise_error SystemExit
+    end
+
+    it "should not exit when directory is writable" do
+      File.should_receive(:writable?).with('/tmp/test').
+                                       and_return true
+      @object.ensure_directory_is_writable :path => '/tmp/test', :config => @config_mock
     end
 
   end
@@ -243,7 +257,7 @@ describe Heirloom do
       @logger_stub = stub 'logger', :error => true
       @config_stub = stub 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
-      @options = { :config  => @config_stub, 
+      @options = { :config  => @config_stub,
                    :catalog => @catalog_mock,
                    :entry   => 'entry' }
       @object = Object.new
@@ -271,7 +285,7 @@ describe Heirloom do
 
     it "should return the latest id" do
       Heirloom::Archive.should_receive(:new).
-                        with(:name => 'test', 
+                        with(:name => 'test',
                              :config => @config_stub).
                         and_return @archive_mock
       @archive_mock.should_receive(:list).
@@ -336,7 +350,7 @@ describe Heirloom do
 
     it "should return true if buckets available in all regions" do
       @checker_mock.should_receive(:bucket_name_available?).
-                    with(:bucket_prefix => 'intu-lc', 
+                    with(:bucket_prefix => 'intu-lc',
                          :regions       => ['us-west-1', 'us-west-2'],
                          :config        => @config_stub).
                     and_return true
@@ -345,7 +359,7 @@ describe Heirloom do
 
     it "should return raise and error if any bucket un-available in all regions" do
       @checker_mock.should_receive(:bucket_name_available?).
-                    with(:bucket_prefix => 'intu-lc', 
+                    with(:bucket_prefix => 'intu-lc',
                          :regions       => ['us-west-1', 'us-west-2'],
                          :config        => @config_stub).
                     and_return false
@@ -365,9 +379,9 @@ describe Heirloom do
     end
 
     it "should exit if the entry exists in catalog and not forced" do
-      options = { :config  => @config_stub, 
+      options = { :config  => @config_stub,
                   :catalog => @catalog_mock,
-                  :entry   => 'entry', 
+                  :entry   => 'entry',
                   :force   => false }
       @catalog_mock.should_receive(:entry_exists_in_catalog?).
                     with('entry').
@@ -377,9 +391,9 @@ describe Heirloom do
     end
 
     it "should not exit if the entry exists in catalog and forced" do
-      options = { :config  => @config_stub, 
+      options = { :config  => @config_stub,
                   :catalog => @catalog_mock,
-                  :entry   => 'entry', 
+                  :entry   => 'entry',
                   :force   => true }
       @catalog_mock.should_receive(:entry_exists_in_catalog?).
                     with('entry').
@@ -388,9 +402,9 @@ describe Heirloom do
     end
 
     it "should not exit if the does not exists in catalog" do
-      options = { :config  => @config_stub, 
+      options = { :config  => @config_stub,
                   :catalog => @catalog_mock,
-                  :entry   => 'entry', 
+                  :entry   => 'entry',
                   :force   => false }
       @catalog_mock.should_receive(:entry_exists_in_catalog?).
                     with('entry').

@@ -60,7 +60,7 @@ describe Heirloom do
                  :name          => 'archive_name',
                  :regions       => @regions,
                  :config        => @config_mock)
-    @upload.should_receive(:ensure_directory).
+    @upload.should_receive(:ensure_path_is_directory).
             with(:path   => '/buildme',
                  :config => @config_mock)
     @upload.should_receive(:ensure_valid_secret).

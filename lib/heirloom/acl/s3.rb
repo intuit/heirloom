@@ -43,10 +43,17 @@ module Heirloom
 
         # Add each account email as read access
         accounts.each do |g|
-          a << {
-                 'Grantee' => { 'EmailAddress' => g } ,
-                 'Permission' => 'READ'
-               }
+          if g =~ /^.*@.*\..*$/
+            a << {
+                   'Grantee' => { 'EmailAddress' => g } ,
+                   'Permission' => 'READ'
+                 }
+          else
+            a << {
+                'Grantee' => { 'ID' => g } ,
+                'Permission' => 'READ'
+            }
+          end
         end
 
         # Grand owner full access

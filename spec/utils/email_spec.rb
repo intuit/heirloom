@@ -16,9 +16,4 @@ describe Heirloom::Utils::Email do
     @object.valid_email?(account).should be_false
   end
 
-  it "should return that the account is a valid email " do
-    account = '123456789_123456'
-    @object.valid_email?(account).should be_false
-  end
-
 end

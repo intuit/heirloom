@@ -47,7 +47,7 @@ describe Heirloom do
 
     it "should exit when an account is a shortid" do
       @logger_mock.should_receive(:error)
-      @authorizer.authorize(:accounts => [ '12345678901234', 'good@good.com'],
+      @authorizer.authorize(:accounts => [ '123456789_1234', 'good@good.com'],
                             :regions  => ['us-west-1', 'us-west-2']).
                   should be_false
     end
@@ -61,9 +61,16 @@ describe Heirloom do
 
     it "should exit when an id which is not long(64) or short(16)" do
       @logger_mock.should_receive(:error)
-      @authorizer.authorize(:accounts => ['12345678901234567890', 'good@good.com'],
+      @authorizer.authorize(:accounts => ['123456789_123456789_1', 'good@good.com'],
                             :regions  => ['us-west-1', 'us-west-2']).
                   should be_false
     end
 
+    it "should exit even when the first value is valid" do
+      @logger_mock.should_receive(:error)
+      @authorizer.authorize(:accounts => ['good@good.com', '123456789_123456789_1'],
+                            :regions  => ['us-west-1', 'us-west-2']).
+                  should be_false
+    end
+    
 end

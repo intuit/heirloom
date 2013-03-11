@@ -38,23 +38,24 @@ module Heirloom
     private
 
     def validate_format_of_accounts
+      status = true
+
       @accounts.each do |account|
-        @type_of_id = detect_id_type account
-        case @type_of_id
+        case account_type(account)
           when 'email'
             @logger.info "Using email #{account} for authorization"
-            return true
-          when 'longid'
-            @logger.info "Using longid #{account} for authorization"
-            return true
-          when 'shortid'
+          when 'canonical_id'
+            @logger.info "Using canonical_id #{account} for authorization"
+          when 'short_id'
             @logger.error "#{account} passed in a short id which is not supported in AWS yet."
-            return false
+            status = false
           else
             @logger.error "#{account} is not a valid accound type (Canonical ID, or email)."
-            return false
+            status = false
         end
       end
+
+      status
     end
 
     def validate_email email
@@ -62,14 +63,15 @@ module Heirloom
       email_pattern.nil? ? false : true
     end
 
-    def detect_id_type account
+    def account_type account
       if validate_email account
-        @logger.info "#{account} Passed an account in email format"
         return 'email'
-      elsif account
-        @logger.info "#{account} Passed an account in ID format"
-        return 'longid' if account.length == 64
-        return 'shortid' if account.length == 14
+      elsif account.length == 64
+        return 'canonical_id' 
+      elsif account.length == 14
+        return 'short_id'
+      else
+        @logger.info "#{account} account type not detected"
       end
     end
 

@@ -1,6 +1,8 @@
 module Heirloom
 
   class Authorizer
+    
+    include Heirloom::Utils::Email
 
     def initialize(args)
       @config = args[:config]
@@ -58,13 +60,8 @@ module Heirloom
       status
     end
 
-    def validate_email email
-      email_pattern = (email =~ /^.*@.*\..*$/)
-      email_pattern.nil? ? false : true
-    end
-
     def account_type account
-      if validate_email account
+      if valid_email? account
         return 'email'
       elsif account.length == 64
         return 'canonical_id' 

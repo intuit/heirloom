@@ -1,6 +1,7 @@
 module Heirloom
   module ACL
     class S3
+      include Heirloom::Utils::Email
 
       attr_accessor :accounts, :config, :logger, :region
 
@@ -43,7 +44,7 @@ module Heirloom
 
         # Add each account email as read access
         accounts.each do |g|
-          if g =~ /^.*@.*\..*$/
+          if valid_email? g
             a << {
                    'Grantee' => { 'EmailAddress' => g } ,
                    'Permission' => 'READ'

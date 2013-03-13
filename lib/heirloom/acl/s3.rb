@@ -42,22 +42,10 @@ module Heirloom
 
         a = Array.new
 
-        # Add each account email as read access
         accounts.each do |g|
-          if valid_email? g
-            a << {
-                   'Grantee' => { 'EmailAddress' => g } ,
-                   'Permission' => 'READ'
-                 }
-          else
-            a << {
-                'Grantee' => { 'ID' => g } ,
-                'Permission' => 'READ'
-            }
-          end
+            a << { 'Grantee' => grantee(g), 'Permission' => 'READ' }
         end
 
-        # Grand owner full access
         a << { 'Grantee' => { 'DisplayName' => name, 'ID' => id },
                'Permission' => 'FULL_CONTROL'
              }
@@ -74,6 +62,10 @@ module Heirloom
       def s3
         @s3 ||= AWS::S3.new :config => @config,
                             :region => @region
+      end
+
+      def grantee(account)
+          valid_email?(account) ? { 'EmailAddress' => account } : { 'ID' => account }
       end
 
     end

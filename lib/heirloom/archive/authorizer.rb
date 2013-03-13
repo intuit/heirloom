@@ -43,33 +43,19 @@ module Heirloom
       status = true
 
       @accounts.each do |account|
-        case account_type(account)
-          when 'email'
-            @logger.info "Using email #{account} for authorization"
-          when 'canonical_id'
-            @logger.info "Using canonical_id #{account} for authorization"
-          when 'short_id'
-            @logger.error "#{account} passed in a short id which is not supported in AWS yet."
-            status = false
-          else
-            @logger.error "#{account} is not a valid accound type (Canonical ID, or email)."
-            status = false
+        if valid_account?(account)
+          @logger.info "Using #{account} for authorization"
+        else 
+          @logger.error "#{account} is not a valid account type"
+          status = false
         end
       end
 
       status
     end
 
-    def account_type account
-      if valid_email? account
-        return 'email'
-      elsif account.length == 64
-        return 'canonical_id' 
-      elsif account.length == 14
-        return 'short_id'
-      else
-        @logger.info "#{account} account type not detected"
-      end
+    def valid_account?(account)
+      valid_email?(account) || account.length == 64
     end
 
     def reader

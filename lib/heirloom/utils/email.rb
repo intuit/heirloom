@@ -3,8 +3,7 @@ module Heirloom
     module Email
 
       def valid_email?(email)
-         email_pattern = (email =~ /^.*@.*\..*$/)
-         email_pattern.nil? ? false : true
+         email =~ /^.*@.*\..*$/
       end
 
     end

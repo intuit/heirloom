@@ -1,6 +1,8 @@
 module Heirloom
 
   class Authorizer
+    
+    include Heirloom::Utils::Email
 
     def initialize(args)
       @config = args[:config]
@@ -38,17 +40,22 @@ module Heirloom
     private
 
     def validate_format_of_accounts
+      status = true
+
       @accounts.each do |account|
-        unless validate_email account
-          @logger.error "#{account} is not a valid email address."
-          return false
+        if valid_account?(account)
+          @logger.info "Using #{account} for authorization"
+        else 
+          @logger.error "#{account} is not a valid account type"
+          status = false
         end
       end
+
+      status
     end
 
-    def validate_email email
-      email_pattern = (email =~ /^.*@.*\..*$/)
-      email_pattern.nil? ? false : true
+    def valid_account?(account)
+      valid_email?(account) || account.length == 64
     end
 
     def reader

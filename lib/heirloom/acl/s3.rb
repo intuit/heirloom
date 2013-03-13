@@ -1,6 +1,7 @@
 module Heirloom
   module ACL
     class S3
+      include Heirloom::Utils::Email
 
       attr_accessor :accounts, :config, :logger, :region
 
@@ -41,15 +42,10 @@ module Heirloom
 
         a = Array.new
 
-        # Add each account email as read access
         accounts.each do |g|
-          a << {
-                 'Grantee' => { 'EmailAddress' => g } ,
-                 'Permission' => 'READ'
-               }
+            a << { 'Grantee' => grantee(g), 'Permission' => 'READ' }
         end
 
-        # Grand owner full access
         a << { 'Grantee' => { 'DisplayName' => name, 'ID' => id },
                'Permission' => 'FULL_CONTROL'
              }
@@ -66,6 +62,10 @@ module Heirloom
       def s3
         @s3 ||= AWS::S3.new :config => @config,
                             :region => @region
+      end
+
+      def grantee(account)
+          valid_email?(account) ? { 'EmailAddress' => account } : { 'ID' => account }
       end
 
     end

@@ -16,6 +16,10 @@ module Heirloom
       end
 
       def delete_object(bucket_name, object_name, options = {})
+        printf "ARGS"
+        puts bucket_name.inspect
+        puts object_name.inspect
+        puts options.inspect
         @s3.delete_object(bucket_name, object_name, options)
       end
 
@@ -76,6 +80,10 @@ module Heirloom
 
       def get_object(bucket_name, object_name)
         @s3.get_object(bucket_name, object_name).body
+      end
+
+      def get_object_acl(args)
+        @s3.get_object_acl(args[:bucket], args[:object_name]).body
       end
 
       def get_bucket_acl(bucket)

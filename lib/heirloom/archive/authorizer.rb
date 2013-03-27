@@ -36,6 +36,20 @@ module Heirloom
       true
     end
 
+    def get_object_acl(args)
+      bucket = args[:bucket]
+      region = args[:region]
+      object_name = "#{@name}/#{args[:object_name]}"
+
+      s3_acl = ACL::S3.new :config => @config,
+                           :region => region
+
+      object_acl = s3_acl.get_object_acl :bucket => bucket,
+                                         :object_name => object_name
+
+      object_acl
+    end
+
     private
 
     def validate_format_of_accounts

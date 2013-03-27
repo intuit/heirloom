@@ -80,7 +80,18 @@ module Heirloom
     end
 
     def show
-      reader.show
+      data = reader.show
+      reader.regions.each do |region|
+        key_name = reader.key_name
+        bucket = reader.get_bucket :region => region
+        object_acl = authorizer.get_object_acl :bucket      => bucket,
+                                               :region      => region,
+                                               :object_name => key_name
+
+        object_acl.tap { |x| x.delete("Owner") }
+        data.merge!( "#{region}" "\\" "#{key_name}" => object_acl)
+      end
+      data
     end
 
     def list(limit=10)

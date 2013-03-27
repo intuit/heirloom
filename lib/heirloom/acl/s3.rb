@@ -33,6 +33,16 @@ module Heirloom
         s3.put_object_acl bucket, key, grants
       end
 
+      def get_object_acl(args)
+        bucket = args[:bucket]
+        object_name = args[:object_name]
+        # s3.get_object_acl bucket = "chadcloes-us-west-2" object = "demo2/0.0.6.tar.gz.gpg"
+        object_acls = s3.get_object_acl :bucket      => bucket,
+                                        :object_name => object_name
+        #printf "OBJECT ACLs: "
+        #puts object_acls
+      end
+
       def get_bucket_acl(args)
         bucket     = args[:bucket]
         current_acls = s3.get_bucket_acl bucket

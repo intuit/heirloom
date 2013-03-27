@@ -30,33 +30,6 @@ module Heirloom
       end
       
       def show
-        #printf "NAME"
-        #puts @opts[:name]
-        #printf "ID"
-        #puts @opts[:id]
-        #printf "CONFIG"
-        #puts @config
-
-        #@reader ||= Reader.new :config => @config,
-        #                       :name   => @opts[:name],
-        #                       :id     => @id
-
-        @archive.regions.each do |region|
-          printf "REGION "
-          puts region
-          bucket = @archive.get_bucket region
-          printf "BUCKET "
-          puts bucket
-
-          s3_acl = ACL::S3.new :config => @config,
-                               :region => region
-
-          current_acls = s3_acl.get_bucket_acl :bucket => bucket
-
-          printf "SHOW ACL "
-          puts current_acls
-        end
-
         data = @archive.show
         if @opts[:json]
           jj data

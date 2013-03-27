@@ -67,6 +67,10 @@ module Heirloom
       verifier.buckets_exist? args
     end
 
+    def get_bucket(args)
+      reader.get_bucket :region => args
+    end
+
     def domain_exists?
       verifier.domain_exists?
     end

@@ -23,7 +23,6 @@ module Heirloom
 
       regions.each do |region|
         bucket = reader.get_bucket :region => region
-
         s3_acl = ACL::S3.new :config => @config,
                              :region => region
 

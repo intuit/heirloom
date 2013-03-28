@@ -37,17 +37,13 @@ module Heirloom
     end
 
     def get_object_acl(args)
-      bucket = args[:bucket]
-      region = args[:region]
       object_name = "#{@name}/#{args[:object_name]}"
 
       s3_acl = ACL::S3.new :config => @config,
-                           :region => region
+                           :region => args[:region]
 
-      object_acl = s3_acl.get_object_acl :bucket => bucket,
-                                         :object_name => object_name
-
-      object_acl
+      s3_acl.get_object_acl :bucket      => args[:bucket],
+                            :object_name => object_name
     end
 
     private

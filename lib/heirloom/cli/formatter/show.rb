@@ -39,6 +39,7 @@ module Heirloom
         def is_internal_attribute?(attribute)
           return true if is_reserved? attribute
           return true if is_endpoint? attribute
+          return true if is_perms? attribute
           false
         end
 
@@ -47,7 +48,11 @@ module Heirloom
         end
         
         def is_endpoint?(attribute)
-          attribute.match('^.*-.*-\d*-s3|http|https-url$|perms')
+          attribute.match('^.*-.*-\d*-s3|http|https-url$')
+        end
+
+        def is_perms?(attribute)
+          attribute.match('^.*perms')
         end
       end
     end

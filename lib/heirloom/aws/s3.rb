@@ -82,10 +82,6 @@ module Heirloom
         @s3.get_object_acl(args[:bucket], args[:object_name]).body
       end
 
-      def get_bucket_acl(bucket)
-        @s3.get_bucket_acl(bucket).body
-      end
-
       def get_bucket_object_versions(bucket)
         @s3.get_bucket_object_versions(bucket).body
       end

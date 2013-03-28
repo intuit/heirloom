@@ -47,7 +47,7 @@ module Heirloom
         end
         
         def is_endpoint?(attribute)
-          attribute.match('^.*-.*-\d*-s3|http|https-url$')
+          attribute.match('^.*-.*-\d*-s3|http|https-url$|perms')
         end
       end
     end

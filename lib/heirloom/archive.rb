@@ -89,7 +89,7 @@ module Heirloom
                                                :object_name => key_name
 
         object_acl.tap { |x| x.delete("Owner") }
-        data.merge!( "#{region}" "\\" "#{key_name}" => object_acl)
+        data.merge!( "#{region}" "-" "perms" => object_acl)
       end
       data
     end

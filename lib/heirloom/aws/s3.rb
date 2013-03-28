@@ -16,10 +16,6 @@ module Heirloom
       end
 
       def delete_object(bucket_name, object_name, options = {})
-        printf "ARGS"
-        puts bucket_name.inspect
-        puts object_name.inspect
-        puts options.inspect
         @s3.delete_object(bucket_name, object_name, options)
       end
 

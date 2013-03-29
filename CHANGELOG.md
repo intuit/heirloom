@@ -1,11 +1,6 @@
 ## HEAD:
 
 * Add support for authorizing accounts using the canonical ID
-
-## 0.10.2 (3/29/2013):
-
-* Catalog command will now show the full url to the s3 bucket(s)
-
 ## 0.10.1 (02/28/2013):
 
 * Minor refactoring of lib/heirloom/cipher/shared.rb

@@ -24,7 +24,11 @@ describe Heirloom do
 
   context "filtered" do
     it "should return the name with details" do
-      format = "test1\n  Regions       : us-west-1, us-east-1\n  Bucket Prefix : bp1"
+      format = "test1\n" +
+               "  regions          : us-west-1, us-east-1\n" +
+               "  bucket_prefix    : bp1\n" +
+               "  us-west-1-s3-url : s3://bp1-us-west-1/test1\n" +
+               "  us-east-1-s3-url : s3://bp1-us-east-1/test1"
       @formatter.format(:catalog => @catalog,
                         :name    => 'test1').should == format
     end

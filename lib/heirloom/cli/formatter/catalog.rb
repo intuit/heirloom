@@ -30,9 +30,15 @@ module Heirloom
 
         def details
           data = @catalog.each_pair.map do |k,v|
+            urls = v["regions"].map do |region|
+              bucket_prefix = v["bucket_prefix"].first
+              "  #{region}-s3-url : s3://#{bucket_prefix}-#{region}/#{k}"
+            end
+
             d = k + "\n"
-            d << "  Regions       : " + @catalog[k]["regions"].join(", ") + "\n"
-            d << "  Bucket Prefix : " + @catalog[k]["bucket_prefix"].first
+            d << "  regions          : " + @catalog[k]["regions"].join(", ") + "\n"
+            d << "  bucket_prefix    : " + @catalog[k]["bucket_prefix"].first + "\n"
+            d << urls.join("\n")
           end
           data.join "\n"
         end

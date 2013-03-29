@@ -31,7 +31,8 @@ module Heirloom
         def details
           data = @catalog.each_pair.map do |k,v|
             urls = v["regions"].map do |region|
-              "  " + region + "-s3-url : s3://" + v["bucket_prefix"].first + "-" + region + "/" + k
+              bucket_prefix = v["bucket_prefix"].first
+              "  #{region}-s3-url : s3://#{bucket_prefix}-#{region}/#{k}"
             end
 
             d = k + "\n"

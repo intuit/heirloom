@@ -36,8 +36,8 @@ module Heirloom
             end
 
             d = k + "\n"
-            d << "  Regions          : " + @catalog[k]["regions"].join(", ") + "\n"
-            d << "  Bucket Prefix    : " + @catalog[k]["bucket_prefix"].first + "\n"
+            d << "  regions          : " + @catalog[k]["regions"].join(", ") + "\n"
+            d << "  bucket_prefix    : " + @catalog[k]["bucket_prefix"].first + "\n"
             d << urls.join("\n")
           end
           data.join "\n"

@@ -1,7 +1,6 @@
 ## HEAD:
 
 * Add support for authorizing accounts using the canonical ID
-
 ## 0.10.1 (02/28/2013):
 
 * Minor refactoring of lib/heirloom/cipher/shared.rb

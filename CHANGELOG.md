@@ -2,6 +2,9 @@
 
 * Updating to fog 1.10.0
 * Add support for authorizing accounts using the canonical ID
+* Updated catalog output to include s3 urls
+* Catalog output renamed Bucket Prefix to bucket_prefix
+* Catalog output renamed Region to region
 
 ## 0.10.1 (02/28/2013):
 

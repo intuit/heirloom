@@ -1,12 +1,13 @@
 module Heirloom
   class Config
 
-    attr_accessor :access_key, :secret_key, :metadata_region, :logger
+    attr_accessor :access_key, :secret_key, :metadata_region, :logger, :environment
 
     def initialize(args={})
-      @opts       = args[:opts] ||= Hash.new
-      @config     = load_config_file
-      self.logger = args[:logger] ||= HeirloomLogger.new
+      @opts            = args[:opts] ||= Hash.new
+      self.logger      = args[:logger] ||= HeirloomLogger.new
+      self.environment = args[:environment] ||= 'aws'
+      @config          = load_config_file
       load_config
     end
 
@@ -26,7 +27,12 @@ module Heirloom
 
       if File.exists? config_file
         data = YAML::load File.open(config_file)
-        data['aws']
+        if data.has_key?(self.environment)
+          data[self.environment]
+        else
+          self.logger.error "Environment '#{self.environment}' not found in config file."
+          exit 1
+        end
       else
         { }
       end

@@ -5,7 +5,7 @@ module Heirloom
       def load_config(args)
         opts = args[:opts]
         logger = args[:logger]
-        config = Config.new :logger => logger
+        config = Config.new :logger => logger, :environment => opts[:environment]
         config.access_key = opts[:aws_access_key] if opts[:aws_access_key]
         config.secret_key = opts[:aws_secret_key] if opts[:aws_secret_key]
         config.metadata_region = opts[:metadata_region] if opts[:metadata_region]

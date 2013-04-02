@@ -27,7 +27,7 @@ module Heirloom
 
       if File.exists? config_file
         data = YAML::load File.open(config_file)
-        if data.has_key?(self.environment)
+        if data.has_key? self.environment
           data[self.environment]
         else
           self.logger.error "Environment '#{self.environment}' not found in config file."

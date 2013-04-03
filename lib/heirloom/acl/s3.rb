@@ -33,11 +33,6 @@ module Heirloom
         s3.put_object_acl bucket, key, grants
       end
 
-      def get_object_acl(args)
-        s3.get_object_acl :bucket      => args[:bucket],
-                          :object_name => args[:object_name]
-      end
-
       private
 
       def build_bucket_grants(args)

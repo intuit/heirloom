@@ -84,8 +84,13 @@ module Heirloom
                                                :region      => region,
                                                :object_name => key_name
 
-        object_acl.tap { |x| x.delete("Owner") }
-        data.merge!( "#{region}" "-" "perms" => object_acl)
+        object_acl.delete ("Owner")
+        output = object_acl["AccessControlList"].map do |x|
+          display_name = x["Grantee"]["DisplayName"]
+          permission = x["Permission"]
+          "#{display_name}:#{permission.downcase}"
+        end
+        data.merge!( "#{region}-perms" => output.join(', '))
       end
       data
     end

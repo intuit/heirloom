@@ -76,23 +76,7 @@ module Heirloom
     end
 
     def show
-      data = reader.show
-      reader.regions.each do |region|
-        key_name = reader.key_name
-        bucket = reader.get_bucket :region => region
-        object_acl = authorizer.get_object_acl :bucket      => bucket,
-                                               :region      => region,
-                                               :object_name => key_name
-
-        object_acl.delete ("Owner")
-        output = object_acl["AccessControlList"].map do |x|
-          display_name = x["Grantee"]["DisplayName"]
-          permission = x["Permission"]
-          "#{display_name}:#{permission.downcase}"
-        end
-        data.merge!( "#{region}-perms" => output.join(', '))
-      end
-      data
+      reader.show.merge reader.object_acls
     end
 
     def list(limit=10)

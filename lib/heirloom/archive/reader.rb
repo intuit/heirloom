@@ -59,11 +59,35 @@ module Heirloom
     def show
       query = sdb.select "select * from `#{@domain}` where itemName() = '#{@id}'"
       items = query[@id] ? query[@id] : {}
-      Hash.new.tap do |hash|
+      data = Hash.new.tap do |hash|
         items.each_pair.map do |key,value|
           hash[key] = value.first
         end
       end
+    end
+
+    def object_acls
+      data = {}
+      regions.each do |region|
+        object_name = "#{@name}/#{key_name}"
+
+        bucket = get_bucket :region => region
+
+        s3_acl = AWS::S3.new :config => @config,
+                             :region => region
+
+        object_acl = s3_acl.get_object_acl :bucket      => bucket,
+                                           :object_name => object_name
+
+        object_acl.delete ("Owner")
+        output = object_acl["AccessControlList"].map do |x|
+          display_name = x["Grantee"]["DisplayName"]
+          permission = x["Permission"]
+          "#{display_name}:#{permission.downcase}"
+        end
+        data.merge!( "#{region}-perms" => output.join(', '))
+      end
+      data
     end
 
     def key_name

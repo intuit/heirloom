@@ -104,17 +104,28 @@ describe Heirloom do
       @archive.exists?.should be_false
     end
 
-    xit "should call show method"  do
-       mock = double('Mock')
-       Heirloom::Reader.should_receive(:new).
+    it "should call show method"  do
+      reader_mock = mock('reader') 
+      show_mock = { 'id'               => '0.0.7',
+                    'encrypted'        => 'true',
+                    'bucket_prefix'    => 'rickybobby',
+                    'us-west-2-s3-url' => 's3://rickybobby-us-west-2/demo2/0.0.7.tar.gz.gpg'
+                  }
+      object_acls_mock = { 'us-west-2-perms' => 'rickybobby:read, lc:full_control',
+                           'us-west-1-perms' => 'rickybobby:read, lc:full_control'
+                         }
+      merge_mock = show_mock.merge object_acls_mock
+ 
+      Heirloom::Reader.should_receive(:new).
                         with(:config => @config_mock,
                              :name   => 'chef',
                              :id     => '123').
-                        and_return mock
-       mock.should_receive(:show)
-       mock.should_receive(:object_acls)
-       @archive.show
-     end
+                        and_return reader_mock
+ 
+      reader_mock.stub(:show).and_return(show_mock)
+      reader_mock.stub(:object_acls).and_return(object_acls_mock)
+      @archive.show.should == merge_mock
+    end
 
     it "should call list method" do
       mock = double('Mock')

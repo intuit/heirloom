@@ -4,7 +4,7 @@ describe Heirloom do
 
   before do
     @sdb_mock = mock 'sdb'
-    @config_mock = double 'config'
+    @config_mock = mock 'config'
     @logger_stub = stub :debug => true
     @config_mock.should_receive(:logger).and_return @logger_stub
     Heirloom::AWS::SimpleDB.should_receive(:new).and_return @sdb_mock
@@ -23,6 +23,27 @@ describe Heirloom do
                with("select * from `heirloom_tim` where itemName() = '123'").
                and_return( { '123' => { 'value' => [ 'details' ] } } )
       @reader.show.should == { 'value' => 'details' }
+    end
+
+    it "should get object_acls" do
+      @reader.stub(:regions).and_return( ['us-west-1', 'us-east-1'] )
+      @reader.stub(:key_name).and_return( 'mockvalue' )
+      @reader.stub(:get_bucket).and_return( 'mockvalue' )
+      #@region_mock = mock 'us-west-1'
+      @sdb_mock.stub(:select).and_return('value')
+      @s3_acl_mock = mock 's3'
+      Heirloom::AWS::S3.should_receive(:new).exactly(2).times.and_return @s3_acl_mock
+      @s3_acl_mock.stub(:get_object_acl).and_return(
+        {"Owner"=>{"ID"=>"123", "DisplayName"=>"lc"}, 
+          "AccessControlList"=>[
+            {"Grantee"=>{"ID"=>"321", "DisplayName"=>"rickybobby"}, "Permission"=>"READ"}, 
+            {"Grantee"=>{"ID"=>"123", "DisplayName"=>"lc"}, "Permission"=>"FULL_CONTROL"}]
+        })
+
+      @reader.show.should == {} 
+      @reader.object_acls.should == { 'us-west-1-perms' => 'rickybobby:read, lc:full_control', 
+                                      'us-east-1-perms' => 'rickybobby:read, lc:full_control'
+                                    } 
     end
 
     it "should return an empty hash if item does not exist" do

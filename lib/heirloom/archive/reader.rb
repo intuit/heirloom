@@ -79,7 +79,7 @@ module Heirloom
         object_acl = s3_acl.get_object_acl :bucket      => bucket,
                                            :object_name => object_name
 
-        object_acl.delete ("Owner")
+        object_acl.delete "Owner"
         output = object_acl["AccessControlList"].map do |x|
           "#{x["Grantee"]["DisplayName"]}:#{x["Permission"]}".downcase
         end

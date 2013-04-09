@@ -4,6 +4,7 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      # how to re-use what is in upload?
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
@@ -14,12 +15,11 @@ module Heirloom
                              :required => [:name],
                              :config   => @config
 
-        @catalog = Heirloom::Catalog.new :name    => @opts[:name],
-                                         :config  => @config
+        @catalog = Heirloom::Catalog.new :name   => @opts[:name],
+                                         :config => @config
 
         # Can't use fetch as Trollop sets :id to nil
-        id = @opts[:id] ||( latest_id :name   => @opts[:name],                                              
-                                      :config => @config)
+        id = @opts[:id] || (latest_id :name => @opts[:name], :config => @config)
 
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config,
@@ -37,17 +37,38 @@ module Heirloom
       end
       
       def rotate
-        ensure_path_is_directory     :path => @opts[:output], :config => @config
-        ensure_directory_is_writable :path => @opts[:output], :config => @config
-        secret = read_secret :opts   => @opts,
-                             :config => @config
-        archive = @archive.download :output        => @opts[:output],
-                                    :extract       => @opts[:extract],
-                                    :region        => @region,
-                                    :bucket_prefix => @bucket_prefix,
-                                    :secret        => secret
-        # do rotation
-        exit 1 unless archive
+        temp_dir = create_temp_directory
+        
+        unless @archive.download :output        => temp_dir,
+                                 :extract       => @opts[:extract],
+                                 :region        => @region,
+                                 :bucket_prefix => @bucket_prefix,
+                                 :secret        => secret
+          @logger.error "Download failed."
+          exit 1
+        end
+
+        @file = Tempfile.new('archive.tar.gz')
+
+        # do we need the original exclude options
+        unless @archive.build :bucket_prefix => @bucket_prefix,
+                              :directory     => temp_dir,
+                              :exclude       => @opts[:exclude],
+                              :file          => @file.path,
+                              :secret        => secret
+          @logger.error "Build failed."
+          exit 1
+        end
+        
+        @archive.destroy if @archive.exists?
+
+        @archive.upload :bucket_prefix   => @bucket_prefix,
+                        :regions         => @regions,
+                        :public_readable => @opts[:public],
+                        :file            => @file.path,
+                        :secret          => secret
+
+        @file.close!
       end
 
       private

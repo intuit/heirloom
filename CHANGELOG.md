@@ -1,5 +1,6 @@
 ## HEAD:
 
+* Added functionality to the show command to include permissions of objects
 * Updating to fog 1.10.0
 * Add support for authorizing accounts using the canonical ID
 * Updated catalog output to include s3 urls

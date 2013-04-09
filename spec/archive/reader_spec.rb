@@ -14,7 +14,7 @@ describe Heirloom do
 
   context "domain does exist" do
     before do
-      Heirloom::AWS::SimpleDB.stub(:new).and_return @sdb_mock
+      Heirloom::AWS::SimpleDB.stub :new => @sdb_mock
       @sdb_mock.stub :domain_exists? => true
     end
 
@@ -117,7 +117,7 @@ describe Heirloom do
 
   context "domain does not exist" do
     before do
-      Heirloom::AWS::SimpleDB.stub(:new).and_return @sdb_mock
+      Heirloom::AWS::SimpleDB.stub :new => @sdb_mock
       @sdb_mock.stub :domain_exists? => false
     end
 

@@ -67,7 +67,6 @@ describe Heirloom do
 
     it "should return nil if the bucket does not exist" do
       @sdb_mock.should_receive(:select).
-                exactly(1).times.
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { } )
       @reader.get_bucket(:region => 'us-west-1').should == nil
@@ -75,7 +74,7 @@ describe Heirloom do
 
     it "should return the key if it exists" do
       @sdb_mock.should_receive(:select).
-                exactly(6).times.
+                at_least(:once).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' =>
                               { 'us-west-1-s3-url' =>
@@ -101,7 +100,6 @@ describe Heirloom do
 
     it "should return the regions the archive has been uploaded to" do
       @sdb_mock.should_receive(:select).
-                exactly(1).times.
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' =>
                               { 'us-west-1-s3-url' =>

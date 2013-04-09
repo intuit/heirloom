@@ -76,7 +76,7 @@ module Heirloom
     end
 
     def show
-      reader.show
+      reader.show.merge reader.object_acls
     end
 
     def list(limit=10)

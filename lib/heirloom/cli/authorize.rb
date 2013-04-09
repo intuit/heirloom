@@ -43,7 +43,8 @@ Usage:
 
 heirloom authorize -n NAME -i ID -a AWS_ACCOUNT1 -a AWS_ACCOUNT2
 
-Note: This will replace all current authorizations with those specified and make the Heirloom private.
+Note: This will replace all current authorizations with those specified and make the Heirloom private.  Use the 'show' command to retrieve the existing authorizations assigned to an object.
+
 
 EOS
           opt :accounts, "AWS Account(s) email or canonical_ID to authorize. Can be specified multiple times.", :type  => :string,

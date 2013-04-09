@@ -212,8 +212,9 @@ describe Heirloom do
     body_mock = mock 'body'
     @fog_mock.should_receive(:get_object_acl).
               with('bucket', 'object').and_return(body_mock)
-    body_mock.should_receive(:body)
-    @s3.get_object_acl({ :bucket => 'bucket', :object_name => 'object'})
+    body_mock.stub :body => 'data'
+    @s3.get_object_acl({ :bucket => 'bucket', :object_name => 'object'}).
+        should == 'data'
   end
 
 

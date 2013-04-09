@@ -26,14 +26,23 @@ describe Heirloom do
     end
 
     it "should get object_acls" do
-      @reader.stub(:regions).and_return( ['us-west-1', 'us-east-1'] )
-      @reader.stub(:key_name).and_return( 'mockvalue' )
-      @reader.stub(:get_bucket).and_return( 'mockvalue' )
-      #@region_mock = mock 'us-west-1'
+      @config_mock.stub(:access_key).and_return('the-key')
+      @config_mock.stub(:secret_key).and_return('the-secret')
+      @reader.stub(:regions).and_return(['us-west-1', 'us-west-2'])
+      @reader.stub(:key_name).and_return('mockvalue')
+      @reader.stub(:get_bucket).and_return('mockvalue')
       @sdb_mock.stub(:select).and_return('value')
-      @s3_acl_mock = mock 's3'
-      Heirloom::AWS::S3.should_receive(:new).exactly(2).times.and_return @s3_acl_mock
-      @s3_acl_mock.stub(:get_object_acl).and_return(
+      s3_mock = mock 's3'
+      Heirloom::AWS::S3.should_receive(:new).
+                       with(:config => @config_mock,
+                            :region => 'us-west-1').
+                       and_return s3_mock
+      Heirloom::AWS::S3.should_receive(:new).
+                       with(:config => @config_mock,
+                            :region => 'us-west-2').
+                       and_return s3_mock
+      
+      s3_mock.stub(:get_object_acl).and_return(
         {"Owner"=>{"ID"=>"123", "DisplayName"=>"lc"}, 
           "AccessControlList"=>[
             {"Grantee"=>{"ID"=>"321", "DisplayName"=>"rickybobby"}, "Permission"=>"READ"}, 
@@ -41,8 +50,8 @@ describe Heirloom do
         })
 
       @reader.show.should == {} 
-      @reader.object_acls.should == { 'us-west-1-perms' => 'rickybobby:read, lc:full_control', 
-                                      'us-east-1-perms' => 'rickybobby:read, lc:full_control'
+      @reader.object_acls.should == { 'us-west-1-permissions' => 'rickybobby:read, lc:full_control', 
+                                      'us-west-2-permissions' => 'rickybobby:read, lc:full_control'
                                     } 
     end
 

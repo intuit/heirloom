@@ -105,7 +105,7 @@ describe Heirloom do
     end
 
     it "should call show method"  do
-      reader_mock = mock('reader') 
+      reader_mock = mock 'reader' 
       show_mock = { 'id'               => '0.0.7',
                     'encrypted'        => 'true',
                     'bucket_prefix'    => 'rickybobby',

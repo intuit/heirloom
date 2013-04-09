@@ -81,11 +81,9 @@ module Heirloom
 
         object_acl.delete ("Owner")
         output = object_acl["AccessControlList"].map do |x|
-          display_name = x["Grantee"]["DisplayName"]
-          permission = x["Permission"]
-          "#{display_name}:#{permission.downcase}"
+          "#{x["Grantee"]["DisplayName"]}:#{x["Permission"]}".downcase
         end
-        data.merge!( "#{region}-perms" => output.join(', '))
+        data.merge!"#{region}-permissions" => output.join(', ')
       end
       data
     end

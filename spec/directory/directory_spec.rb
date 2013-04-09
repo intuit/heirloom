@@ -93,8 +93,7 @@ describe Heirloom::Directory do
 
     context "parameter validation" do
       before do
-        files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me']
-        Dir.should_receive(:entries).with('/dir').and_return files
+        Dir.stub(:entries).and_return ['pack_me', 'dont_pack_me']
       end
 
       it "should not fail if exclude is nil" do
@@ -102,7 +101,10 @@ describe Heirloom::Directory do
                                              :exclude => nil,
                                              :path    => '/dir',
                                              :file    => '/tmp/file.tar.gz'
-        @directory.build_artifact_from_directory(:exclude => nil)
+        @directory.stub(:`).and_return 'cmd output'
+        lambda {
+          @directory.build_artifact_from_directory(:exclude => nil)
+        }.should_not raise_error
       end
     end
 

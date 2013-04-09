@@ -91,6 +91,21 @@ describe Heirloom::Directory do
       end
     end
 
+    context "parameter validation" do
+      before do
+        files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me']
+        Dir.should_receive(:entries).with('/dir').and_return files
+      end
+
+      it "should not fail if exclude is nil" do
+        @directory = Heirloom::Directory.new :config  => @config_mock,
+                                             :exclude => nil,
+                                             :path    => '/dir',
+                                             :file    => '/tmp/file.tar.gz'
+        @directory.build_artifact_from_directory(:exclude => nil)
+      end
+    end
+
   end
 
 end

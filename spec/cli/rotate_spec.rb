@@ -4,16 +4,26 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    @archive_mock = mock 'archive'
+
+    options = { :name          => 'archive_name',
+                :id            => '1.0.0',
+                :bucket_prefix => 'bp',
+                :old_secret    => 'oldpassword',
+                :new_secret    => 'newpassword' }
+    Trollop.stub(:options).and_return options
+
+    catalog_stub = stub :regions => ['us-east-1', 'us-west-1']
+    Heirloom::Catalog.stub(:new).and_return(catalog_stub)
+
   end
 
-  it "should download, decrypt, then re-encrypt the archive" do
+  it "should delegate to archive object" do
 
-    @cli_rotate = Heirloom::CLI::Rotate.new
+    Heirloom::Archive.stub(:new).and_return(@archive_mock)
 
-    @cli_rotate.should_receive(:download)
-    @cli_rotate.should_receive(:rotate)
-    @cli_rotate.should_receive(:upload)
+    @archive_mock.should_receive(:rotate)
+
+    @cli_rotate = Heirloom::CLI::Rotate.new.rotate
 
   end
   

@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @config_mock = mock 'config'
+    @logger_mock = mock 'logger', :info => true, :debug => true, :error => true
+    @config_mock = mock 'config', :logger => @logger_mock
     @archive = Heirloom::Archive.new :config => @config_mock,
                                      :name   => 'chef',
                                      :id     => '123'
@@ -210,5 +211,18 @@ describe Heirloom do
       @archive.delete_domain
     end
 
+  end
+
+  context "rotate" do
+    it "should rotate an archive by downloading and re-uploading" do
+      @archive.should_receive(:download).
+               with(hash_including(:secret => "oldpassword")).
+               and_return(true)
+      @archive.should_receive(:build).and_return(true)
+      @archive.should_receive(:destroy)
+      @archive.should_receive(:upload).with(hash_including(:secret => "newpassword"))
+
+      @archive.rotate({ :new_secret => "newpassword", :old_secret => "oldpassword" })
+    end
   end
 end

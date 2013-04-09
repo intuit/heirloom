@@ -79,6 +79,25 @@ module Heirloom
       reader.show
     end
 
+    def rotate(args)
+      temp_dir = Dir.mktmpdir
+      temp_file = Tempfile.new('archive.tar.gz')
+
+      unless download({ :output => temp_dir, :secret => args[:old_secret], :extract => true }.merge(args))
+        @config.logger.error "Download failed - aborting rotation."
+        exit 1
+      end
+      unless build({ :directory => temp_dir, :secret => args[:new_secret], :file => temp_file.path }.merge(args))
+        @config.logger.error "Build failed - aborting rotation."
+        exit 1
+      end
+      destroy
+      upload({ :file => temp_file.path, :secret => args[:new_secret] }.merge(args))
+    ensure
+      temp_file.close!
+      FileUtils.remove_entry temp_dir
+    end
+
     def list(limit=10)
       lister.list(limit)
     end

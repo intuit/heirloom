@@ -14,7 +14,7 @@ describe Heirloom do
 
   context "domain does exist" do
     before do
-      Heirloom::AWS::SimpleDB.should_receive(:new).and_return @sdb_mock
+      Heirloom::AWS::SimpleDB.stub(:new).and_return @sdb_mock
       @sdb_mock.stub :domain_exists? => true
     end
 
@@ -48,7 +48,7 @@ describe Heirloom do
 
     it "should return the bucket if it exists" do
       @sdb_mock.should_receive(:select).
-                exactly(3).times.
+                at_least(:once).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' =>
                               { 'us-west-1-s3-url' =>
@@ -60,7 +60,6 @@ describe Heirloom do
 
     it "should return nil if the key does not exist" do
       @sdb_mock.should_receive(:select).
-                exactly(1).times.
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { } )
       @reader.get_key(:region => 'us-west-1').should == nil
@@ -120,7 +119,7 @@ describe Heirloom do
 
   context "domain does not exist" do
     before do
-      Heirloom::AWS::SimpleDB.should_receive(:new).and_return @sdb_mock
+      Heirloom::AWS::SimpleDB.stub(:new).and_return @sdb_mock
       @sdb_mock.stub :domain_exists? => false
     end
 

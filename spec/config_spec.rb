@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @config_file = { 'aws' => 
+    @config_file = { 'default' => 
                      { 'access_key'      => 'key',
                        'secret_key'      => 'secret',
                        'metadata_region' => 'us-west-2'
@@ -36,9 +36,9 @@ describe Heirloom do
     File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
                                and_return(@config_file.to_yaml)
     config = Heirloom::Config.new
-    config.access_key.should == @config_file['aws']['access_key']
-    config.secret_key.should == @config_file['aws']['secret_key']
-    config.metadata_region.should == @config_file['aws']['metadata_region']
+    config.access_key.should == @config_file['default']['access_key']
+    config.secret_key.should == @config_file['default']['secret_key']
+    config.metadata_region.should == @config_file['default']['metadata_region']
   end
   
   it "should override config settings in file from opts" do

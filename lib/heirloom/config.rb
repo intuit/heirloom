@@ -6,7 +6,7 @@ module Heirloom
     def initialize(args={})
       @opts        = args[:opts] ||= Hash.new
       @logger      = args[:logger] ||= HeirloomLogger.new
-      @environment = args[:environment] ||= 'aws'
+      @environment = args[:environment] ||= 'default'
       @config      = load_config_file
       load_config
     end

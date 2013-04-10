@@ -74,7 +74,7 @@ describe Heirloom do
       @logger_mock = mock 'logger'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
-      Heirloom::Config.should_receive(:new).with(:logger => @logger_mock).
+      Heirloom::Config.should_receive(:new).with(:logger => @logger_mock, :environment => nil).
                        and_return @config_mock
     end
 

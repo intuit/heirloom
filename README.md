@@ -25,10 +25,19 @@ gem install heirloom --no-ri --no-rdoc
 To get started, copy the sample below to ~/.heirloom.yml and update the specified fields.
 
 ```
+# default environment
 aws:
   access_key: UPDATE_ME
   secret_key: UPDATE_ME
   metadata_region: us-west-1
+  
+# multiple environments can be defined and 
+# selected via cli with -e or --environment
+
+# prod:
+#   access_key: UPDATE_ME
+#   secret_key: UPDATE_ME
+#   metadata_region: us-west-1
 ```
 
 Documentation

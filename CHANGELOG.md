@@ -1,5 +1,7 @@
 ## HEAD:
 
+* Add support for multiple environments
+* Environment named 'default' is now the default
 * Added functionality to the show command to include permissions of objects
 * Updating to fog 1.10.0
 * Add support for authorizing accounts using the canonical ID

@@ -84,7 +84,7 @@ heirloom upload -n NAME -i ID -d DIRECTORY_TO_UPLOAD
 EOS
           opt :directory, "Source directory to upload.", :type  => :string
           opt :exclude, "File(s) or directorie(s) to exclude. \
-Can be specified multiple times.", :type  => :string, :multi => true
+Can be specified multiple times.", :type  => :string, :multi => true, :short => "-x"
           opt :help, "Display Help"
           opt :id, "ID for Heirloom.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
@@ -100,6 +100,7 @@ Can be specified multiple times.", :type  => :string, :multi => true
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type  => :string,
                                                         :short => :none
+          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
         end
       end
 

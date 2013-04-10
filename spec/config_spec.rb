@@ -3,10 +3,15 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @config_file = { 'aws' => 
+    @config_file = { 'default' => 
                      { 'access_key'      => 'key',
                        'secret_key'      => 'secret',
                        'metadata_region' => 'us-west-2'
+                     },
+                     'dev' =>
+                     { 'access_key'      => 'devkey',
+                       'secret_key'      => 'devsecret',
+                       'metadata_region' => 'devmd'
                      }
                    }
     @opts = { :aws_access_key  => 'optkey',
@@ -31,9 +36,9 @@ describe Heirloom do
     File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
                                and_return(@config_file.to_yaml)
     config = Heirloom::Config.new
-    config.access_key.should == @config_file['aws']['access_key']
-    config.secret_key.should == @config_file['aws']['secret_key']
-    config.metadata_region.should == @config_file['aws']['metadata_region']
+    config.access_key.should == @config_file['default']['access_key']
+    config.secret_key.should == @config_file['default']['secret_key']
+    config.metadata_region.should == @config_file['default']['metadata_region']
   end
   
   it "should override config settings in file from opts" do
@@ -52,6 +57,42 @@ describe Heirloom do
     config.access_key.should be_nil
     config.secret_key.should be_nil
     config.metadata_region.should be_nil
+  end
+
+  it "should load a different environment if requested" do
+    File.stub :exists? => true
+    File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
+                               and_return(@config_file.to_yaml)
+    config = Heirloom::Config.new :environment => 'dev'
+    config.access_key.should == @config_file['dev']['access_key']
+    config.secret_key.should == @config_file['dev']['secret_key']
+    config.metadata_region.should == @config_file['dev']['metadata_region']
+  end
+
+  it "should still allow overrides with different environments" do
+    File.stub :exists? => true
+    File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
+                               and_return(@config_file.to_yaml)
+    opts = {
+      :aws_access_key => 'specialdevkey'
+    }
+
+    config = Heirloom::Config.new :opts => opts, :environment => 'dev'
+    config.access_key.should == 'specialdevkey'
+    config.metadata_region.should == @config_file['dev']['metadata_region']
+  end
+
+  it "should complain if a non-existing environment is requested" do
+    File.stub :exists? => true
+    File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
+                               and_return(@config_file.to_yaml)
+
+    logger_mock = mock 'logger'
+    logger_mock.should_receive(:error)
+
+    lambda {
+      config = Heirloom::Config.new :environment => 'missing', :logger => logger_mock
+    }.should raise_error SystemExit
   end
 
 end

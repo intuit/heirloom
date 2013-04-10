@@ -5,11 +5,13 @@ describe Heirloom do
 
   before do
 
-    options = { :name          => 'archive_name',
-                :id            => '1.0.0',
-                :bucket_prefix => 'bp',
-                :old_secret    => 'oldpassword',
-                :new_secret    => 'newpassword' }
+    options = { :name           => 'archive_name',
+                :id             => '1.0.0',
+                :bucket_prefix  => 'bp',
+                :old_secret     => 'oldpassword',
+                :new_secret     => 'newpassword',
+                :aws_access_key => 'key',
+                :aws_secret_key => 'secret' }
     Trollop.stub(:options).and_return options
 
     catalog_stub = stub :regions => ['us-east-1', 'us-west-1']
@@ -19,11 +21,11 @@ describe Heirloom do
 
   it "should delegate to archive object" do
 
-    Heirloom::Archive.stub(:new).and_return(@archive_mock)
+    archive_mock = mock 'archive'
+    Heirloom::Archive.stub(:new).and_return(archive_mock)
+    archive_mock.should_receive(:rotate)
 
-    @archive_mock.should_receive(:rotate)
-
-    @cli_rotate = Heirloom::CLI::Rotate.new.rotate
+    Heirloom::CLI::Rotate.new.rotate
 
   end
   

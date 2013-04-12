@@ -15,18 +15,33 @@ describe Heirloom do
     Trollop.stub(:options).and_return options
 
     catalog_stub = stub :regions => ['us-east-1', 'us-west-1']
-    Heirloom::Catalog.stub(:new).and_return(catalog_stub)
+    Heirloom::Catalog.stub(:new).and_return catalog_stub
+
+    @archive_mock = mock 'archive'
+    Heirloom::Archive.stub(:new).and_return @archive_mock
 
   end
 
   it "should delegate to archive object" do
 
-    archive_mock = mock 'archive'
-    Heirloom::Archive.stub(:new).and_return(archive_mock)
-    archive_mock.should_receive(:rotate)
+    @archive_mock.should_receive :rotate
 
     Heirloom::CLI::Rotate.new.rotate
 
+  end
+
+  it "should log and do a SystemExit when a rotate fails" do
+    
+    @archive_mock.stub(:rotate).and_raise Heirloom::Exceptions::RotateFailed.new("failed")
+
+    @logger_mock = mock 'logger'
+    Heirloom::HeirloomLogger.stub :new => @logger_mock
+    
+    @logger_mock.should_receive(:error).with "failed"
+    expect {
+      Heirloom::CLI::Rotate.new.rotate
+    }.to raise_error SystemExit
+    
   end
   
 end

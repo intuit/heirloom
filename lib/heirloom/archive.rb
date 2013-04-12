@@ -84,12 +84,10 @@ module Heirloom
       temp_file = Tempfile.new('archive.tar.gz')
 
       unless download({ :output => temp_dir, :secret => args[:old_secret], :extract => true }.merge(args))
-        @config.logger.error "Download failed - aborting rotation."
-        exit 1
+        raise Heirloom::Exceptions::RotateFailed.new "Download failed - aborting rotation"
       end
       unless build({ :directory => temp_dir, :secret => args[:new_secret], :file => temp_file.path }.merge(args))
-        @config.logger.error "Build failed - aborting rotation."
-        exit 1
+        raise Heirloom::Exceptions::RotateFailed.new "Build failed - aborting rotation"
       end
       destroy
       upload({ :file => temp_file.path, :secret => args[:new_secret] }.merge(args))

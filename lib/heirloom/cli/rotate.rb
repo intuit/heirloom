@@ -34,6 +34,9 @@ module Heirloom
       
       def rotate
         @archive.rotate @opts
+      rescue Heirloom::Exceptions::RotateFailed => e
+        @config.logger.error e.message
+        exit 1
       end
 
       private

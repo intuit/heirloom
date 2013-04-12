@@ -1,5 +1,6 @@
-module Stackster
+module Heirloom
   module Exceptions
+
     class Base < RuntimeError
       attr_accessor :message
 
@@ -7,5 +8,9 @@ module Stackster
         @message = message
       end
     end
+
+    class RotateFailed < Base
+    end
+      
   end
 end

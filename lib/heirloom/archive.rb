@@ -1,16 +1,16 @@
+require 'heirloom/archive/authorizer.rb'
+require 'heirloom/archive/builder.rb'
+require 'heirloom/archive/checker.rb'
+require 'heirloom/archive/destroyer.rb'
+require 'heirloom/archive/downloader.rb'
 require 'heirloom/archive/lister.rb'
 require 'heirloom/archive/reader.rb'
-require 'heirloom/archive/builder.rb'
-require 'heirloom/archive/updater.rb'
-require 'heirloom/archive/uploader.rb'
-require 'heirloom/archive/downloader.rb'
 require 'heirloom/archive/setuper.rb'
 require 'heirloom/archive/teardowner.rb'
-require 'heirloom/archive/writer.rb'
-require 'heirloom/archive/authorizer.rb'
-require 'heirloom/archive/destroyer.rb'
+require 'heirloom/archive/updater.rb'
+require 'heirloom/archive/uploader.rb'
 require 'heirloom/archive/verifier.rb'
-require 'heirloom/archive/checker.rb'
+require 'heirloom/archive/writer.rb'
 
 module Heirloom
 
@@ -77,6 +77,23 @@ module Heirloom
 
     def show
       reader.show.merge reader.object_acls
+    end
+
+    def rotate(args)
+      temp_dir = Dir.mktmpdir
+      temp_file = Tempfile.new('archive.tar.gz')
+
+      unless download({ :output => temp_dir, :secret => args[:old_secret], :extract => true }.merge(args))
+        raise Heirloom::Exceptions::RotateFailed.new "Download failed - aborting rotation"
+      end
+      unless build({ :directory => temp_dir, :secret => args[:new_secret], :file => temp_file.path }.merge(args))
+        raise Heirloom::Exceptions::RotateFailed.new "Build failed - aborting rotation"
+      end
+      destroy
+      upload({ :file => temp_file.path, :secret => args[:new_secret] }.merge(args))
+    ensure
+      temp_file.close!
+      FileUtils.remove_entry temp_dir
     end
 
     def list(limit=10)

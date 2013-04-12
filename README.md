@@ -26,7 +26,7 @@ To get started, copy the sample below to ~/.heirloom.yml and update the specifie
 
 ```
 # default environment
-aws:
+default:
   access_key: UPDATE_ME
   secret_key: UPDATE_ME
   metadata_region: us-west-1

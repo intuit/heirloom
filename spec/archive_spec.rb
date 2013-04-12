@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @config_mock = mock 'config'
+    @logger_mock = mock 'logger', :info => true, :debug => true, :error => true
+    @config_mock = mock 'config', :logger => @logger_mock
     @archive = Heirloom::Archive.new :config => @config_mock,
                                      :name   => 'chef',
                                      :id     => '123'
@@ -220,6 +221,85 @@ describe Heirloom do
                           and_return mock
       mock.should_receive(:delete_domain)
       @archive.delete_domain
+    end
+
+  end
+
+  context "rotate" do
+    before do
+
+      @tmp_dir = '/path/to/temp/dir'
+      Dir.stub(:mktmpdir).and_return @tmp_dir
+
+      @tmp_file = mock 'file'
+      @tmp_file.stub :path => '/path/to/tmp/file', :close! => true
+      Tempfile.stub :new => @tmp_file
+      FileUtils.stub :remove_entry => true
+
+    end
+
+    it "should rotate an archive by downloading and re-uploading" do
+
+      @archive.should_receive(:download).
+               with(hash_including(:output => @tmp_dir, 
+                                   :secret => "oldpassword",
+                                   :extract => true)).
+               and_return true
+      @archive.should_receive(:build).
+               with(hash_including(:directory => @tmp_dir,
+                                   :secret => "newpassword",
+                                   :file => @tmp_file.path)).
+               and_return true
+      @archive.should_receive(:destroy).with(no_args)
+      @archive.should_receive(:upload).
+               with(hash_including(:secret => "newpassword",
+                                   :file => @tmp_file.path))
+
+      @archive.rotate({ :new_secret => "newpassword", :old_secret => "oldpassword" })
+    end
+
+    context "failing download" do
+
+      before do
+        @archive.stub :download => false, :build => true, :destroy => nil, :upload => true
+      end
+      
+      it "should raise an exception when download fails" do
+        expect {
+          @archive.rotate({ :new_secret => "new", :old_secret => "old" }) 
+        }.to raise_error Heirloom::Exceptions::RotateFailed
+      end
+
+      it "should not destroy the file when download fails" do
+        @archive.should_not_receive(:destroy)
+        begin
+          @archive.rotate({ :new_secret => "new", :old_secret => "old" })
+        rescue Heirloom::Exceptions::RotateFailed
+        end
+      end
+
+    end
+
+    context "failing build" do
+
+      before do
+        @archive.stub :download => true, :build => false, :destroy => nil, :upload => true
+      end
+      
+      it "should raise an exception when build fails" do
+        expect {
+          @archive.rotate({ :new_secret => "new", :old_secret => "old" })
+        }.to raise_error Heirloom::Exceptions::RotateFailed
+      end
+
+      it "should not destroy the file when build fails" do
+        @archive.should_not_receive(:destroy)
+        begin
+          @archive.rotate({ :new_secret => "new", :old_secret => "old" }) 
+        rescue Heirloom::Exceptions::RotateFailed
+        end
+      end
+
     end
 
   end

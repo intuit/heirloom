@@ -1,18 +1,20 @@
 require 'json'
 require 'trollop'
 
+require 'heirloom/cli/formatter'
 require 'heirloom/cli/shared'
+
 require 'heirloom/cli/authorize'
 require 'heirloom/cli/catalog'
-require 'heirloom/cli/upload'
-require 'heirloom/cli/setup'
+require 'heirloom/cli/destroy'
+require 'heirloom/cli/download'
 require 'heirloom/cli/list'
+require 'heirloom/cli/rotate'
+require 'heirloom/cli/setup'
 require 'heirloom/cli/show'
 require 'heirloom/cli/tag'
-require 'heirloom/cli/download'
-require 'heirloom/cli/destroy'
 require 'heirloom/cli/teardown'
-require 'heirloom/cli/formatter'
+require 'heirloom/cli/upload'
 
 module Heirloom
   module CLI
@@ -30,15 +32,17 @@ module Heirloom
         CLI::Download.new.download
       when 'list'
         CLI::List.new.list
+      when 'rotate'
+        CLI::Rotate.new.rotate
       when 'setup'
         CLI::Setup.new.setup
       when 'show'
         CLI::Show.new.show
+      when 'tag', 'update'
+        CLI::Tag.new.tag
       when 'teardown'
         CLI::Teardown.new.teardown
-      when 'update', 'tag'
-        CLI::Tag.new.tag
-      when 'build', 'upload'
+      when 'upload', 'build'
         CLI::Upload.new.upload
       when '-v'
         puts Heirloom::VERSION

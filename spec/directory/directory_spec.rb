@@ -91,6 +91,23 @@ describe Heirloom::Directory do
       end
     end
 
+    context "parameter validation" do
+      before do
+        Dir.stub(:entries).and_return ['pack_me', 'dont_pack_me']
+      end
+
+      it "should not fail if exclude is nil" do
+        @directory = Heirloom::Directory.new :config  => @config_mock,
+                                             :exclude => nil,
+                                             :path    => '/dir',
+                                             :file    => '/tmp/file.tar.gz'
+        @directory.stub(:`).and_return 'cmd output'
+        lambda {
+          @directory.build_artifact_from_directory(:exclude => nil)
+        }.should_not raise_error
+      end
+    end
+
   end
 
 end

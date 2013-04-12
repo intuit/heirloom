@@ -6,7 +6,7 @@ module Heirloom
 
     def initialize(args)
       @config  = args[:config]
-      @exclude = args[:exclude]
+      @exclude = args[:exclude] ||= []
       @path    = args[:path]
       @file    = args[:file]
       @logger  = @config.logger

@@ -3,16 +3,46 @@ require 'spec_helper'
 describe Heirloom do
   before do
     @config_mock = mock 'config'
-    @config_mock.should_receive(:access_key).and_return 'the-key'
-    @config_mock.should_receive(:secret_key).and_return 'the-secret'
-    @config_mock.should_receive(:metadata_region).and_return 'us-west-1'
+    @config_mock.stub :access_key      => 'the-key',
+                      :secret_key      => 'the-secret',
+                      :logger          => @logger_stub,
+                      :metadata_region => 'us-west-1',
+                      :use_iam_profile => false
     @fog_mock = mock 'fog'
-    Fog::AWS::SimpleDB.should_receive(:new).
+    Fog::AWS::SimpleDB.stub(:new).
                        with(:aws_access_key_id     => 'the-key',
                             :aws_secret_access_key => 'the-secret',
                             :region                => 'us-west-1').
                        and_return @fog_mock
     @sdb = Heirloom::AWS::SimpleDB.new :config => @config_mock
+  end
+
+  context "credential management" do
+    it "should use the access and secret keys by default" do
+
+      Fog::AWS::SimpleDB.should_receive(:new).
+        with(:aws_access_key_id => 'the-key',
+             :aws_secret_access_key => 'the-secret',
+             :region => 'us-west-1')
+      s3 = Heirloom::AWS::SimpleDB.new :config => @config_mock
+
+    end
+
+    it "should use the iam role if asked to" do
+
+      config = mock 'config'
+      config.stub :use_iam_profile => true, 
+                  :access_key => nil,
+                  :secret_key => nil,
+                  :metadata_region => 'us-west-1',
+                  :logger => @logger_stub
+      
+      Fog::AWS::SimpleDB.should_receive(:new).
+        with(:use_iam_profile => true,
+             :region => 'us-west-1')
+      s3 = Heirloom::AWS::SimpleDB.new :config => config
+
+    end
   end
 
   it "should list the domains in simples db" do

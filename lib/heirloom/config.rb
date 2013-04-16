@@ -1,7 +1,7 @@
 module Heirloom
   class Config
 
-    attr_accessor :access_key, :secret_key, :metadata_region, :logger, :environment
+    attr_accessor :access_key, :secret_key, :metadata_region, :logger, :environment, :use_iam_profile
 
     def initialize(args={})
       @opts        = args[:opts] ||= Hash.new
@@ -18,6 +18,8 @@ module Heirloom
                                      @config['secret_key']
       @metadata_region = @opts.fetch :metadata_region, 
                                      @config['metadata_region']
+      @use_iam_profile = @opts.fetch :use_iam_profile,
+                                     false
     end
 
     private

@@ -8,14 +8,40 @@ describe Heirloom do
                                   :info  => true,
                                   :warn  => true
     @config_mock = mock 'config'
-    @config_mock.stub :access_key => 'the-key',
-                      :secret_key => 'the-secret',
-                      :logger     => @logger_stub
+    @config_mock.stub :access_key      => 'the-key',
+                      :secret_key      => 'the-secret',
+                      :logger          => @logger_stub,
+                      :use_iam_profile => false
     @fog_mock = mock 'fog'
     @fog_mock.stub :directories => @directories_mock
-    Fog::Storage.should_receive(:new).and_return @fog_mock
+    Fog::Storage.stub(:new).and_return @fog_mock
     @s3 = Heirloom::AWS::S3.new :config => @config_mock,
                                 :region => 'us-west-1'
+  end
+
+  context "using IAM roles" do
+    it "should use the access and secret keys by default" do
+
+      Fog::Storage.should_receive(:new).
+        with(:provider => 'AWS',
+             :aws_access_key_id => 'the-key',
+             :aws_secret_access_key => 'the-secret',
+             :region => 'us-west-1')
+      s3 = Heirloom::AWS::S3.new :config => @config_mock, :region => 'us-west-1'
+
+    end
+
+    it "should use the iam role if asked to" do
+
+      config = mock_config :use_iam_profile => true
+      
+      Fog::Storage.should_receive(:new).
+        with(:provider => 'AWS',
+             :use_iam_profile => true,
+             :region => 'us-west-1')
+      s3 = Heirloom::AWS::S3.new :config => config, :region => 'us-west-1'
+
+    end
   end
 
   context "bucket_exists?" do

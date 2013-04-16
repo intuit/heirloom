@@ -10,13 +10,9 @@ describe Heirloom do
                 { 'regions'       => ['us-west-1'],
                   'bucket_prefix' => ['bp'] } }
     @logger_stub = stub :debug => true
-    @config_mock = mock 'config'
+    @config_mock = mock_config :logger => @logger_stub
     @catalog_mock = mock 'catalog'
     @catalog_mock.stub :catalog_domain_exists? => true
-    @config_mock.stub :logger          => @logger_mock, 
-                      :access_key      => 'key',
-                      :secret_key      => 'secret',
-                      :metadata_region => 'us-west-1'
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_stub
     Heirloom::CLI::Catalog.any_instance.should_receive(:load_config).

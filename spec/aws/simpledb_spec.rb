@@ -12,7 +12,7 @@ describe Heirloom do
       Fog::AWS::SimpleDB.should_receive(:new).
         with(:aws_access_key_id => 'key',
              :aws_secret_access_key => 'secret',
-            :region => 'us-west-1')
+             :region => 'us-west-1')
 
       s3 = Heirloom::AWS::SimpleDB.new :config => config
 
@@ -24,7 +24,7 @@ describe Heirloom do
       
       Fog::AWS::SimpleDB.should_receive(:new).
         with(:use_iam_profile => true,
-        :region => 'us-west-1')
+             :region => 'us-west-1')
       s3 = Heirloom::AWS::SimpleDB.new :config => config
 
     end

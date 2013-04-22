@@ -24,5 +24,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'fog', '~> 1.10.0'
   s.add_runtime_dependency 'trollop', '= 2.0'
+  s.add_runtime_dependency 'commander', '= 4.1.3'
+  s.add_runtime_dependency 'hashie', '= 2.0.3'
   s.add_runtime_dependency 'xml-simple', '~> 1.1.2'
 end

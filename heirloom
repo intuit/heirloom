@@ -1,0 +1,92 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'hashie'
+require 'rubygems'
+require 'commander/import'
+require 'heirloom'
+
+program :version, Heirloom::VERSION
+program :description, 'I help build and manage building tar.gz files and deploying them into the cloud'
+
+default_command :help
+
+global_option '-l', '--level LEVEL', 'Log level [debug|info|warn|error]'
+global_option '--access-key AWS_ACCESS_KEY', 'AWS Access Key ID'
+global_option '--secret-key AWS_SECRET_KEY', 'AWS Secret Access Key'
+global_option '--metadata-region REGION', 'AWS Secret Access Key'
+global_option '-e', '--environment ENVIRONMENT', 'Environment (defined in ~/.heirloom.yml)'
+global_option '--use-iam-profile', 'Use IAM EC2 Profile'
+
+def load_defaults(env, defaults={})
+  env ||= 'default'
+  config_file = "#{ENV['HOME']}/.heirloom.yml"
+
+  config = Hashie::Mash.new :metadata_region => 'us-west-1',
+                            :logger => Heirloom::HeirloomLogger.new,
+                            :environment => env
+  config.merge! defaults
+
+  if File.exists? config_file
+    data = Hashie::Mash.new YAML::load File.open config_file
+    if data.has_key? env
+      config.merge! data[env]
+    else
+      puts "Environment '#{env}' not found in config file."
+      exit 1
+    end
+  end
+  config
+end
+
+command :show do |c|
+  c.syntax = 'heirloom show [options]'
+  c.summary = 'Show Heirloom.'
+  # c.description = 'here is the description'
+  c.example 'Show version v1.0.0 of heirloom with preview of myprefix', 'heirloom show -n myprefix -i v1.0.0'
+
+  c.option '--id ID', 'ID of the Heirloom to display.'
+  c.option '--name NAME', 'Name of Heirloom.'
+  c.option '--all',   'Display all attributes (includes internal heirloom settings).'
+  c.option '--json',  'Display output as raw JSON.'
+
+  c.action do |args, options|
+    options.default load_defaults options.environment, {}
+
+    archive = Heirloom::Archive.new :name => options.name, :id => options.id, :config => options
+
+    data = archive.show
+    if options.json
+      jj data
+    else
+      formatter = Heirloom::CLI::Formatter::Show.new
+      puts formatter.format :attributes => data,
+                            :all        => options.all
+    end
+  end
+end
+
+command :list do |c|
+  c.syntax = 'heirloom list [options]'
+  c.summary = 'List Heirloom IDs.'
+  # c.description = ''
+  # c.example 'description', 'command example'
+
+  c.option '--name NAME', 'Name of Heirloom.'
+  c.option '--count COUNT', 'Number of IDs to return.'
+  c.option '--json', 'Display output as raw JSON.'
+
+  c.action do |args, options|
+    options.default load_defaults options.environment, :count => 10
+
+    archive = Heirloom::Archive.new :name => options.name, :config => options
+    
+    list = archive.list options.count
+    if options.json
+      jj list
+    else
+      puts list.join "\n"
+    end
+  end
+end
+

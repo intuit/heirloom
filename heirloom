@@ -5,6 +5,7 @@ require 'hashie'
 require 'rubygems'
 require 'commander/import'
 require 'heirloom'
+require 'heirloom/logger'
 
 program :version, Heirloom::VERSION
 program :description, 'I help build and manage building tar.gz files and deploying them into the cloud'
@@ -22,9 +23,11 @@ def load_defaults(env, defaults={})
   env ||= 'default'
   config_file = "#{ENV['HOME']}/.heirloom.yml"
 
-  config = Hashie::Mash.new :metadata_region => 'us-west-1',
-                            :logger => Heirloom::HeirloomLogger.new,
-                            :environment => env
+  config = Hashie::Mash.new(
+    :metadata_region => 'us-west-1',
+    :level => 'info',
+    :environment => env
+  )
   config.merge! defaults
 
   if File.exists? config_file
@@ -36,57 +39,65 @@ def load_defaults(env, defaults={})
       exit 1
     end
   end
+
+  # initialize logger
+  Heirloom::Logging.logger :log_level => config.level
+
   config
 end
 
-command :show do |c|
-  c.syntax = 'heirloom show [options]'
-  c.summary = 'Show Heirloom.'
-  # c.description = 'here is the description'
-  c.example 'Show version v1.0.0 of heirloom with preview of myprefix', 'heirloom show -n myprefix -i v1.0.0'
+module CLI
 
-  c.option '--id ID', 'ID of the Heirloom to display.'
-  c.option '--name NAME', 'Name of Heirloom.'
-  c.option '--all',   'Display all attributes (includes internal heirloom settings).'
-  c.option '--json',  'Display output as raw JSON.'
+  command :show do |c|
+    c.syntax = 'heirloom show [options]'
+    c.summary = 'Show Heirloom.'
+    # c.description = 'here is the description'
+    c.example 'Show version v1.0.0 of heirloom with preview of myprefix', 'heirloom show -n myprefix -i v1.0.0'
 
-  c.action do |args, options|
-    options.default load_defaults options.environment, {}
+    c.option '-i', '--id ID', 'ID of the Heirloom to display.'
+    c.option '--name NAME', 'Name of Heirloom.'
+    c.option '--all',   'Display all attributes (includes internal heirloom settings).'
+    c.option '--json',  'Display output as raw JSON.'
 
-    archive = Heirloom::Archive.new :name => options.name, :id => options.id, :config => options
+    c.action do |args, options|
+      options.default load_defaults options.environment, {}
 
-    data = archive.show
-    if options.json
-      jj data
-    else
-      formatter = Heirloom::CLI::Formatter::Show.new
-      puts formatter.format :attributes => data,
-                            :all        => options.all
+      archive = Heirloom::Archive.new :name => options.name, :id => options.id, :config => options
+
+      data = archive.show
+      if options.json
+        jj data
+      else
+        formatter = Heirloom::CLI::Formatter::Show.new
+        puts formatter.format :attributes => data,
+        :all        => options.all
+      end
     end
   end
-end
 
-command :list do |c|
-  c.syntax = 'heirloom list [options]'
-  c.summary = 'List Heirloom IDs.'
-  # c.description = ''
-  # c.example 'description', 'command example'
+  command :list do |c|
+    c.syntax = 'heirloom list [options]'
+    c.summary = 'List Heirloom IDs.'
+    # c.description = ''
+    # c.example 'description', 'command example'
 
-  c.option '--name NAME', 'Name of Heirloom.'
-  c.option '--count COUNT', 'Number of IDs to return.'
-  c.option '--json', 'Display output as raw JSON.'
+    c.option '-n', '--name NAME', 'Name of Heirloom.'
+    c.option '--count COUNT', 'Number of IDs to return.'
+    c.option '--json', 'Display output as raw JSON.'
 
-  c.action do |args, options|
-    options.default load_defaults options.environment, :count => 10
+    c.action do |args, options|
+      options.default load_defaults options.environment, :count => 10
 
-    archive = Heirloom::Archive.new :name => options.name, :config => options
-    
-    list = archive.list options.count
-    if options.json
-      jj list
-    else
-      puts list.join "\n"
+      archive = Heirloom::Archive.new :name => options.name, :config => options
+      
+      logger.debug "#{archive.count} IDs found."
+      list = archive.list options.count
+      if options.json
+        jj list
+      else
+        puts list.join "\n"
+      end
     end
   end
-end
 
+end

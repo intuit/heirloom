@@ -9,10 +9,16 @@ module Heirloom
         @region = args[:region]
         @logger = @config.logger
 
-        @s3 = Fog::Storage.new :provider              => 'AWS',
-                               :aws_access_key_id     => @config.access_key,
-                               :aws_secret_access_key => @config.secret_key,
-                               :region                => @region
+        fog_args = { :region   => @region, :provider => 'AWS' }
+
+        if @config.use_iam_profile
+          fog_args[:use_iam_profile] = true
+        else
+          fog_args[:aws_access_key_id]     = @config.access_key
+          fog_args[:aws_secret_access_key] = @config.secret_key
+        end
+
+        @s3 = Fog::Storage.new fog_args
       end
 
       def delete_object(bucket_name, object_name, options = {})

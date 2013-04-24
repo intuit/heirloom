@@ -15,11 +15,7 @@ describe Heirloom do
                 :metadata_region => 'us-west-1' }
 
     @logger_stub = stub 'logger', :error => true, :info => true
-    @config_mock = mock 'config'
-    @config_mock.stub :logger          => @logger_stub,
-                      :access_key      => 'key',
-                      :secret_key      => 'secret',
-                      :metadata_region => 'us-west-1'
+    @config_mock = mock_config(:logger => @logger_stub)
     @archive_mock = mock 'archive'
     @catalog_mock = mock 'catalog'
     @catalog_mock.stub :regions                => @regions,

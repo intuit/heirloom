@@ -10,9 +10,9 @@ describe Heirloom do
                            :aws_secret_access_key => 'secret'
 
       Fog::AWS::SimpleDB.should_receive(:new).
-        with(:aws_access_key_id => 'key',
-             :aws_secret_access_key => 'secret',
-             :region => 'us-west-1')
+                         with :aws_access_key_id => 'key',
+                              :aws_secret_access_key => 'secret',
+                              :region => 'us-west-1'
 
       s3 = Heirloom::AWS::SimpleDB.new :config => config
 
@@ -23,8 +23,8 @@ describe Heirloom do
       config = mock_config :use_iam_profile => true
       
       Fog::AWS::SimpleDB.should_receive(:new).
-        with(:use_iam_profile => true,
-             :region => 'us-west-1')
+                         with :use_iam_profile => true,
+                              :region => 'us-west-1'
       s3 = Heirloom::AWS::SimpleDB.new :config => config
 
     end
@@ -42,9 +42,9 @@ describe Heirloom do
     it "should list the domains in simples db" do
       body_mock = mock 'body'
       @fog_mock.should_receive(:list_domains).
-        and_return body_mock
+                and_return body_mock
       body_mock.should_receive(:body).
-        and_return 'Domains' => ['domain1']
+                and_return 'Domains' => ['domain1']
       @sdb.domains.should == ['domain1']
     end
 
@@ -84,8 +84,8 @@ describe Heirloom do
       it "should count the number of entries in the domain" do
         data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
         @fog_mock.should_receive(:select).
-          with('SELECT count(*) FROM `heirloom_domain`').
-          and_return @body_stub
+                  with('SELECT count(*) FROM `heirloom_domain`').
+                  and_return @body_stub
         @body_stub.stub :body => data
         @sdb.count('heirloom_domain').should == 1
       end
@@ -93,8 +93,8 @@ describe Heirloom do
       it "should return true if no entries for the domain" do
         data = { 'Items' => { 'Domain' => { 'Count' => ['0'] } } }
         @fog_mock.should_receive(:select).
-          with('SELECT count(*) FROM `heirloom_domain`').
-          and_return @body_stub
+                  with('SELECT count(*) FROM `heirloom_domain`').
+                  and_return @body_stub
         @body_stub.stub :body => data
         @sdb.domain_empty?('heirloom_domain').should be_true
       end
@@ -102,8 +102,8 @@ describe Heirloom do
       it "should return false if entries exist for the domain" do
         data = { 'Items' => { 'Domain' => { 'Count' => ['50'] } } }
         @fog_mock.should_receive(:select).
-          with('SELECT count(*) FROM `heirloom_domain`').
-          and_return @body_stub
+                  with('SELECT count(*) FROM `heirloom_domain`').
+                  and_return @body_stub
         @body_stub.stub :body => data
         @sdb.domain_empty?('heirloom_domain').should be_false
       end
@@ -111,8 +111,8 @@ describe Heirloom do
       it "should return the count for a specific itemName within a domain" do
         data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
         @fog_mock.should_receive(:select).
-          with("SELECT count(*) FROM `heirloom` WHERE itemName() = 'archive'").
-          and_return @body_stub
+                  with("SELECT count(*) FROM `heirloom` WHERE itemName() = 'archive'").
+                  and_return @body_stub
         @body_stub.stub :body => data
         @sdb.item_count('heirloom', 'archive').should == 1
       end

@@ -1,5 +1,7 @@
 ## HEAD:
 
+## 0.11.0 (04/26/2013):
+
 * Add support for multiple environments
 * Environment named 'default' is now the default
 * Added functionality to the show command to include permissions of objects

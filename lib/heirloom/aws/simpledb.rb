@@ -6,9 +6,17 @@ module Heirloom
 
       def initialize(args)
         @config = args[:config]
-        @sdb = Fog::AWS::SimpleDB.new :aws_access_key_id     => @config.access_key,
-                                      :aws_secret_access_key => @config.secret_key,
-                                      :region                => @config.metadata_region
+        
+        fog_args = { :region => @config.metadata_region }
+
+        if @config.use_iam_profile
+          fog_args[:use_iam_profile] = true
+        else
+          fog_args[:aws_access_key_id]     = @config.access_key
+          fog_args[:aws_secret_access_key] = @config.secret_key
+        end
+
+        @sdb = Fog::AWS::SimpleDB.new fog_args
       end
 
       def domains

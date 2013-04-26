@@ -100,6 +100,7 @@ Can be specified multiple times.", :type  => :string, :multi => true, :short => 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type  => :string,
                                                         :short => :none
+          opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
           opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
         end
       end

@@ -9,6 +9,7 @@ module Heirloom
         config.access_key = opts[:aws_access_key] if opts[:aws_access_key]
         config.secret_key = opts[:aws_secret_key] if opts[:aws_secret_key]
         config.metadata_region = opts[:metadata_region] if opts[:metadata_region]
+        config.use_iam_profile = opts[:use_iam_profile] if opts[:use_iam_profile]
         config
       end
 
@@ -28,8 +29,10 @@ module Heirloom
         config   = args[:config]
         logger   = config.logger
 
-        required << :aws_access_key unless config.access_key
-        required << :aws_secret_key unless config.secret_key
+        unless config.use_iam_profile
+          required << :aws_access_key unless config.access_key
+          required << :aws_secret_key unless config.secret_key
+        end
 
         missing_opts = required.sort.map do |opt|
           case provided[opt]

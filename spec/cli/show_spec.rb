@@ -10,12 +10,8 @@ describe Heirloom do
                  :level           => 'info',
                  :metadata_region => 'us-west-1' }
     @logger_stub = stub :debug => true
-    @config_mock = mock 'config'
+    @config_mock = mock_config(:logger => @logger_stub)
     @archive_mock = mock 'archive'
-    @config_mock.stub :logger          => @logger_stub, 
-                      :access_key      => 'key',
-                      :secret_key      => 'secret',
-                      :metadata_region => 'us-west-1'
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_stub
     Heirloom::CLI::Show.any_instance.should_receive(:load_config).

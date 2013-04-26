@@ -7,12 +7,8 @@ describe Heirloom do
   context "testing ensure_valid_options" do
 
     before do
-      @config_mock = mock 'config'
       @logger_mock = mock 'logger'
-      @config_mock.stub :logger          => @logger_mock,
-                        :access_key      => 'key',
-                        :secret_key      => 'secret',
-                        :metadata_region => 'us-west-1'
+      @config_mock = mock_config(:logger => @logger_mock)
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
     end

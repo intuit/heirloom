@@ -9,6 +9,7 @@
 * Catalog output renamed Bucket Prefix to bucket_prefix
 * Catalog output renamed Region to region
 * Add `rotate` command to allow for encryption key rotation
+* Add support for IAM instance roles
 
 ## 0.10.1 (02/28/2013):
 

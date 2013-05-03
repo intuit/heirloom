@@ -1,6 +1,173 @@
 #!/usr/bin/env ruby
+$:.unshift "#{File.dirname(__FILE__)}/../lib"
+puts $:
 
 require 'heirloom'
-require 'heirloom/cli'
+require 'heirloom/cli/shared'
 
-Heirloom::CLI.start
+require 'rubygems'
+require 'commander/import'
+
+include Heirloom::CLI
+
+program :version, Heirloom::VERSION
+program :description, 'I help build and manage building tar.gz files and deploying them into the cloud'
+
+default_command :help
+
+global_option '-l', '--log-level LEVEL', 'Log level [debug|info|warn|error]'
+global_option '--access-key AWS_ACCESS_KEY', 'AWS Access Key ID'
+global_option '--secret-key AWS_SECRET_KEY', 'AWS Secret Access Key'
+global_option '--metadata-region REGION', 'AWS Secret Access Key'
+global_option '-e', '--environment ENVIRONMENT', 'Environment (defined in ~/.heirloom.yml)'
+global_option '--use-iam-profile', 'Use IAM EC2 Profile'
+
+def init_heirloom(opts)
+  # convert from commander::options wrapper
+  opts = opts.__hash__ if opts.responds_to?(:__hash__)
+
+  Heirloom.load_config opts
+  Heirloom.log.level = Heirloom.config.log_level
+end
+
+class CliHelpers
+  include Heirloom::CLI::Shared
+end
+helpers = CliHelpers.new
+
+command :setup do |c|
+  c.summary = "Setup S3 and SimpleDB in the given regions."
+  c.description = <<-EOS
+# The bucket prefix will be combined with specified regions to create the required buckets. For example: 
+
+        $ heirloom setup -n myproject -b myprefix -r us-west-1 -r us-east-1
+
+    will create bucket test-us-west-1 in us-west-1 and test-us-east-1 in us-east-1.
+EOS
+
+  # handle multiple values like trollop for backward compatibility
+  c.option '-r', '--region REGION', 'AWS Region(s) to upload Heirloom. Can be specified multiple times.' do |region|
+    Heirloom.config.regions ||= []
+    Heirloom.config.regions << region
+  end
+
+  c.option '-b', '--bucket-prefix PREFIX', 'The bucket prefix used with regions to name buckets.'
+
+  c.action do |args, options|
+    init_heirloom options
+
+    @catalog = Heirloom::Catalog.new(
+      :name   => Heirloom.config.name,
+      :config => Heirloom.config
+    )
+    @archive = Heirloom::Archive.new(
+      :name   => Heirloom.config.name,
+      :config => Heirloom.config
+    )
+
+    helpers.ensure_valid_region(
+      :region => Heirloom.config.metadata_region,
+      :config => Heirloom.config
+    )
+
+    helpers.ensure_valid_regions(
+      :regions => Heirloom.config.regions,
+      :config  => Heirloom.config
+    )
+
+    ensure_metadata_in_upload_region(
+      :region  => Heirloom.config.metadata_region,
+      :regions => Heirloom.config.regions
+    )
+
+    ensure_valid_name(
+      :config => Heirloom.config,
+      :name   => Heirloom.config.name
+    )
+
+    ensure_valid_bucket_prefix(
+      :config        => Heirloom.config,
+      :bucket_prefix => Heirloom.config.bucket_prefix
+    )
+    @catalog.create_catalog_domain
+
+    ensure_entry_does_not_exist_in_catalog(
+      :config  => Heirloom.config,
+      :catalog => @catalog,
+      :entry   => Heirloom.config.name,
+      :force   => Heirloom.config.force
+    )
+
+    ensure_buckets_available(
+      :config        => Heirloom.config,
+      :bucket_prefix => Heirloom.config.bucket_prefix,
+      :regions       => Heirloom.config.regions
+    )
+
+    @catalog.add_to_catalog(
+      :regions       => Heirloom.config.regions,
+      :bucket_prefix => Heirloom.config.bucket_prefix
+    )
+
+    @archive.setup(
+      :regions       => Heirloom.config.regions,
+      :bucket_prefix => Heirloom.config.bucket_prefix
+    )
+    
+  end
+end
+
+command :show do |c|
+  c.syntax = 'heirloom show [options]'
+  c.summary = 'Show Heirloom.'
+  c.example 'Show version v1 of heirloom with name of myproject', 'heirloom show -n myproject -i v1'
+
+  c.option '-i', '--id ID', 'ID of the Heirloom to display.'
+  c.option '--name NAME', 'Name of Heirloom.'
+  c.option '--all',   'Display all attributes (includes internal heirloom settings).'
+  c.option '--json',  'Display output as raw JSON.'
+
+  c.action do |args, options|
+    init_heirloom options
+
+    archive = Heirloom::Archive.find :id => Heirloom.config.id
+
+    data = archive.show
+    if options.json
+      jj data
+    else
+      formatter = Heirloom::CLI::Formatter::Show.new
+      puts formatter.format(
+        :attributes => data,
+        :all        => options.all
+      )
+    end
+  end
+end
+
+command :list do |c|
+  c.syntax = 'heirloom list [options]'
+  c.summary = 'List Heirloom IDs.'
+  # c.description = ''
+  # c.example 'description', 'command example'
+
+  c.option '-n', '--name NAME', 'Name of Heirloom.'
+  c.option '--count COUNT', 'Number of IDs to return.'
+  c.option '--json', 'Display output as raw JSON.'
+
+  c.action do |args, options|
+    options.default load_defaults options.environment, :count => 10
+
+    archive = Heirloom::Archive.new :name => options.name, :config => options
+    
+    logger.debug "#{archive.count} IDs found."
+    list = archive.list options.count
+    if options.json
+      jj list
+    else
+      puts list.join "\n"
+    end
+  end
+end
+
+

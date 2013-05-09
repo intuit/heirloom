@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   s.add_development_dependency "rspec", '~> 2.11.0'
   s.add_development_dependency "rake"
+  s.add_development_dependency "simplecov"
 
   s.add_runtime_dependency 'fog', '~> 1.10.0'
   s.add_runtime_dependency 'trollop', '= 2.0'

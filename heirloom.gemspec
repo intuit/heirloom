@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   s.add_development_dependency "rspec", '~> 2.11.0'
   s.add_development_dependency "rake"
-  s.add_development_dependency "vcr"
+  s.add_development_dependency "vcr", '= 2.4.0'
   s.add_development_dependency "macaddr"
   s.add_development_dependency "simplecov"
 

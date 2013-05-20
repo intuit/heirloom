@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake"
   s.add_development_dependency "vcr"
   s.add_development_dependency "macaddr"
+  s.add_development_dependency "simplecov"
 
   s.add_runtime_dependency 'excon', '= 0.16'
   s.add_runtime_dependency 'fog', '= 1.10.0'

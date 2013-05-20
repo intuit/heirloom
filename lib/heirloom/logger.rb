@@ -17,7 +17,7 @@ module Heirloom
     private
 
     def new_logger(args)
-      Logger.new(STDOUT).tap do |l|
+      Logger.new($stdout).tap do |l|
         l.datetime_format = '%Y-%m-%dT%H:%M:%S%z'
         l.formatter = proc do |severity, datetime, progname, msg|
           "#{datetime} #{severity} : #{msg}\n"

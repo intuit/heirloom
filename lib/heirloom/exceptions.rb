@@ -9,7 +9,13 @@ module Heirloom
       end
     end
 
+    class EnvironmentNotFound < Base
+    end
+
     class RotateFailed < Base
+    end
+      
+    class CleanupFailed < Base
     end
       
   end

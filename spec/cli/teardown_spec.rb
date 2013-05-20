@@ -1,51 +1,86 @@
 require 'spec_helper'
 require 'heirloom/cli'
 
-describe Heirloom do
+describe Heirloom::CLI::Teardown do
+
+  def stubbed_teardown
+    teardown = Heirloom::CLI::Teardown.new
+    teardown.stub(
+      :ensure_domain_exists => true,
+      :ensure_archive_domain_empty => true
+    )
+    teardown
+  end
 
   before do
-    options = { :level           => 'info',
-                :name            => 'archive_name',
-                :metadata_region => 'us-west-1' }
+    Heirloom.stub :log => mock_log
+    @config_mock = mock_config
 
-    @logger_stub = stub 'logger', :error => true, :info => true
-    @config_mock = mock_config(:logger => @logger_stub)
+    @defaults = { 
+      :level           => 'info',
+      :name            => 'archive_name',
+      :metadata_region => 'us-west-1'
+    }
+
+
     @archive_mock = mock 'archive'
+    @archive_mock.stub(
+      :delete_buckets => true,
+      :delete_domain  => true
+    )
+
     @catalog_mock = mock 'catalog'
-    @catalog_mock.stub :regions => ['us-west-1', 'us-west-2']
-    @catalog_mock.stub :bucket_prefix          => 'bp', 
-                       :catalog_domain_exists? => true
-    @catalog_mock.should_receive(:entry_exists_in_catalog?).
-                  with('archive_name').
-                  and_return true
-    Trollop.stub(:options).and_return options
-    Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
-                             and_return @logger_stub
-    Heirloom::CLI::Teardown.any_instance.should_receive(:load_config).
-                            with(:logger => @logger_stub,
-                                 :opts   => options).
-                            and_return @config_mock
-    Heirloom::Archive.should_receive(:new).
-                      with(:name => 'archive_name',
-                           :config => @config_mock).
-                      and_return @archive_mock
-    Heirloom::Catalog.should_receive(:new).
-                      with(:name => 'archive_name',
-                           :config => @config_mock).
-                      and_return @catalog_mock
-    @teardown = Heirloom::CLI::Teardown.new
+    @catalog_mock.stub(
+      :regions                  => ['us-west-1', 'us-west-2'],
+      :bucket_prefix            => 'bp', 
+      :catalog_domain_exists?   => true,
+      :delete_from_catalog      => true,
+      :entry_exists_in_catalog? => true
+    )
+    
+    Trollop.stub :options => @defaults
+    Heirloom::HeirloomLogger.stub :new => @logger_stub
+    Heirloom::CLI::Teardown.any_instance.stub(:load_config).
+      and_return @config_mock
+    Heirloom::Archive.stub :new => @archive_mock
+    Heirloom::Catalog.stub :new => @catalog_mock
+    @teardown = stubbed_teardown
+  end
+
+  context "delete existing archives force option" do
+    
+    it "should ask archive to delete only when passed the 'force' option" do
+      # present
+      Trollop.stub :options => @defaults.merge(:force => true)
+      @teardown = stubbed_teardown
+      @catalog_mock.should_receive(:cleanup).with(
+        :num_to_keep => 0,
+        :remove_preserved => true
+      )
+      @teardown.teardown
+
+      # absent
+      Trollop.stub :options => @defaults.merge(:force => nil)
+      @teardown = stubbed_teardown
+      @catalog_mock.should_not_receive(:cleanup)
+      @teardown.teardown
+    end
+    
   end
 
   it "should delete s3 buckets, catalog and simpledb domain" do
-    @teardown.should_receive(:ensure_domain_exists).
-              with(:name   => 'archive_name',
-                   :config => @config_mock)
-    @teardown.should_receive(:ensure_archive_domain_empty).
-              with(:archive => @archive_mock,
-                   :config  => @config_mock)
+    @teardown.should_receive(:ensure_domain_exists).with(
+      :name   => 'archive_name',
+      :config => @config_mock
+    )
+    @teardown.should_receive(:ensure_archive_domain_empty).with(
+      :archive => @archive_mock,
+      :config  => @config_mock
+    )
     @archive_mock.should_receive(:delete_buckets)
     @archive_mock.should_receive(:delete_domain)
     @catalog_mock.should_receive(:delete_from_catalog)
+
     @teardown.teardown 
   end
 

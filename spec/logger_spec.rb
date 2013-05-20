@@ -11,7 +11,7 @@ describe Heirloom do
 
   it "should create a new logger object when one is not passed" do
     logger_mock = mock 'logger'
-    Logger.should_receive(:new).with(STDOUT).and_return logger_mock
+    Logger.should_receive(:new).with($stdout).and_return logger_mock
     logger_mock.should_receive(:info).with 'a message'
     logger_mock.should_receive(:datetime_format=).with '%Y-%m-%dT%H:%M:%S%z'
     logger_mock.should_receive(:formatter=)

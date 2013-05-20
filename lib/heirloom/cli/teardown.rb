@@ -27,18 +27,23 @@ module Heirloom
       end
 
       def teardown
-        ensure_domain_exists :name   => @opts[:name],
-                             :config => @config
+        ensure_domain_exists :name => @opts[:name], :config => @config
 
-        ensure_archive_domain_empty :archive => @archive,
-                                    :config  => @config
-
-        @regions = @catalog.regions
-        @bucket_prefix = @catalog.bucket_prefix
+        if @opts[:force]
+          Heirloom.log.info "Removing any existing archives..."
+          @catalog.cleanup :num_to_keep => 0, :remove_preserved => true
+        else
+          ensure_archive_domain_empty(
+            :archive => @archive,
+            :config  => @config
+          )
+        end
 
         unless @opts[:keep_buckets]
-          @archive.delete_buckets :regions       => @regions,
-                                  :bucket_prefix => @bucket_prefix
+          @archive.delete_buckets(
+            :regions       => @catalog.regions,
+            :bucket_prefix => @catalog.bucket_prefix
+          )
         end
 
         @archive.delete_domain
@@ -67,6 +72,7 @@ EOS
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
                                                                           :default => 'us-west-1'
           opt :name, "Name of Heirloom.", :type => :string
+          opt :force, "Forces recursive deletion of existing archives."
           opt :keep_buckets, "Do not delete S3 buckets."
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none

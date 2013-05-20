@@ -9,8 +9,31 @@ module Heirloom
   class Catalog
 
     def initialize(args)
-      @config  = args[:config]
-      @name    = args[:name]
+      @config = args[:config]
+      @name   = args[:name]
+    end
+
+    def cleanup(opts = {})
+      opts[:num_to_keep]      ||= 100
+      opts[:remove_preserved] ||= false
+
+      num_cleaned = 0
+
+      q = "select * from `#{domain}` where built_at > '2000-01-01T00:00:00.000Z' order by built_at desc"
+
+      sdb.select(q, :offset => opts[:num_to_keep]) do |key, item|
+        next if item['preserve'] && item['preserve'].include?('true') && !opts[:remove_preserved]
+
+        archive = Archive.new :config => @config, :name => @name, :id => key
+        archive.destroy
+        num_cleaned += 1
+      end
+
+      if num_cleaned == 0
+        Heirloom.log.info "No archives to delete."
+      else
+        Heirloom.log.info "#{num_cleaned} archive#{'s' unless num_cleaned == 1} deleted."
+      end
     end
 
     def create_catalog_domain
@@ -47,14 +70,16 @@ module Heirloom
 
     private
 
+    def sdb
+      @sdb ||= Heirloom::AWS::SimpleDB.new :config => @config
+    end
+
     def add
-      @add ||= Catalog::Add.new :config => @config,
-                                :name   => @name
+      @add ||= Catalog::Add.new :config => @config, :name => @name
     end
 
     def delete
-      @delete ||= Catalog::Delete.new :config => @config,
-                                      :name   => @name
+      @delete ||= Catalog::Delete.new :config => @config, :name => @name
     end
 
     def list
@@ -66,12 +91,15 @@ module Heirloom
     end
 
     def show
-      @show ||= Catalog::Show.new :config => @config,
-                                  :name   => @name
+      @show ||= Catalog::Show.new :config => @config, :name => @name
     end
 
     def verify
       @verify ||= Catalog::Verify.new :config => @config
+    end
+
+    def domain
+      "heirloom_#{@name}"
     end
 
   end

@@ -1,3 +1,6 @@
+require 'global_log.rb'
+require 'global_config.rb'
+
 require "heirloom/utils"
 
 require "heirloom/acl"
@@ -13,3 +16,18 @@ require "heirloom/exceptions"
 require "heirloom/logger"
 require "heirloom/uploader"
 require "heirloom/version"
+
+module Heirloom
+  
+  include GlobalLog
+  include GlobalConfig
+  
+  self.global_config_defaults = {
+    :metadata_region => 'us-west-1',
+    :level           => 'info',
+    :logger          => self.log
+  }
+  self.global_config_file = "#{ENV['HOME']}/.heirloom.yml"
+
+end
+

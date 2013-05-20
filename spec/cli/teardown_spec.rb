@@ -40,8 +40,8 @@ describe Heirloom::CLI::Teardown do
     
     Trollop.stub :options => @defaults
     Heirloom::HeirloomLogger.stub :new => @logger_stub
-    Heirloom::CLI::Teardown.any_instance.stub(:load_config).
-      and_return @config_mock
+    Heirloom::CLI::Teardown.any_instance.stub(:load_config)
+      .and_return @config_mock
     Heirloom::Archive.stub :new => @archive_mock
     Heirloom::Catalog.stub :new => @catalog_mock
     @teardown = stubbed_teardown

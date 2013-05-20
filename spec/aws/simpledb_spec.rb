@@ -84,10 +84,10 @@ describe Heirloom::AWS::SimpleDB, :vcr do
 
     it "should list the domains in simples db" do
       body_mock = mock 'body'
-      @fog_mock.should_receive(:list_domains).
-        and_return body_mock
-      body_mock.should_receive(:body).
-        and_return 'Domains' => ['domain1']
+      @fog_mock.should_receive(:list_domains)
+        .and_return body_mock
+      body_mock.should_receive(:body)
+        .and_return 'Domains' => ['domain1']
       @sdb.domains.should == ['domain1']
     end
 

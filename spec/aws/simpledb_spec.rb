@@ -46,7 +46,7 @@ describe Heirloom::AWS::SimpleDB, :vcr do
 
   end
 
-  context "select" do
+  context "select", :integration => true do
     
     before do
       @q = "select * from `heirloom_test_data` where built_at > '2000-01-01T00:00:00.000Z' order by built_at desc"

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe GlobalConfig do
+describe Heirloom::GlobalConfig do
 
   class DummyClass
   end
 
   before do
     @dummy = DummyClass.new
-    @dummy.extend(GlobalConfig)
+    @dummy.extend(Heirloom::GlobalConfig)
   end
 
   it "should have a config hash" do
@@ -20,12 +20,12 @@ describe GlobalConfig do
   end
 
   it "should be able to set defaults" do
-    @dummy.global_config_defaults = { :host => 'localhost' }
+    @dummy.config_defaults = { :host => 'localhost' }
     @dummy.config.host.should == 'localhost'
   end
 
   it "should be able to override defaults" do
-    @dummy.global_config_defaults = { :host => 'localhost' }
+    @dummy.config_defaults = { :host => 'localhost' }
     @dummy.load_config! 'host' => 'dev.example.com'
     @dummy.config.host.should == 'dev.example.com'
   end

@@ -28,7 +28,6 @@ describe "cleanup", :integration => true do
     }
 
     Heirloom.load_config!(opts.merge(defaults))
-    Heirloom.config.stub :logger => mock_log
     Trollop.stub :options => Heirloom.config
   end
 
@@ -36,9 +35,6 @@ describe "cleanup", :integration => true do
     @bucket_prefix = "heirloom-integration-tests-#{Mac.addr.gsub(':', '')}"
     @name          = "integration_tests"
     @domain        = "heirloom_#{@name}"
-
-    Heirloom.stub :log => mock_log
-    # Heirloom::HeirloomLogger.stub :new => mock_log
 
     # we want to load our own config
     Heirloom::CLI::Cleanup.any_instance.stub :load_settings! => true

@@ -6,7 +6,7 @@ module Heirloom
 
       def initialize
         load_settings!
-        Heirloom.log.level = Heirloom.config.log_level
+        Heirloom.log_level = Heirloom.config.log_level
 
         unless Heirloom.config.name?
           Heirloom.log.error "Option 'name' required but not specified"

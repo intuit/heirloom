@@ -31,6 +31,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'trollop', '= 2.0'
   s.add_runtime_dependency 'xml-simple', '~> 1.1.2'
   s.add_runtime_dependency 'hashie'
-  s.add_runtime_dependency 'logging', '= 1.8.1'
 
 end

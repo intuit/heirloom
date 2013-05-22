@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe GlobalLog do
+describe Heirloom::Log do
 
   class DummyClass
   end
 
   before do
     @dummy = DummyClass.new
-    @dummy.extend(GlobalLog)
+    @dummy.extend(Heirloom::Log)
   end
 
   it "should have a log" do

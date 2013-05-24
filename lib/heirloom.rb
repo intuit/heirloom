@@ -1,5 +1,4 @@
 require "heirloom/global_config"
-require "heirloom/log"
 require "heirloom/utils"
 
 require "heirloom/acl"
@@ -18,8 +17,12 @@ require "heirloom/version"
 
 module Heirloom
   
-  include Log
+  # include Log
   include GlobalConfig
+
+  def self.log
+    @logger ||= HeirloomLogger.new
+  end
   
 end
 

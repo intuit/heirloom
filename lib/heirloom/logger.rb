@@ -14,6 +14,11 @@ module Heirloom
       @logger    = args[:logger] ||= new_logger(args)
     end
 
+    def level=(level_as_string)
+      @log_level = level_as_string
+      @logger.level = logger_level
+    end
+
     private
 
     def new_logger(args)

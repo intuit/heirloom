@@ -17,7 +17,6 @@ require "heirloom/version"
 
 module Heirloom
   
-  # include Log
   include GlobalConfig
 
   def self.log

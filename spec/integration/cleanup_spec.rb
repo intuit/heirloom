@@ -17,36 +17,24 @@ describe "cleanup", :integration => true do
     tmp_dir
   end
 
-  def reset_config(opts = {})
-    # only access_key and secret_key are required in ~/.heirloom.yml for integration testing
-    defaults = {
-      :config_file     => "#{ENV['HOME']}/.heirloom.yml", 
-      :environment     => 'integration',
-      :region          => ['us-west-1'],
-      :metadata_region => 'us-west-1',
-      :level           => 'debug'
-    }
+  def reset_env(opts = {})
+    opts[:environment] = 'integration'
+    opts[:log_level]   = 'debug'
 
-    Heirloom.load_config!(opts.merge(defaults))
-    Trollop.stub :options => Heirloom.config
+    Trollop.stub :options => opts
   end
 
   before do
     @bucket_prefix = "heirloom-integration-tests-#{Mac.addr.gsub(':', '')}"
     @name          = "integration_tests"
     @domain        = "heirloom_#{@name}"
-
-    # we want to load our own config
-    Heirloom::CLI::Cleanup.any_instance.stub :load_settings! => true
-    Heirloom.load_config! :config_file => "#{ENV['HOME']}/.heirloom.yml", :environment => "integration"
-
-    reset_config
   end
 
   it "should require name" do
+    reset_env
 
     Heirloom.log.should_receive(:error)
-      .with("Option 'name' required but not specified")
+      .with("Option 'name' required but not specified.")
 
     expect {
       Heirloom::CLI::Cleanup.new.cleanup
@@ -59,20 +47,22 @@ describe "cleanup", :integration => true do
     before do
       @tmp_dir = create_temp_heirloom_content
 
-      reset_config(
+      reset_env(
+        :bucket_prefix   => @bucket_prefix,
+        :force           => true,
+        :metadata_region => 'us-west-1',
         :name            => @name,
-        :bucket_prefix   => @bucket_prefix
+        :region          => ['us-east-1', 'us-west-1']
       )
-
       Heirloom::CLI::Setup.new.setup
       # give the bucket a chance to propagate
       wait_for_aws
 
-      @sdb = Heirloom::AWS::SimpleDB.new :config => Heirloom.config
+      @sdb = Heirloom::AWS::SimpleDB.new :config => (Heirloom::Config.new :environment => 'integration')
     end
     
     after do
-      reset_config(
+      reset_env(
         :name  => @name,
         :force => true
       )
@@ -82,15 +72,16 @@ describe "cleanup", :integration => true do
 
     it "should delete some number of archives from an heirloom" do
       (1..3).each do |i|
-        reset_config(
-          :id        => "v#{i}",
-          :name      => @name,
-          :directory => @tmp_dir
+        reset_env(
+          :id              => "v#{i}",
+          :name            => @name,
+          :directory       => @tmp_dir,
+          :metadata_region => 'us-west-1'
         )
         Heirloom::CLI::Upload.new.upload
       end
 
-      reset_config(
+      reset_env(
         :name => @name,
         :keep => 2
       )

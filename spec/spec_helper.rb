@@ -36,16 +36,13 @@ VCR.configure do |config|
   config.hook_into :excon
   config.configure_rspec_metadata!
 
-  config.filter_sensitive_data('<AWSACCESSKEYID>') { Heirloom.config.access_key }
-  config.filter_sensitive_data('<AWSSECRETKEY>')   { Heirloom.config.secret_key }
-
-  config.filter_sensitive_data('<AWSACCESSKEYIDINT>') do
-    Heirloom.load_config! :environment => "integration"
-    Heirloom.config.access_key
+  config.filter_sensitive_data('<AWSACCESSKEYID>') do
+    config = Heirloom::Config.new :environment => 'integration'
+    config.access_key
   end
-  config.filter_sensitive_data('<AWSSECRETKEYINT>') do
-    Heirloom.load_config! :environment => "integration"
-    Heirloom.config.secret_key
+  config.filter_sensitive_data('<AWSSECRETKEY>') do
+    config = Heirloom::Config.new :environment => 'integration'
+    config.secret_key
   end
 end
 

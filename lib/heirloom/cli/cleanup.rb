@@ -5,28 +5,27 @@ module Heirloom
       include Heirloom::CLI::Shared
 
       def initialize
-        load_settings!
-        Heirloom.log.level = Heirloom.config.log_level
+        @opts   = read_options
+        @config = load_config :opts => @opts, :logger => Heirloom.log
 
-        unless Heirloom.config.name?
-          Heirloom.log.error "Option 'name' required but not specified"
-          exit 1
-        end
+        Heirloom.log.level = @opts[:log_level]
+
+        ensure_valid_options(
+          :provided => @opts,
+          :required => [:name],
+          :config   => @config
+        )
       end
       
       def cleanup
-        cat = Heirloom::Catalog.new :name => Heirloom.config.name, :config => Heirloom.config
-        cat.cleanup :num_to_keep => Heirloom.config.keep
+        cat = Heirloom::Catalog.new :name => @opts[:name], :config => @config
+        cat.cleanup :num_to_keep => @opts[:keep]
       rescue Heirloom::Exceptions::CleanupFailed => e
         Heirloom.log.error e.message
         exit 1
       end
 
       private
-
-      def load_settings!
-        Heirloom.load_config! read_options
-      end
 
       def read_options
         Trollop::options do

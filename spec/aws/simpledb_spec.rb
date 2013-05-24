@@ -1,16 +1,9 @@
 require 'spec_helper'
 
-# Data recorded with VCR after running ./spec/fixtures/create_test_data.sh
-# To re-record VCR data:
-# 1) Delete relevant YAML files in spec/fixtures/cassettes
-# 2) Replace mock_config with Heirloom.load_config!
-# 3) Run specs
-describe Heirloom::AWS::SimpleDB, :vcr do
+describe Heirloom::AWS::SimpleDB do
 
   before do
     @sdb = Heirloom::AWS::SimpleDB.new :config => mock_config
-    # see step 2 above
-    # @sdb = Heirloom::AWS::SimpleDB.new :config => Heirloom.load_config!
   end
 
   context "credential management" do
@@ -46,9 +39,15 @@ describe Heirloom::AWS::SimpleDB, :vcr do
 
   end
 
-  context "select", :integration => true do
+  # Data recorded with VCR after running ./spec/fixtures/create_test_data.sh
+  # To re-record VCR data:
+  # 1) Delete relevant YAML files in spec/fixtures/cassettes
+  # 2) Replace mock_config with Heirloom.load_config!
+  # 3) Run integration specs: $ HEIRLOOM_INTEGRATION=true rake spec
+  context "select", :vcr => true, :integration => true do
     
     before do
+      @sdb = Heirloom::AWS::SimpleDB.new :config => (Heirloom::Config.new :environment => 'integration')
       @q = "select * from `heirloom_test_data` where built_at > '2000-01-01T00:00:00.000Z' order by built_at desc"
     end
 

@@ -19,17 +19,16 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # specify any dependencies here; for example:
-  s.add_development_dependency "rspec", '~> 2.11.0'
-  s.add_development_dependency "rake"
-  s.add_development_dependency "vcr", '= 2.4.0'
+  s.add_development_dependency "hashie"
   s.add_development_dependency "macaddr"
+  s.add_development_dependency "rake"
+  s.add_development_dependency "rspec", '~> 2.11.0'
   s.add_development_dependency "simplecov"
+  s.add_development_dependency "vcr", '= 2.5.0'
   s.add_development_dependency "watchr"
 
-  s.add_runtime_dependency 'excon', '= 0.16'
-  s.add_runtime_dependency 'fog', '= 1.10.0'
+  s.add_runtime_dependency 'fog', '~> 1.10.0'
   s.add_runtime_dependency 'trollop', '= 2.0'
   s.add_runtime_dependency 'xml-simple', '~> 1.1.2'
-  s.add_runtime_dependency 'hashie'
 
 end

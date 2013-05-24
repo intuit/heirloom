@@ -22,7 +22,9 @@ module Heirloom
       q = "select * from `#{domain}` where built_at > '2000-01-01T00:00:00.000Z' order by built_at desc"
 
       sdb.select(q, :offset => opts[:num_to_keep]) do |key, item|
-        next if item['preserve'] && item['preserve'].include?('true') && !opts[:remove_preserved]
+        unless opts[:remove_preserved]
+          next if preserved?(item)
+        end
 
         archive = Archive.new :config => @config, :name => @name, :id => key
         archive.destroy
@@ -69,6 +71,10 @@ module Heirloom
     end
 
     private
+
+    def preserved?(item)
+      item['preserve'] && item['preserve'].include?('true')
+    end
 
     def sdb
       @sdb ||= Heirloom::AWS::SimpleDB.new :config => @config

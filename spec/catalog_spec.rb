@@ -6,12 +6,9 @@ describe Heirloom::Catalog do
     @config_mock   = mock 'catalog'
     @regions       = ['us-west-1', 'us-west-2']
     @bucket_prefix = 'bp'
-    @catalog       = Heirloom::Catalog.new :config => @config_mock,
-                                           :name   => 'new_archive'
+    @catalog       = Heirloom::Catalog.new :config => @config_mock, :name => 'new_archive'
 
-    log = mock 'log', :debug => true, :info => true, :warn => true, :error => true
-    Heirloom.stub :log => log
-
+    Heirloom.stub :log => mock_log
   end
 
   context "cleanup" do

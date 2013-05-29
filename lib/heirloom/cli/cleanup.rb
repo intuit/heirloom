@@ -15,6 +15,17 @@ module Heirloom
           :required => [:name],
           :config   => @config
         )
+
+        ensure_valid_region(
+          :region => @opts[:metadata_region],
+          :config => @config
+        )
+
+        ensure_domain_exists(
+          :name   => @opts[:name],
+          :config => @config
+        )
+
       end
       
       def cleanup
@@ -39,9 +50,7 @@ Usage:
 heirloom cleanup -n NAME -k 10
 
 EOS
-          opt :attribute, "Attribute to update.", :type => :string
           opt :help, "Display Help"
-          opt :id, "ID of the Heirloom to tag.", :type => :string
           opt :log_level, "Log level [debug|info|warn|error].", :type    => :string,
                                                                 :default => 'info'
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   

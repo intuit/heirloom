@@ -9,8 +9,8 @@ module Heirloom
   class Catalog
 
     def initialize(args)
-      @config = args[:config]
-      @name   = args[:name]
+      @config  = args[:config]
+      @name    = args[:name]
     end
 
     def cleanup(opts = {})
@@ -81,11 +81,13 @@ module Heirloom
     end
 
     def add
-      @add ||= Catalog::Add.new :config => @config, :name => @name
+      @add ||= Catalog::Add.new :config => @config,
+                                :name => @name
     end
 
     def delete
-      @delete ||= Catalog::Delete.new :config => @config, :name => @name
+      @delete ||= Catalog::Delete.new :config => @config,
+                                      :name => @name
     end
 
     def list
@@ -97,7 +99,8 @@ module Heirloom
     end
 
     def show
-      @show ||= Catalog::Show.new :config => @config, :name => @name
+      @show ||= Catalog::Show.new :config => @config,
+                                  :name => @name
     end
 
     def verify

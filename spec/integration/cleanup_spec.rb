@@ -18,8 +18,9 @@ describe "cleanup", :integration => true do
   end
 
   def reset_env(opts = {})
-    opts[:environment] = 'integration'
-    opts[:log_level]   = 'debug'
+    opts[:environment]     = 'integration'
+    opts[:log_level]       = 'debug'
+    opts[:metadata_region] = 'us-west-1'
 
     Trollop.stub :options => opts
   end

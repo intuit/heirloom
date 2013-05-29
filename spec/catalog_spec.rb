@@ -25,12 +25,6 @@ describe Heirloom::Catalog do
       archive = mock 'archive', :destroy => true
       @catalog.stub :sdb => @sdb
 
-      Heirloom::Archive.should_not_receive(:new)
-        .with(hash_including(:id => '123'))
-
-      Heirloom::Archive.should_not_receive(:new)
-        .with(hash_including(:id => 'abc'))
-
       Heirloom::Archive.should_receive(:new)
         .with(hash_including(:id => '456'))
         .and_return archive
@@ -38,7 +32,7 @@ describe Heirloom::Catalog do
       @catalog.cleanup :num_to_keep => 10
     end
 
-    it "shouldn't destroy them unless asked to :)" do
+    it "should destroy archives when removed_preserved is true" do
       archive = mock 'archive', :destroy => true
       @catalog.stub :sdb => @sdb
 

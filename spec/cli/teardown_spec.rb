@@ -49,8 +49,7 @@ describe Heirloom::CLI::Teardown do
 
   context "delete existing archives force option" do
     
-    it "should ask archive to delete only when passed the 'force' option" do
-      # present
+    it "should ask archive to delete when passed the 'force' option" do
       Trollop.stub :options => @defaults.merge(:force => true)
       @teardown = stubbed_teardown
       @catalog_mock.should_receive(:cleanup).with(
@@ -58,8 +57,9 @@ describe Heirloom::CLI::Teardown do
         :remove_preserved => true
       )
       @teardown.teardown
+    end
 
-      # absent
+    it "should not ask archive to delete when not passed the 'force' option" do
       Trollop.stub :options => @defaults.merge(:force => nil)
       @teardown = stubbed_teardown
       @catalog_mock.should_not_receive(:cleanup)

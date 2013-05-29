@@ -82,12 +82,12 @@ module Heirloom
 
     def add
       @add ||= Catalog::Add.new :config => @config,
-                                :name => @name
+                                :name   => @name
     end
 
     def delete
       @delete ||= Catalog::Delete.new :config => @config,
-                                      :name => @name
+                                      :name   => @name
     end
 
     def list
@@ -100,7 +100,7 @@ module Heirloom
 
     def show
       @show ||= Catalog::Show.new :config => @config,
-                                  :name => @name
+                                  :name   => @name
     end
 
     def verify

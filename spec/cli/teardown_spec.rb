@@ -69,18 +69,15 @@ describe Heirloom::CLI::Teardown do
   end
 
   it "should delete s3 buckets, catalog and simpledb domain" do
-    @teardown.should_receive(:ensure_domain_exists).with(
-      :name   => 'archive_name',
-      :config => @config_mock
-    )
-    @teardown.should_receive(:ensure_archive_domain_empty).with(
-      :archive => @archive_mock,
-      :config  => @config_mock
-    )
+    @teardown.should_receive(:ensure_domain_exists).
+              with(:name   => 'archive_name',
+                   :config => @config_mock)
+    @teardown.should_receive(:ensure_archive_domain_empty).
+              with(:archive => @archive_mock,
+                   :config  => @config_mock)
     @archive_mock.should_receive(:delete_buckets)
     @archive_mock.should_receive(:delete_domain)
     @catalog_mock.should_receive(:delete_from_catalog)
-
     @teardown.teardown 
   end
 

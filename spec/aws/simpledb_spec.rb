@@ -10,16 +10,13 @@ describe Heirloom::AWS::SimpleDB do
 
     it "should use the access and secret keys by default" do
 
-      config = mock_config(
-        :aws_access_key_id => 'key',
-        :aws_secret_access_key => 'secret'
-      )
+      config = mock_config :aws_access_key_id => 'key',
+                           :aws_secret_access_key => 'secret'
 
-      Fog::AWS::SimpleDB.should_receive(:new).with(
-        :aws_access_key_id => 'key',
-        :aws_secret_access_key => 'secret',
-        :region => 'us-west-1'
-      )
+      Fog::AWS::SimpleDB.should_receive(:new).
+                         with :aws_access_key_id => 'key',
+                              :aws_secret_access_key => 'secret',
+                              :region => 'us-west-1'
 
       s3 = Heirloom::AWS::SimpleDB.new :config => config
 
@@ -29,10 +26,9 @@ describe Heirloom::AWS::SimpleDB do
 
       config = mock_config :use_iam_profile => true
       
-      Fog::AWS::SimpleDB.should_receive(:new).with(
-        :use_iam_profile => true,
-        :region => 'us-west-1'
-      )
+      Fog::AWS::SimpleDB.should_receive(:new).
+                         with :use_iam_profile => true,
+                              :region => 'us-west-1'
       s3 = Heirloom::AWS::SimpleDB.new :config => config
 
     end
@@ -134,9 +130,9 @@ describe Heirloom::AWS::SimpleDB do
 
       it "should return true if no entries for the domain" do
         data = { 'Items' => { 'Domain' => { 'Count' => ['0'] } } }
-        @fog_mock.should_receive(:select)
-          .with('SELECT count(*) FROM `heirloom_domain`')
-          .and_return @body_stub
+        @fog_mock.should_receive(:select).
+                  with('SELECT count(*) FROM `heirloom_domain`').
+                  and_return @body_stub
         @body_stub.stub :body => data
         @sdb.domain_empty?('heirloom_domain').should be_true
       end

@@ -36,14 +36,15 @@ describe Heirloom::AWS::SimpleDB do
   end
 
   # Data recorded with VCR after running ./spec/fixtures/create_test_data.sh
-  # To re-record VCR data:
-  # 1) Delete relevant YAML files in spec/fixtures/cassettes
-  # 2) Replace mock_config with Heirloom.load_config!
-  # 3) Run integration specs: $ HEIRLOOM_INTEGRATION=true rake spec
-  context "select", :vcr => true, :integration => true do
+  context "select", :vcr => true do
     
     before do
-      @sdb = Heirloom::AWS::SimpleDB.new :config => (Heirloom::Config.new :environment => 'integration')
+      @config = begin
+                  Heirloom::Config.new(:environment => 'integration', :logger => mock_log)
+                rescue SystemExit
+                  mock_config
+                end
+      @sdb = Heirloom::AWS::SimpleDB.new :config => @config
       @q = "select * from `heirloom_test_data` where built_at > '2000-01-01T00:00:00.000Z' order by built_at desc"
     end
 

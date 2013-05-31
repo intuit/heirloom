@@ -39,12 +39,7 @@ describe Heirloom::AWS::SimpleDB do
   context "select", :vcr => true do
     
     before do
-      @config = begin
-                  Heirloom::Config.new(:environment => 'integration', :logger => mock_log)
-                rescue SystemExit
-                  mock_config
-                end
-      @sdb = Heirloom::AWS::SimpleDB.new :config => @config
+      @sdb = Heirloom::AWS::SimpleDB.new :config => integration_or_mock_config
       @q = "select * from `heirloom_test_data` where built_at > '2000-01-01T00:00:00.000Z' order by built_at desc"
     end
 

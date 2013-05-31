@@ -27,6 +27,18 @@ module SpecHelpers
     Hashie::Mash.new args
   end
 
+  def integration_or_mock_config
+    if File.exists? "#{ENV['HOME']}/.heirloom.yml"
+      begin
+        Heirloom::Config.new(:environment => 'integration', :logger => mock_log)
+      rescue SystemExit
+        mock_config
+      end
+    else
+      mock_config
+    end
+  end
+
 end
 
 VCR.configure do |config|

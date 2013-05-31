@@ -13,3 +13,12 @@ require "heirloom/exceptions"
 require "heirloom/logger"
 require "heirloom/uploader"
 require "heirloom/version"
+
+module Heirloom
+  
+  def self.log
+    @logger ||= HeirloomLogger.new
+  end
+  
+end
+

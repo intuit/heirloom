@@ -43,8 +43,31 @@ module Heirloom
         @sdb.put_attributes domain, key, attributes, options
       end
 
-      def select(query)
-        @sdb.select(query).body['Items']
+      def select(query, opts = {})
+        has_more = true
+        next_token = nil
+        results = {}
+
+        if opts[:offset] && opts[:offset] > 0
+          limit = @sdb.select("#{query} limit #{opts[:offset]}").body
+          if limit['NextToken']
+            next_token = limit['NextToken']
+          else
+            has_more = false
+          end
+        end
+        while has_more
+          more = @sdb.select(query, 'NextToken' => next_token).body
+          more['Items'].each do |k, v|
+            block_given? ? yield(k, v) : results[k] = v
+          end
+          if more['NextToken']
+            next_token = more['NextToken']
+          else
+            has_more = false
+          end
+        end
+        results unless block_given?
       end
 
       def delete(domain, key)

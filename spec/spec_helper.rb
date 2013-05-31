@@ -64,6 +64,6 @@ RSpec.configure do |config|
   # https://www.relishapp.com/vcr/vcr/v/2-4-0/docs/test-frameworks/usage-with-rspec-metadata!
   config.treat_symbols_as_metadata_keys_with_true_values = true
 
-  config.filter_run_excluding :integration => true unless ENV['HEIRLOOM_INTEGRATION']
+  config.filter_run_excluding :integration => true unless ENV['HEIRLOOM_INTEGRATION_BUCKET_PREFIX']
 end
 

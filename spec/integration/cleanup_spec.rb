@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'macaddr'
 require 'heirloom/cli'
 require 'heirloom/logger'
 
@@ -26,8 +25,8 @@ describe "cleanup", :integration => true do
   end
 
   before do
-    @bucket_prefix = "heirloom-integration-tests-#{Mac.addr.gsub(':', '')}"
-    @name          = "integration_tests"
+    @bucket_prefix = ENV['HEIRLOOM_INTEGRATION_BUCKET_PREFIX']
+    @name          = @bucket_prefix
     @domain        = "heirloom_#{@name}"
   end
 
@@ -53,7 +52,7 @@ describe "cleanup", :integration => true do
         :force           => true,
         :metadata_region => 'us-west-1',
         :name            => @name,
-        :region          => ['us-east-1', 'us-west-1']
+        :region          => ['us-west-1']
       )
       Heirloom::CLI::Setup.new.setup
       # give the bucket a chance to propagate
@@ -64,8 +63,9 @@ describe "cleanup", :integration => true do
     
     after do
       reset_env(
-        :name  => @name,
-        :force => true
+        :name         => @name,
+        :force        => true,
+        :keep_buckets => true
       )
       Heirloom::CLI::Teardown.new.teardown
       FileUtils.remove_entry @tmp_dir

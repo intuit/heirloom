@@ -12,5 +12,8 @@ module Heirloom
     class RotateFailed < Base
     end
       
+    class CleanupFailed < Base
+    end
+      
   end
 end

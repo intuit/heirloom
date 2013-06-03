@@ -6,8 +6,51 @@ describe Heirloom::Catalog do
     @config_mock   = mock 'catalog'
     @regions       = ['us-west-1', 'us-west-2']
     @bucket_prefix = 'bp'
-    @catalog       = Heirloom::Catalog.new :config => @config_mock,
-                                         :name   => 'new_archive'
+    @catalog       = Heirloom::Catalog.new :config => @config_mock, :name => 'new_archive'
+
+    Heirloom.stub :log => mock_log
+  end
+
+  context "cleanup" do
+    before do
+      @sdb = mock 'sdb'
+      @sdb.stub(:select)
+        .and_yield('123', { 'preserve' => ['true'] })
+        .and_yield('abc', { 'preserve' => ['true'] })
+        .and_yield('456', { 'test' => ['banana'] })
+    end
+
+    it "should not destroy archives marked with 'preserve'" do
+
+      archive = mock 'archive', :destroy => true
+      @catalog.stub :sdb => @sdb
+
+      Heirloom::Archive.should_receive(:new)
+        .with(hash_including(:id => '456'))
+        .and_return archive
+
+      @catalog.cleanup :num_to_keep => 10
+    end
+
+    it "should destroy archives when removed_preserved is true" do
+      archive = mock 'archive', :destroy => true
+      @catalog.stub :sdb => @sdb
+
+      Heirloom::Archive.should_receive(:new)
+        .with(hash_including(:id => '123'))
+        .and_return archive
+
+      Heirloom::Archive.should_receive(:new)
+        .with(hash_including(:id => 'abc'))
+        .and_return archive
+
+      Heirloom::Archive.should_receive(:new)
+        .with(hash_including(:id => '456'))
+        .and_return archive
+
+      @catalog.cleanup :num_to_keep => 10, :remove_preserved => true
+    end
+        
   end
 
   context "testing add" do

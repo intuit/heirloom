@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe Heirloom::AWS::SimpleDB do
 
-  before do
-    @sdb = Heirloom::AWS::SimpleDB.new :config => mock_config
-  end
-
   context "credential management" do
 
     it "should use the access and secret keys by default" do

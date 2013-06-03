@@ -49,11 +49,11 @@ VCR.configure do |config|
   config.configure_rspec_metadata!
 
   config.filter_sensitive_data('<AWSACCESSKEYID>') do
-    config = Heirloom::Config.new :environment => 'integration'
+    config = integration_or_mock_config
     config.access_key
   end
   config.filter_sensitive_data('<AWSSECRETKEY>') do
-    config = Heirloom::Config.new :environment => 'integration'
+    config = integration_or_mock_config
     config.secret_key
   end
 end

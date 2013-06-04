@@ -11,6 +11,9 @@ require 'vcr'
 
 require 'heirloom'
 
+HEIRLOOM_INT_BP = ENV['HEIRLOOM_INTEGRATION_BUCKET_PREFIX']
+RUN_INTEGRATION_TESTS = HEIRLOOM_INT_BP && !HEIRLOOM_INT_BP.empty?
+
 module SpecHelpers
 
   def mock_log
@@ -28,7 +31,7 @@ module SpecHelpers
   end
 
   def integration_or_mock_config
-    if File.exists? "#{ENV['HOME']}/.heirloom.yml"
+    if RUN_INTEGRATION_TESTS && File.exists?("#{ENV['HOME']}/.heirloom.yml")
       begin
         Heirloom::Config.new(:environment => 'integration', :logger => mock_log)
       rescue SystemExit
@@ -48,14 +51,16 @@ VCR.configure do |config|
   config.hook_into :excon
   config.configure_rspec_metadata!
 
-  config.filter_sensitive_data('<AWSACCESSKEYID>') do
-    config = Heirloom::Config.new :environment => 'integration'
-    config.access_key
+  if RUN_INTEGRATION_TESTS
+    heirloom_integration_config = Heirloom::Config.new(:environment => 'integration')
+    config.filter_sensitive_data('<AWSACCESSKEYID>') do
+      heirloom_integration_config.access_key
+    end
+    config.filter_sensitive_data('<AWSSECRETKEY>') do
+      heirloom_integration_config.secret_key
+    end
   end
-  config.filter_sensitive_data('<AWSSECRETKEY>') do
-    config = Heirloom::Config.new :environment => 'integration'
-    config.secret_key
-  end
+
 end
 
 RSpec.configure do |config|

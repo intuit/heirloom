@@ -4,6 +4,10 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      def self.command_summary
+        'Show catalog of Heirlooms'
+      end
+
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
@@ -41,7 +45,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Show catalog of Heirlooms.
+#{Catalog.command_summary}.
 
 Usage:
 

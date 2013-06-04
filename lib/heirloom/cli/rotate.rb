@@ -4,6 +4,10 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      def self.command_summary
+        'Rotate keys for an Heirloom'
+      end
+
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
@@ -46,7 +50,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Rotate keys for an Heirloom.  
+#{Rotate.command_summary}.  
 
 Will download the heirloom to temp directory, decrypt, encrypt, and upload, replacing original.
 

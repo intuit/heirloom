@@ -76,7 +76,7 @@ module Heirloom
       @commands = klasses.map do |klass|
         Hashie::Mash.new.tap do |h|
           h[:command_name]    = klass.downcase
-          h[:command_summary] = Heirloom::CLI.const_get(klass).command_summary rescue 'No summary available'
+          h[:command_summary] = Heirloom::CLI.const_get(klass).command_summary
         end
       end
     end

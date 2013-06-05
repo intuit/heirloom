@@ -4,6 +4,10 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      def self.command_summary
+        'Destroy an Heirloom'
+      end
+
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
@@ -37,7 +41,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Destroy an Heirloom.
+#{Destroy.command_summary}.
 
 Usage:
 

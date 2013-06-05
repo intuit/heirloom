@@ -4,6 +4,10 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      def self.command_summary
+        'Teardown S3 buckets and SimpleDB domain for Heirloom name'
+      end
+
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
@@ -57,7 +61,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Teardown S3 buckets and SimpleDB domain for a given Heirloom name.
+#{Teardown.command_summary}.
 
 Usage:
 

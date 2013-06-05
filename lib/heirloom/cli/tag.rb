@@ -4,6 +4,10 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      def self.command_summary
+        'Tag an Heirloom with an attribute and value'
+      end
+
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
@@ -40,7 +44,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Tag an Heirloom with an attribute and value.
+#{Tag.command_summary}.
 
 Usage:
 

@@ -6,6 +6,10 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      def self.command_summary
+        'Upload a directory to Heirloom'
+      end
+
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
@@ -75,7 +79,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Upload a directory to Heirloom.
+#{Upload.command_summary}.
 
 Usage:
 

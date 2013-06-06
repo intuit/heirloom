@@ -4,6 +4,10 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      def self.command_summary
+        "Delete old heirlooms not tagged with 'preserve': true"
+      end
+
       def initialize
         @opts   = read_options
         @config = load_config :opts => @opts, :logger => Heirloom.log
@@ -43,7 +47,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Delete old heirlooms.  Will not delete any IDs tagged with 'preserve': true.
+#{Cleanup.command_summary}.
 
 Usage:
 

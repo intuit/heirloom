@@ -4,6 +4,10 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      def self.command_summary
+        'Setup S3 and SimpleDB in the given regions'
+      end
+
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
@@ -63,7 +67,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Setup S3 and SimpleDB in the given regions.
+#{Setup.command_summary}.
 
 Usage:
 

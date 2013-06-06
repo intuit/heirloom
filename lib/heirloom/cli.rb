@@ -1,3 +1,4 @@
+require 'hashie'
 require 'json'
 require 'trollop'
 
@@ -50,10 +51,39 @@ module Heirloom
       when '-v'
         puts Heirloom::VERSION
       else
-        puts "Unkown command: '#{cmd}'." unless cmd == '-h'
-        puts "heirloom [authorize|catalog|destroy|download|list|setup|show|tag|teardown|upload] OPTIONS"
-        puts "Append -h for help on specific command."
+        puts "Unknown command: '#{cmd}'." unless cmd == '-h'
+        usage
       end
     end
+
+    def self.usage
+      puts ''
+      puts 'Usage: heirloom command [options]'
+      puts ''
+      puts 'Append -h for help on specific command.'
+      puts ''
+      puts 'Commands:'
+      commands.each do |cmd|
+        $stdout.printf "    %-#{length_of_longest_command}s      %s\n",
+                       cmd.command_name,
+                       cmd.command_summary
+      end
+    end
+
+    def self.commands
+      return @commands if @commands
+      klasses = Heirloom::CLI.constants.reject { |c| [:Shared, :Formatter].include?(c) }
+      @commands = klasses.map do |klass|
+        Hashie::Mash.new.tap do |h|
+          h[:command_name]    = klass.downcase
+          h[:command_summary] = Heirloom::CLI.const_get(klass).command_summary
+        end
+      end
+    end
+
+    def self.length_of_longest_command
+      @length ||= commands.map { |c| c.command_name.length }.max
+    end
+
   end
 end

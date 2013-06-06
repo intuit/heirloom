@@ -4,6 +4,10 @@ module Heirloom
 
       include Heirloom::CLI::Shared
 
+      def self.command_summary
+        'Download Heirloom'
+      end
+
       def initialize
         @opts = read_options
         @logger = HeirloomLogger.new :log_level => @opts[:level]
@@ -56,7 +60,7 @@ module Heirloom
           version Heirloom::VERSION
           banner <<-EOS
 
-Download Heirloom.
+#{Download.command_summary}.
 
 Usage:
 

@@ -1,5 +1,7 @@
 ## HEAD:
 
+* Move to .ruby-version and .ruby-gemset instead of .rvmrc
+
 ## 0.11.0 (04/26/2013):
 
 * Add support for multiple environments

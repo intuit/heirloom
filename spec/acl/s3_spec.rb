@@ -22,7 +22,7 @@ describe Heirloom do
     @s3.should_receive(:s3).exactly(2).times.
                             and_return(s3_mock)
 
-    s3_mock.should_receive(:get_bucket_acl).with('bucket').
+    s3_mock.should_receive(:get_object_acl).with({ :bucket => 'bucket', :object_name => 'key-folder/key.tar.gz' }).
                                             and_return acls
 
     s3_mock.should_receive(:put_object_acl).

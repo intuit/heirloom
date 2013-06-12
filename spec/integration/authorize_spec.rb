@@ -51,8 +51,8 @@ describe "authorize", :integration => true do
 
     after do
       reset_env(
-        :name => @name,
-        :force => true,
+        :name         => @name,
+        :force        => true,
         :keep_buckets => true
       )
       Heirloom::CLI::Teardown.new.teardown

@@ -4,26 +4,6 @@ require 'heirloom/logger'
 
 describe "cleanup", :integration => true do
 
-  def wait_for_aws(num_seconds = 5)
-    sleep num_seconds
-  end
-
-  def create_temp_heirloom_content
-    tmp_dir = Dir.mktmpdir
-    File.open(File.join(tmp_dir, 'index.html'), 'w') do |f|
-      f.write 'Hello World!'
-    end
-    tmp_dir
-  end
-
-  def reset_env(opts = {})
-    opts[:environment]     = 'integration'
-    opts[:log_level]       = 'debug'
-    opts[:metadata_region] = 'us-west-1'
-
-    Trollop.stub :options => opts
-  end
-
   before do
     @bucket_prefix = ENV['HEIRLOOM_INTEGRATION_BUCKET_PREFIX']
     @name          = @bucket_prefix

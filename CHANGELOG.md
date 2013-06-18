@@ -1,5 +1,6 @@
-## HEAD:
+## 0.11.1 (06/18/2013):
 
+* Fixes bug #139 by using get_object_acl instead of removed get_bucket_acl.
 * Move to .ruby-version and .ruby-gemset instead of .rvmrc
 
 ## 0.11.0 (04/26/2013):

@@ -1,3 +1,7 @@
+## HEAD:
+
+* Adding hashie to runtime.
+
 ## 0.11.1 (06/18/2013):
 
 * Fixes bug #139 by using get_object_acl instead of removed get_bucket_acl.

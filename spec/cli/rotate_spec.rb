@@ -18,6 +18,8 @@ describe Heirloom do
     Heirloom::Catalog.stub(:new).and_return catalog_stub
 
     @archive_mock = mock 'archive'
+    @logger_mock = mock_log
+    Heirloom::HeirloomLogger.stub :new => @logger_mock
     Heirloom::Archive.stub(:new).and_return @archive_mock
 
   end
@@ -34,9 +36,6 @@ describe Heirloom do
     
     @archive_mock.stub(:rotate).and_raise Heirloom::Exceptions::RotateFailed.new("failed")
 
-    @logger_mock = mock 'logger'
-    Heirloom::HeirloomLogger.stub :new => @logger_mock
-    
     @logger_mock.should_receive(:error).with "failed"
     expect {
       Heirloom::CLI::Rotate.new.rotate

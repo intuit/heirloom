@@ -25,8 +25,6 @@ module Heirloom
     private
 
     def load_config_file
-      config_file = "#{ENV['HOME']}/.heirloom.yml"
-
       if File.exists? config_file
         data = YAML::load File.open(config_file)
         if data.has_key? @environment
@@ -38,6 +36,18 @@ module Heirloom
       else
         { }
       end
+    end
+
+    def config_file
+      env_config_file || default_config_file
+    end
+
+    def env_config_file
+      env.load 'HEIRLOOM_CONFIG_FILE'
+    end
+
+    def default_config_file
+      "#{env.load 'HOME'}/.heirloom.yml"
     end
 
   end

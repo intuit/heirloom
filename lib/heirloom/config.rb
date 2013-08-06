@@ -50,5 +50,9 @@ module Heirloom
       "#{env.load 'HOME'}/.heirloom.yml"
     end
 
+    def env
+      @env ||= Heirloom::Env.new
+    end
+
   end
 end

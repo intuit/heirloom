@@ -1,3 +1,7 @@
+## HEAD :
+
+* Added HEIRLOOM_CONFIG_FILE as alternate config file
+
 ## 0.11.2 (06/19/2013):
 
 * Adding hashie to runtime.

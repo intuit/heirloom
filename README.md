@@ -40,6 +40,11 @@ default:
 #   metadata_region: us-west-1
 ```
 
+You can specify an alternate config file by setting "HEIRLOOM_CONFIG_FILE" 
+```
+export HEIRLOOM_CONFIG_FILE="~/special_config.yml"
+```
+
 Documentation
 -------------
 

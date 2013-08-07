@@ -20,6 +20,26 @@ describe Heirloom do
                  
   end
 
+  it "should open the HEIRLOOM_CONFIG_FILE if set" do
+    File.stub :exists? => true
+    File.should_receive(:open).with('~/.special_config.yml').and_return(@config_file.to_yaml)
+    env_stub = stub 'env', :load => '~/.special_config.yml'
+    Heirloom::Env.stub(:new).and_return(env_stub)
+    config = Heirloom::Config.new :opts   => @opts,
+                                  :logger => 'da-logger'
+  end
+
+  it "should open the default config file if HEIRLOOM_CONFIG_FILE is not set" do
+    File.stub :exists? => true
+    File.should_receive(:open).with('~/.heirloom.yml').and_return(@config_file.to_yaml)
+    env_stub = stub 'env', :load => '~/.heirloom.yml'
+    Heirloom::Env.stub(:new).and_return(env_stub)
+    config = Heirloom::Config.new :opts   => @opts,
+                                  :logger => 'da-logger'
+  end
+
+
+
   it "should create a new config object from the hash passed as config" do
     File.stub :exists? => false
     File.should_receive(:open).never
@@ -33,8 +53,7 @@ describe Heirloom do
 
   it "should create a new config object and read from ~/.heirloom.yml" do
     File.stub :exists? => true
-    File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
-                               and_return(@config_file.to_yaml)
+    File.should_receive(:open).and_return(@config_file.to_yaml)
     config = Heirloom::Config.new
     config.access_key.should == @config_file['default']['access_key']
     config.secret_key.should == @config_file['default']['secret_key']
@@ -43,8 +62,7 @@ describe Heirloom do
   
   it "should override config settings in file from opts" do
     File.stub :exists? => true
-    File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
-                               and_return(@config_file.to_yaml)
+    File.should_receive(:open).and_return(@config_file.to_yaml)
     config = Heirloom::Config.new :opts => @opts
     config.access_key.should == @opts[:aws_access_key]
     config.secret_key.should == @opts[:aws_secret_key]
@@ -61,8 +79,7 @@ describe Heirloom do
 
   it "should load a different environment if requested" do
     File.stub :exists? => true
-    File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
-                               and_return(@config_file.to_yaml)
+    File.should_receive(:open).and_return(@config_file.to_yaml)
     config = Heirloom::Config.new :environment => 'dev'
     config.access_key.should == @config_file['dev']['access_key']
     config.secret_key.should == @config_file['dev']['secret_key']
@@ -71,8 +88,7 @@ describe Heirloom do
 
   it "should still allow overrides with different environments" do
     File.stub :exists? => true
-    File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
-                               and_return(@config_file.to_yaml)
+    File.should_receive(:open).and_return(@config_file.to_yaml)
     opts = {
       :aws_access_key => 'specialdevkey'
     }
@@ -84,8 +100,7 @@ describe Heirloom do
 
   it "should complain if a non-existing environment is requested" do
     File.stub :exists? => true
-    File.should_receive(:open).with("#{ENV['HOME']}/.heirloom.yml").
-                               and_return(@config_file.to_yaml)
+    File.should_receive(:open).and_return(@config_file.to_yaml)
 
     logger_mock = mock 'logger'
     logger_mock.should_receive(:error)

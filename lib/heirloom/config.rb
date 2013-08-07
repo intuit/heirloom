@@ -51,7 +51,7 @@ module Heirloom
     end
 
     def env
-      @env ||= Heirloom::Env.new
+      @env ||= Env.new
     end
 
   end

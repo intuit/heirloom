@@ -16,6 +16,10 @@ RUN_INTEGRATION_TESTS = HEIRLOOM_INT_BP && !HEIRLOOM_INT_BP.empty?
 
 module SpecHelpers
 
+  def set_env_var(name,value)
+    ENV.stub(:fetch).with(name, nil).and_return(value)
+  end
+
   def mock_log
     mock 'log', :debug => true, :info => true, :warn => true, :error => true, :level= => true
   end

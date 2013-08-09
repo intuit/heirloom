@@ -1,5 +1,6 @@
 ## HEAD :
 
+* Fixes bug 145 when no config file, it no longer errors out
 * Added HEIRLOOM_CONFIG_FILE as alternate config file
 
 ## 0.11.2 (06/19/2013):

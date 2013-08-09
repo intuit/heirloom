@@ -109,16 +109,15 @@ describe Heirloom do
       config.metadata_region.should == @config_file['dev']['metadata_region']
     end
 
-    it "should complain if a non-existing environment is requested" do
+    it "should log a warning if a non-existing environment is requested from existing config file" do
       File.stub :exists? => true
       File.should_receive(:open).with("~/.heirloom.yml").and_return(@config_file.to_yaml)
-
       logger_mock = mock 'logger'
-      logger_mock.should_receive(:error)
+      logger_mock.should_receive(:warn)
 
       lambda {
         config = Heirloom::Config.new :environment => 'missing', :logger => logger_mock
-      }.should raise_error SystemExit
+      }.should_not raise_error SystemExit
     end
   end
 end

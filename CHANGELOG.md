@@ -1,4 +1,6 @@
-## HEAD :
+## HEAD: 
+
+## 0.12.0 (08/14/2013):
 
 * Fixed bug 130 which did not exclude subdirectories
 * Fixes bug 145 when no config file, it no longer errors out

@@ -11,7 +11,7 @@ describe Heirloom::Directory do
                           :error => 'true'
       @config_mock.stub(:logger).and_return(@logger_stub)
       @directory = Heirloom::Directory.new :config  => @config_mock,
-                                           :exclude => ['dont_pack_me'],
+                                           :exclude => ['dont_pack_me', 'dont_pack_me1'],
                                            :path    => '/dir',
                                            :file    => '/tmp/file.tar.gz'
     end
@@ -20,8 +20,8 @@ describe Heirloom::Directory do
       before do 
         @directory.should_receive(:which).with('tar').and_return true
         output_mock = double 'output mock'
-        command = "cd /dir && tar czf /tmp/file.tar.gz --exclude dont_pack_me ."
-        files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me']
+        command = "cd /dir && tar czf /tmp/file.tar.gz --exclude dont_pack_me --exclude dont_pack_me1 ."
+        files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me', 'dont_pack_me1']
         Heirloom::Directory.any_instance.should_receive(:`).
                             with(command).
                             and_return output_mock
@@ -58,8 +58,8 @@ describe Heirloom::Directory do
       before do 
         @directory.should_receive(:which).with('tar').and_return true
         output_mock = double 'output mock'
-        command = "cd /dir && tar czf /tmp/file.tar.gz --exclude dont_pack_me ."
-        files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me']
+        command = "cd /dir && tar czf /tmp/file.tar.gz --exclude dont_pack_me --exclude dont_pack_me1 ."
+        files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me', 'dont_pack_me1']
         Heirloom::Directory.any_instance.should_receive(:`).
                             with(command).
                             and_return output_mock
@@ -78,7 +78,7 @@ describe Heirloom::Directory do
 
     context 'when required executable is missing' do
       before do
-        files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me']
+        files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me', 'dont_pack_me1']
       end
 
       it "should return false if tar is not in path" do

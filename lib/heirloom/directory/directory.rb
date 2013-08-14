@@ -27,7 +27,7 @@ module Heirloom
 
     def build_archive
       return false unless tar_in_path?
-      command = "cd #{@path} && tar czf #{@file} #{build_exclude_files} *"
+      command = "cd #{@path} && tar czf #{@file} #{build_exclude_files} ."
       @logger.info "Archiving with: `#{command}`"
       output = `#{command}`
       @logger.debug "Exited with status: '#{$?.exitstatus}' ouput: '#{output}'"

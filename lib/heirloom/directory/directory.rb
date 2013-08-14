@@ -55,7 +55,7 @@ module Heirloom
     end
 
     def build_exclude_files
-      @exclude.collect { |x| "--exclude #{x} " }.join
+      @exclude.map { |x| "--exclude #{x}" }.join ' '
     end
     def files_to_pack
       @files_to_pack ||= (Dir.entries(@path) - ['.', '..'] - @exclude).map do |file|

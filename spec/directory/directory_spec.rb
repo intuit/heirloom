@@ -20,7 +20,7 @@ describe Heirloom::Directory do
       before do 
         @directory.should_receive(:which).with('tar').and_return true
         output_mock = double 'output mock'
-        command = "cd /dir && tar czf /tmp/file.tar.gz --exclude . --exclude .. --exclude dont_pack_me  'pack_me' '.hidden' 'with a space'"
+        command = "cd /dir && tar czf /tmp/file.tar.gz --exclude . --exclude .. --exclude dont_pack_me 'pack_me' '.hidden' 'with a space'"
         files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me']
         Heirloom::Directory.any_instance.should_receive(:`).
                             with(command).
@@ -60,7 +60,7 @@ describe Heirloom::Directory do
       before do 
         @directory.should_receive(:which).with('tar').and_return true
         output_mock = double 'output mock'
-        command = "cd /dir && tar czf /tmp/file.tar.gz --exclude . --exclude .. --exclude dont_pack_me  'pack_me' '.hidden' 'with a space'"
+        command = "cd /dir && tar czf /tmp/file.tar.gz --exclude . --exclude .. --exclude dont_pack_me 'pack_me' '.hidden' 'with a space'"
         files = ['pack_me', '.hidden', 'with a space', 'dont_pack_me']
         Heirloom::Directory.any_instance.should_receive(:`).
                             with(command).

@@ -1,5 +1,6 @@
 ## HEAD :
 
+* Fixed bug 130 which did not exclude subdirectories
 * Fixes bug 145 when no config file, it no longer errors out
 * Added HEIRLOOM_CONFIG_FILE as alternate config file
 

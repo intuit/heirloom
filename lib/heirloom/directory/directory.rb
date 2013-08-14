@@ -28,7 +28,7 @@ module Heirloom
 
     def build_archive
       return false unless tar_in_path?
-      command = "cd #{@path} && tar czf #{@file} #{exclude_files} #{files_to_pack}"
+      command = "cd #{@path} && tar czf #{@file} #{build_exclude_files} #{files_to_pack}"
       @logger.info "Archiving with: `#{command}`"
       output = `#{command}`
       @logger.debug "Exited with status: '#{$?.exitstatus}' ouput: '#{output}'"
@@ -50,13 +50,10 @@ module Heirloom
       true
     end
 
-    def exclude_files
-      @exclude_files ||= build_exclude_files
-    end
-
     def build_exclude_files
       @exclude.map { |x| "--exclude #{x}" }.join ' '
     end
+
     def files_to_pack
       @files_to_pack ||= (Dir.entries(@path) - ['.', '..'] - @exclude).map do |file|
         "'#{file}'"

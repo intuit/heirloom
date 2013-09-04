@@ -22,6 +22,10 @@ module Heirloom
                                      false
     end
 
+    def proxy
+      @proxy ||= env.load 'https_proxy'
+    end
+
     private
 
     def load_config_file

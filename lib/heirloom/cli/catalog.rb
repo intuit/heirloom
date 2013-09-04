@@ -23,12 +23,12 @@ module Heirloom
         ensure_catalog_domain_exists :config  => @config,
                                      :catalog => @catalog
       end
-      
+
       def all
         if @opts[:json]
           jj catalog_with_heirloom_prefix_removed
         else
-          formatter = Heirloom::CLI::Formatter::Catalog.new 
+          formatter = Heirloom::CLI::Formatter::Catalog.new
           puts formatter.format :catalog => catalog_with_heirloom_prefix_removed,
                                 :name    => @opts[:name]
         end

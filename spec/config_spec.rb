@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @config_file = { 'default' => 
+    @config_file = { 'default' =>
                      { 'access_key'      => 'key',
                        'secret_key'      => 'secret',
                        'metadata_region' => 'us-west-2'
@@ -17,7 +17,6 @@ describe Heirloom do
     @opts = { :aws_access_key  => 'optkey',
               :aws_secret_key  => 'optsec',
               :metadata_region => 'optmd' }
-                 
   end
 
   context "#test the config file" do
@@ -40,6 +39,18 @@ describe Heirloom do
       Heirloom::Env.stub(:new).and_return(env_mock)
       config = Heirloom::Config.new :opts   => @opts,
                                     :logger => 'da-logger'
+    end
+  end
+
+  context "#reading env variables" do
+    it "should return the proxy as set by https_proxy" do
+      env_mock = mock 'env'
+      env_mock.should_receive(:load).with('HEIRLOOM_CONFIG_FILE').and_return(nil)
+      env_mock.should_receive(:load).with('HOME').and_return('~')
+      env_mock.should_receive(:load).with('https_proxy').and_return('https://proxy.example.com:3128')
+      Heirloom::Env.stub(:new).and_return(env_mock)
+      config = Heirloom::Config.new :opts => @opts
+      expect(config.proxy).to eq('https://proxy.example.com:3128')
     end
   end
 
@@ -70,7 +81,7 @@ describe Heirloom do
       config.secret_key.should == @config_file['default']['secret_key']
       config.metadata_region.should == @config_file['default']['metadata_region']
     end
-    
+
     it "should override config settings in file from opts" do
       File.stub :exists? => true
       File.should_receive(:open).with("~/.heirloom.yml").and_return(@config_file.to_yaml)

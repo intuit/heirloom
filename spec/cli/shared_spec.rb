@@ -67,34 +67,35 @@ describe Heirloom do
 
     before do
       @config_mock = mock 'config'
-      @logger_mock = mock 'logger'
+      @logger_stub = stub 'logger', :debug => true
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
-      Heirloom::Config.should_receive(:new).with(:logger => @logger_mock, :environment => nil).
+      Heirloom::Config.should_receive(:new).with(:logger => @logger_stub, :environment => nil).
                        and_return @config_mock
+      @config_mock.stub :proxy => nil
     end
 
     it "should return the configuration" do
-      @object.load_config(:logger => @logger_mock,
+      @object.load_config(:logger => @logger_stub,
                           :opts => {}).should == @config_mock
     end
 
     it "should set the metadata region if specified" do
       opts = { :metadata_region => 'us-west-1' }
       @config_mock.should_receive(:metadata_region=).with 'us-west-1'
-      @object.load_config :logger => @logger_mock, :opts => opts
+      @object.load_config :logger => @logger_stub, :opts => opts
     end
 
     it "should set the access key if specified" do
       opts = { :aws_access_key => 'the_key' }
       @config_mock.should_receive(:access_key=).with 'the_key'
-      @object.load_config :logger => @logger_mock, :opts => opts
+      @object.load_config :logger => @logger_stub, :opts => opts
     end
 
     it "should set the secret key if specified" do
       opts = { :aws_secret_key => 'the_secret' }
       @config_mock.should_receive(:secret_key=).with 'the_secret'
-      @object.load_config :logger => @logger_mock, :opts => opts
+      @object.load_config :logger => @logger_stub, :opts => opts
     end
 
   end

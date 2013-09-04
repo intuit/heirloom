@@ -6,7 +6,7 @@ module Heirloom
 
       def initialize(args)
         @config = args[:config]
-        
+
         fog_args = { :region => @config.metadata_region }
 
         if @config.use_iam_profile

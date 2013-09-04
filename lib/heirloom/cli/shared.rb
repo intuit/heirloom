@@ -10,6 +10,11 @@ module Heirloom
         config.secret_key = opts[:aws_secret_key] if opts[:aws_secret_key]
         config.metadata_region = opts[:metadata_region] if opts[:metadata_region]
         config.use_iam_profile = opts[:use_iam_profile] if opts[:use_iam_profile]
+        if config.proxy
+          logger.debug "Using proxy #{config.proxy} from https_proxy environment variable."
+        else
+          logger.debug "Proxy environment variable https_proxy not set."
+        end
         config
       end
 

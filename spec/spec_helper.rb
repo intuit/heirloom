@@ -30,6 +30,7 @@ module SpecHelpers
     args[:secret_key]      ||= 'secret'
     args[:metadata_region] ||= 'us-west-1'
     args[:use_iam_profile] ||= false
+    args[:proxy]           ||= nil
 
     Hashie::Mash.new args
   end

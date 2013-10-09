@@ -57,8 +57,7 @@ EOS
                                                             :default => 'info'
           opt :json, "Dump full catalog as raw JSON."
           opt :name, "Name of Heirloom to show full details.", :type => :string
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

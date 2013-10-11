@@ -93,8 +93,7 @@ Can be specified multiple times.", :type  => :string, :multi => true, :short => 
           opt :id, "ID for Heirloom.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :public, "Set this Heirloom as public readable?"
           opt :secret, "Encrypt the Heirloom with given secret.", :type => :string

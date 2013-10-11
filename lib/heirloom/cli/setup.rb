@@ -81,8 +81,7 @@ us-east-1' will create bucket test-us-west-1 in us-west-1 and test-us-east-1 in 
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :region, "AWS Region(s) to upload Heirloom. \
 Can be specified multiple times.", :type  => :string, 

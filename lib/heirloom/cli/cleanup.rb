@@ -57,8 +57,7 @@ EOS
           opt :help, "Display Help"
           opt :log_level, "Log level [debug|info|warn|error].", :type    => :string,
                                                                 :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :keep, "Number of unpreserved heirlooms to keep.", :default => 100
 

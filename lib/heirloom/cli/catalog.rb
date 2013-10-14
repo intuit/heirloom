@@ -28,11 +28,11 @@ module Heirloom
 
       def all
         if @opts[:json]
-          jj catalog_with_heirloom_prefix_removed
+          jj catalog_json_formatted
         else
           formatter = Heirloom::CLI::Formatter::Catalog.new
           puts formatter.format :region => detected_region,
-                                :catalog => catalog_with_heirloom_prefix_removed,
+                                :catalog => catalog_cli_formatted,
                                 :name    => @opts[:name]
         end
       end
@@ -44,7 +44,11 @@ module Heirloom
         @region ||= @config.metadata_region
       end
 
-      def catalog_with_heirloom_prefix_removed
+      def catalog_json_formatted
+        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, ''), v] }]
+      end
+
+      def catalog_cli_formatted
         Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, '  '), v] }]
       end
 

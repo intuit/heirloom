@@ -77,8 +77,7 @@ EOS
           opt :id, "ID of the Heirloom to download.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :output, "Path to output downloaded Heirloom. Must be existing directory.", :type => :string
           opt :region, "Region to download Heirloom.", :type    => :string,

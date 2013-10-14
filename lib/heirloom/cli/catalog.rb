@@ -17,8 +17,10 @@ module Heirloom
         ensure_valid_options :provided => @opts,
                              :required => [],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
+
+        ensure_valid_region :region => detected_region,
                             :config => @config
+
         @catalog = Heirloom::Catalog.new :config  => @config
         ensure_catalog_domain_exists :config  => @config,
                                      :catalog => @catalog
@@ -26,18 +28,28 @@ module Heirloom
 
       def all
         if @opts[:json]
-          jj catalog_with_heirloom_prefix_removed
+          jj catalog_json_formatted
         else
           formatter = Heirloom::CLI::Formatter::Catalog.new
-          puts formatter.format :catalog => catalog_with_heirloom_prefix_removed,
+          puts formatter.format :region => detected_region,
+                                :catalog => catalog_cli_formatted,
                                 :name    => @opts[:name]
         end
       end
 
       private
 
-      def catalog_with_heirloom_prefix_removed
+      def detected_region
+        @region =  @opts[:metadata_region]
+        @region ||= @config.metadata_region
+      end
+
+      def catalog_json_formatted
         Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, ''), v] }]
+      end
+
+      def catalog_cli_formatted
+        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, '  '), v] }]
       end
 
       def read_options
@@ -57,8 +69,7 @@ EOS
                                                             :default => 'info'
           opt :json, "Dump full catalog as raw JSON."
           opt :name, "Name of Heirloom to show full details.", :type => :string
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 

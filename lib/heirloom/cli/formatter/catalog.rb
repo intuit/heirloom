@@ -3,10 +3,11 @@ module Heirloom
     module Formatter
       class Catalog
         def format(args)
+          @region  = args[:region]
           @catalog = args[:catalog]
           @name    = args[:name]
 
-          return summary unless @name
+          return @region, summary unless @name
 
           return "Heirloom #{@name} not found in catalog." unless name_exists?
 

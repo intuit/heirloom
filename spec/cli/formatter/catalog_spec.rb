@@ -18,6 +18,7 @@ describe Heirloom do
     it "should return the formated list" do
       @formatter.format(:catalog => @catalog,
                         :details => nil,
+                        :region => nil,
                         :name    => nil ).should == "test1\ntest2"
     end
   end

@@ -13,6 +13,10 @@ module Heirloom
         @logger = HeirloomLogger.new :log_level => @opts[:level]
         @config = load_config :logger => @logger,
                               :opts   => @opts
+
+        ensure_valid_options :provided => @opts,
+                             :required => [],
+                             :config   => @config
       end
 
 

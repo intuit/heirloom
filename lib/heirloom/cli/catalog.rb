@@ -51,11 +51,10 @@ module Heirloom
       end
 
       def detected_region
-        # this block is messy but couldn't get it to work right with ||=
-        r ||= [@opts[:metadata_region]]
-        r = [@config.metadata_region] if r[0] == nil
-        r = ['us-west-1', 'us-east-1', 'us-west-2'] if r[0] == nil
-        r
+        r ||= @opts[:metadata_region]
+        r ||= @config.metadata_region
+        r &&= r.split
+        r ||= ['us-west-1', 'us-east-1', 'us-west-2']
       end
 
       def catalog_json_formatted

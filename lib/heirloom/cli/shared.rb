@@ -176,6 +176,7 @@ module Heirloom
           logger.error "Catalog does not exist in #{region}."
           exit 1
         end
+        true
       end
 
       def ensure_entry_exists_in_catalog(args)

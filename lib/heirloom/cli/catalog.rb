@@ -13,33 +13,53 @@ module Heirloom
         @logger = HeirloomLogger.new :log_level => @opts[:level]
         @config = load_config :logger => @logger,
                               :opts   => @opts
-
-        ensure_valid_options :provided => @opts,
-                             :required => [],
-                             :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
-        @catalog = Heirloom::Catalog.new :config  => @config
-        ensure_catalog_domain_exists :config  => @config,
-                                     :catalog => @catalog
       end
 
+
       def all
-        if @opts[:json]
-          jj catalog_with_heirloom_prefix_removed
-        else
-          formatter = Heirloom::CLI::Formatter::Catalog.new
+        detected_region.each { |region|
+          @config.metadata_region = region
 
-          formatter.format :catalog => catalog_with_heirloom_prefix_removed,
-                                :name    => @opts[:name]
+          ensure_valid_region :region => region,
+                              :config => @config
 
-        end
+          @catalog = Heirloom::Catalog.new :config  => @config
+
+          next unless catalog_domain_exists?
+
+          if @opts[:json]
+            jj catalog_json_formatted
+          else
+            formatter = Heirloom::CLI::Formatter::Catalog.new
+            puts formatter.format :region  => region,
+                                  :catalog => catalog_cli_formatted,
+                                  :name    => @opts[:name]
+          end
+        }
       end
 
       private
 
-      def catalog_with_heirloom_prefix_removed
+      def catalog_domain_exists?
+        ensure_catalog_domain_exists :config  => @config,
+                                     :catalog => @catalog,
+                                     :continue_on_error => true
+      end
+
+      def detected_region
+        # this block is messy but couldn't get it to work right with ||=
+        r ||= [@opts[:metadata_region]]
+        r = [@config.metadata_region] if r[0] == nil
+        r = ['us-west-1', 'us-east-1', 'us-west-2'] if r[0] == nil
+        r
+      end
+
+      def catalog_json_formatted
         Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, ''), v] }]
+      end
+
+      def catalog_cli_formatted
+        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, '  '), v] }]
       end
 
       def read_options
@@ -53,17 +73,17 @@ Usage:
 
 heirloom catalog
 
-EOS
+          EOS
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
-                                                            :default => 'info'
+              :default => 'info'
           opt :json, "Dump full catalog as raw JSON."
           opt :name, "Name of Heirloom to show full details.", :type => :string
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string
-          opt :aws_access_key, "AWS Access Key ID", :type => :string, 
-                                                    :short => :none
-          opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
-                                                        :short => :none
+          opt :aws_access_key, "AWS Access Key ID", :type => :string,
+              :short => :none
+          opt :aws_secret_key, "AWS Secret Access Key", :type => :string,
+              :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
           opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
         end

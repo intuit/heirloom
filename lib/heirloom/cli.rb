@@ -7,6 +7,7 @@ require 'heirloom/cli/shared'
 
 require 'heirloom/cli/authorize'
 require 'heirloom/cli/catalog'
+require 'heirloom/cli/catalog_global'
 require 'heirloom/cli/cleanup'
 require 'heirloom/cli/destroy'
 require 'heirloom/cli/download'
@@ -28,6 +29,8 @@ module Heirloom
         CLI::Authorize.new.authorize
       when 'catalog'
         CLI::Catalog.new.all
+      when 'catalog_global'
+        CLI::CatalogGlobal.new.all
       when 'cleanup'
         CLI::Cleanup.new.cleanup
       when 'destroy', 'delete'

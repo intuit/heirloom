@@ -167,12 +167,14 @@ module Heirloom
       def ensure_catalog_domain_exists(args)
         config  = args[:config]
         catalog = args[:catalog]
+        continue_on_error = args[:continue_on_error]
         logger  = config.logger
         region  = config.metadata_region
 
         unless catalog.catalog_domain_exists?
           logger.error "Catalog does not exist in #{region}."
-          exit 1
+          exit 1 unless continue_on_error
+          return "foo" if continue_on_error
         end
       end
 

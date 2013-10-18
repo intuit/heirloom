@@ -1,6 +1,6 @@
 module Heirloom
   module CLI
-    class Catalog
+    class CatalogGlobal
 
       include Heirloom::CLI::Shared
 
@@ -14,26 +14,38 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        ensure_valid_options :provided => @opts,
-                             :required => [],
-                             :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
-        @catalog = Heirloom::Catalog.new :config  => @config
-        ensure_catalog_domain_exists :config  => @config,
-                                     :catalog => @catalog
+
+        #ensure_valid_options :provided => @opts,
+        #                     :required => [],
+        #                     :config   => @config
+        #ensure_valid_region :region => @opts[:metadata_region],
+        #                    :config => @config
+        #@catalog = Heirloom::Catalog.new :config  => @config
+        #ensure_catalog_domain_exists :config  => @config,
+        #                             :catalog => @catalog
       end
 
+
       def all
-        if @opts[:json]
-          jj catalog_with_heirloom_prefix_removed
-        else
+        regions = ['us-west-1', 'us-east-1', 'us-west-2']
+        #regions = ['us-east-1']
+        regions.each { |region| @config.metadata_region = region
+          ensure_valid_region :region => region,
+                              :config => @config
+
+          @catalog = Heirloom::Catalog.new :config  => @config
+          f = ensure_catalog_domain_exists :config  => @config,
+                                       :catalog => @catalog,
+                                       :continue_on_error => true
+          if f == "foo"
+            next
+          end
           formatter = Heirloom::CLI::Formatter::Catalog.new
-
-          formatter.format :catalog => catalog_with_heirloom_prefix_removed,
-                                :name    => @opts[:name]
-
-        end
+          formatted = formatter.format :catalog => catalog_with_heirloom_prefix_removed,
+                                     :name    => @opts[:name]
+          puts " " + region
+          puts formatted
+        }
       end
 
       private
@@ -51,7 +63,7 @@ module Heirloom
 
 Usage:
 
-heirloom catalog
+heirloom catalog_global
 
 EOS
           opt :help, "Display Help"

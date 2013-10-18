@@ -13,45 +13,34 @@ module Heirloom
         @logger = HeirloomLogger.new :log_level => @opts[:level]
         @config = load_config :logger => @logger,
                               :opts   => @opts
-
-
-        #ensure_valid_options :provided => @opts,
-        #                     :required => [],
-        #                     :config   => @config
-        #ensure_valid_region :region => @opts[:metadata_region],
-        #                    :config => @config
-        #@catalog = Heirloom::Catalog.new :config  => @config
-        #ensure_catalog_domain_exists :config  => @config,
-        #                             :catalog => @catalog
       end
 
 
       def all
         regions = ['us-west-1', 'us-east-1', 'us-west-2']
-        #regions = ['us-east-1']
-        regions.each { |region| @config.metadata_region = region
+        regions.each { |region|
+          @config.metadata_region = region
+
           ensure_valid_region :region => region,
                               :config => @config
 
           @catalog = Heirloom::Catalog.new :config  => @config
           f = ensure_catalog_domain_exists :config  => @config,
-                                       :catalog => @catalog,
-                                       :continue_on_error => true
-          if f == "foo"
-            next
-          end
+                                                   :catalog => @catalog,
+                                                   :continue_on_error => true
+          next if f == false
           formatter = Heirloom::CLI::Formatter::Catalog.new
-          formatted = formatter.format :catalog => catalog_with_heirloom_prefix_removed,
-                                     :name    => @opts[:name]
-          puts " " + region
-          puts formatted
+
+          puts region
+          puts formatter.format :catalog => catalog_with_heirloom_prefix_removed,
+                                :name    => @opts[:name]
         }
       end
 
       private
 
       def catalog_with_heirloom_prefix_removed
-        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, ''), v] }]
+        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, ' '), v] }]
       end
 
       def read_options

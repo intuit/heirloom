@@ -172,9 +172,9 @@ module Heirloom
         region  = config.metadata_region
 
         unless catalog.catalog_domain_exists?
+          return false if continue_on_error
           logger.error "Catalog does not exist in #{region}."
-          exit 1 unless continue_on_error
-          return "foo" if continue_on_error
+          exit 1
         end
       end
 

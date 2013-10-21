@@ -21,7 +21,7 @@ module Heirloom
 
 
       def all
-        detected_region.each { |region|
+        detected_region.each do |region|
           @config.metadata_region = region
 
           ensure_valid_region :region => region,
@@ -32,14 +32,14 @@ module Heirloom
           next unless catalog_domain_exists?
 
           if @opts[:json]
-            jj catalog_json_formatted
+            jj catalog_format 'json'
           else
             formatter = Heirloom::CLI::Formatter::Catalog.new
             puts formatter.format :region  => region,
-                                  :catalog => catalog_cli_formatted,
+                                  :catalog => catalog_format('cli'),
                                   :name    => @opts[:name]
           end
-        }
+        end
       end
 
       private
@@ -57,12 +57,10 @@ module Heirloom
         r ||= ['us-west-1', 'us-east-1', 'us-west-2']
       end
 
-      def catalog_json_formatted
-        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, ''), v] }]
-      end
-
-      def catalog_cli_formatted
-        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, '  '), v] }]
+      def catalog_format output_type
+        indent = ''
+        indent = '  ' if output_type == 'cli'
+        Hash[@catalog.all.sort.map { |k, v| [k.sub(/heirloom_/, indent), v] }]
       end
 
       def read_options

@@ -4,6 +4,7 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
+
     @catalog = { 'test1' =>
                    { 'regions'       => ['us-west-1', 'us-east-1'],
                      'bucket_prefix' => ['bp1'] },
@@ -12,13 +13,20 @@ describe Heirloom do
                      'bucket_prefix' => ['bp2'] }
                } 
     @formatter = Heirloom::CLI::Formatter::Catalog.new
+
+
   end
 
   context "unfiltered" do
     it "should return the formated list" do
-      @formatter.format(:catalog => @catalog,
+
+#      @region_mock = mock 'region'
+#      @region_mock.stub :detected_region => 'us-west-1'
+
+      @formatter.format(:region  => @region_mock,
+                        :catalog => @catalog,
                         :details => nil,
-                        :name    => nil ).should == "test1\ntest2"
+                        :name    => nil ).should == "\ntest1\ntest2"
     end
   end
 

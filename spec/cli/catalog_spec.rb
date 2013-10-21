@@ -6,6 +6,7 @@ describe Heirloom do
   before do
     @options = { :level           => 'info',
                  :metadata_region => 'us-west-1' }
+
     @result = { 'heirloom_test' => 
                 { 'regions'       => ['us-west-1'],
                   'bucket_prefix' => ['bp'] } }

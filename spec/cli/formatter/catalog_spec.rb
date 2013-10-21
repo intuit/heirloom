@@ -18,15 +18,12 @@ describe Heirloom do
   end
 
   context "unfiltered" do
-    it "should return the formated list" do
+    it "should return the formatted list" do
 
-#      @region_mock = mock 'region'
-#      @region_mock.stub :detected_region => 'us-west-1'
-
-      @formatter.format(:region  => @region_mock,
+      @formatter.format(:region  => 'us-west-1',
                         :catalog => @catalog,
                         :details => nil,
-                        :name    => nil ).should == [ nil, "test1\ntest2" ]
+                        :name    => nil ).should == [ "us-west-1","test1\ntest2" ]
     end
   end
 

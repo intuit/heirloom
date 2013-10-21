@@ -52,8 +52,9 @@ describe Heirloom do
       @cli_catalog = Heirloom::CLI::Catalog.new
       @catalog_mock.stub :all => @result
       formatter_mock = mock 'formatter'
-      catalog = { :catalog =>
-                  { "test" =>
+      catalog = { :region  => "us-west-1",
+                  :catalog =>
+                  { "  test" =>
                     {
                       "regions"       => ["us-west-1"], 
                       "bucket_prefix" => ["bp"] 

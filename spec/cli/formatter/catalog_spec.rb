@@ -26,7 +26,7 @@ describe Heirloom do
       @formatter.format(:region  => @region_mock,
                         :catalog => @catalog,
                         :details => nil,
-                        :name    => nil ).should == "\ntest1\ntest2"
+                        :name    => nil ).should == [ nil, "test1\ntest2" ]
     end
   end
 

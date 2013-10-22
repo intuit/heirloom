@@ -33,7 +33,7 @@ module Heirloom
 
           result = heirloom_found?(region)
           if result && @opts[:json]
-            jj result.to_a
+            jj result
           elsif result
             puts result
           else

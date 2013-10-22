@@ -6,16 +6,25 @@ module Heirloom
           @catalog = args[:catalog]
           @name    = args[:name]
           @region  = args[:region]
+          @json    = args[:json]
+
+          @catalog = catalog_format
 
           return @region, summary unless @name
 
-          return "Heirloom #{@name} not found in catalog." unless name_exists?
-
-          filter_by_name
-          details
+          #return "Heirloom #{@name} not found in catalog for #{@region}." unless name_exists?
+          return false unless name_exists?
+            filter_by_name
+            details
         end
 
         private
+
+        def catalog_format
+          indent = ''
+          indent = '  ' unless @json || @name
+          Hash[@catalog.sort.map { |k, v| [k.sub(/heirloom_/, indent), v] }]
+        end
 
         def name_exists?
           @catalog.include? @name
@@ -37,6 +46,7 @@ module Heirloom
             end
 
             d = k + "\n"
+            d << "  metadata_region  : #{@region}\n"
             d << "  regions          : " + @catalog[k]["regions"].join(", ") + "\n"
             d << "  bucket_prefix    : " + @catalog[k]["bucket_prefix"].first + "\n"
             d << urls.join("\n")

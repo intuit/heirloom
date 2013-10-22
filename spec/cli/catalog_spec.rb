@@ -34,10 +34,10 @@ describe Heirloom do
     it "should list the details about all heirlooms in the catalog" do
       @cli_catalog = Heirloom::CLI::Catalog.new
       @catalog_mock.stub :all => @result
-      formated_result = { 'test' => 
+      formatted_result = { 'test' =>
                           { 'regions'       => ['us-west-1'],
                             'bucket_prefix' => ['bp'] } }
-      @cli_catalog.should_receive(:jj).with formated_result
+      @cli_catalog.should_receive(:jj).with formatted_result
       @cli_catalog.all
     end
   end

@@ -27,39 +27,35 @@ module Heirloom
           ensure_valid_region :region => region,
                               :config => @config
 
-          @catalog = Heirloom::Catalog.new :config  => @config
-
           next unless catalog_domain_exists?
 
-          result = heirloom_found?(region)
-          if result && @opts[:json]
-            jj result
-          elsif result
-            puts result
-          else
-            @logger.debug "Heirloom #{@opts[:name]} not found in catalog for #{region}."
-          end
+          heirloom_info = get_heirloom_info(region)
+          puts heirloom_info if heirloom_info
         end
+        @logger.info "Heirloom #{@opts[:name]} not found in any regions." unless @heirloom_located
       end
 
       private
 
-      def heirloom_found?(region)
+      def get_heirloom_info(region)
         @formatter = Heirloom::CLI::Formatter::Catalog.new
-        @formatter.format :json    => @opts[:json],
-                          :region  => region,
-                          :catalog => Hash[@catalog.all],
-                          :name    => @opts[:name]
+        f = @formatter.format :region  => region,
+                              :catalog => Hash[@catalog.all],
+                              :name    => @opts[:name]
+        @logger.debug "Heirloom #{@opts[:name]} not found in catalog for #{region}." unless f
+        @heirloom_located = true if f
+        f
       end
 
       def catalog_domain_exists?
+        @catalog = Heirloom::Catalog.new :config  => @config
         ensure_catalog_domain_exists :config  => @config,
                                      :catalog => @catalog,
                                      :continue_on_error => true
       end
 
       def default_regions
-        %w(us-west-1 us-west-2 us-east-1)
+        %w(us-east-1 us-west-1 us-west-2)
       end
 
       def detected_regions
@@ -82,7 +78,6 @@ heirloom catalog
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :json, "Dump full catalog as raw JSON."
           opt :name, "Name of Heirloom to show full details.", :type => :string
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type => :string
           opt :all_regions, "Return catalog of all regions."

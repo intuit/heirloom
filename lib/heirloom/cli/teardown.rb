@@ -73,8 +73,7 @@ EOS
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :force, "Forces recursive deletion of existing archives."
           opt :keep_buckets, "Do not delete S3 buckets."

@@ -52,8 +52,7 @@ EOS
           opt :id, "ID of the Heirloom to display.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none

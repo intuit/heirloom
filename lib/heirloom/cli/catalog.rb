@@ -29,8 +29,7 @@ module Heirloom
 
           next unless catalog_domain_exists?
 
-          heirloom_info = get_heirloom_info(region)
-          puts heirloom_info if heirloom_info
+          get_heirloom_info(region)
         end
         @logger.info "Heirloom #{@opts[:name]} not found in any regions." unless @heirloom_located
       end
@@ -44,7 +43,7 @@ module Heirloom
                               :name    => @opts[:name]
         @logger.debug "Heirloom #{@opts[:name]} not found in catalog for #{region}." unless f
         @heirloom_located = true if f
-        f
+        puts f || return
       end
 
       def catalog_domain_exists?

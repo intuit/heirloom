@@ -21,7 +21,7 @@ module Heirloom
 
 
       def all
-        detected_regions.each do |region|
+        results = detected_regions.select do |region|
           @config.metadata_region = region
 
           ensure_valid_region :region => region,
@@ -29,21 +29,27 @@ module Heirloom
 
           next unless catalog_domain_exists?
 
-          get_heirloom_info(region)
+          get_heirloom_info region
         end
-        @logger.info "Heirloom #{@opts[:name]} not found in any regions." unless @heirloom_located
+        @logger.info "Heirloom #{@opts[:name]} not found in any region." unless results.any?
       end
 
       private
 
       def get_heirloom_info(region)
-        @formatter = Heirloom::CLI::Formatter::Catalog.new
-        f = @formatter.format :region  => region,
-                              :catalog => Hash[@catalog.all],
-                              :name    => @opts[:name]
-        @logger.debug "Heirloom #{@opts[:name]} not found in catalog for #{region}." unless f
-        @heirloom_located = true if f
-        puts f || return
+        f = formatter.format :region  => region,
+                             :catalog => Hash[@catalog.all],
+                             :name    => @opts[:name]
+        if f
+          puts f
+        else
+          @logger.debug "Heirloom #{@opts[:name]} not found in catalog for #{region}."
+        end
+        f
+      end
+
+      def formatter
+        @formatter ||= Heirloom::CLI::Formatter::Catalog.new
       end
 
       def catalog_domain_exists?

@@ -49,27 +49,6 @@ describe Heirloom do
       @cli_catalog.should_receive(:puts).with 'theoutput'
       @cli_catalog.all
     end
-
-    #it "should return the heirloom name with details" do
-    #  @cli_catalog = Heirloom::CLI::Catalog.new
-    #  @catalog_mock.stub :all => @result
-    #  formatter_mock = mock 'formatter'
-    #  catalog = { :region  => "us-west-1",
-    #              :catalog =>
-    #                  { "heirloom_test" =>
-    #                        {
-    #                            "regions"       => ["us-west-1"],
-    #                            "bucket_prefix" => ["bp"]
-    #                        }
-    #                  },
-    #              :name => 'test1'
-    #  }
-    #  Heirloom::CLI::Formatter::Catalog.stub :new => formatter_mock
-    #  @cli_catalog.should_receive(:get_heirloom_info).with('us-west-1').and_return 'test'
-    #  formatter_mock.should_receive(:format).with(catalog).and_return 'theoutput'
-    #  @cli_catalog.should_receive(:puts).with 'theoutput'
-    #  @cli_catalog.all
-    #end
   end
 
 end

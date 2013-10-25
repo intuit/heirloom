@@ -41,7 +41,7 @@ module Heirloom
                              :catalog => Hash[@catalog.all],
                              :name    => @opts[:name]
 
-        f ? puts(f) : (@logger.debug "Heirloom #{@opts[:name]} not found in catalog for #{region}.")
+        f ? puts(f) : @logger.debug("Heirloom #{@opts[:name]} not found in catalog for #{region}.")
         f
       end
 

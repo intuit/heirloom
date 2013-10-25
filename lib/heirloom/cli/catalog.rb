@@ -40,11 +40,8 @@ module Heirloom
         f = formatter.format :region  => region,
                              :catalog => Hash[@catalog.all],
                              :name    => @opts[:name]
-        if f
-          puts f
-        else
-          @logger.debug "Heirloom #{@opts[:name]} not found in catalog for #{region}."
-        end
+
+        f ? puts(f) : (@logger.debug "Heirloom #{@opts[:name]} not found in catalog for #{region}.")
         f
       end
 

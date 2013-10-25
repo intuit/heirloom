@@ -23,7 +23,7 @@ describe Heirloom do
       @formatter.format(:region  => 'us-west-1',
                         :catalog => @catalog,
                         :details => nil,
-                        :name    => nil ).should == [ "us-west-1","  test1\n  test2" ]
+                        :name    => nil ).should == "us-west-1\n  test1\n  test2"
     end
   end
 

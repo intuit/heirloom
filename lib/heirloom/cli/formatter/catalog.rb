@@ -7,8 +7,7 @@ module Heirloom
           @name    = args[:name]
           @region  = args[:region]
 
-          return @region, summary unless @name
-
+          return summary unless @name
           return false unless name_exists?
 
           filter_by_name
@@ -34,7 +33,8 @@ module Heirloom
         end
 
         def summary
-          add_indent_prefix.keys.join "\n"
+          s = @region + "\n"
+          s << add_indent_prefix.keys.join("\n")
         end
 
         def details

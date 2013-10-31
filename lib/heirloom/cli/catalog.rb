@@ -19,34 +19,40 @@ module Heirloom
                              :config   => @config
       end
 
-
       def all
-        results = detected_regions.select do |region|
+        detected_regions.each do |region|
           @config.metadata_region = region
 
           ensure_valid_region :region => region,
                               :config => @config
 
           next unless catalog_domain_exists?
+          @catalog_list = Hash[@catalog.all]
 
-          get_heirloom_info region
+          if @opts[:name].nil?
+            heirloom_summary region
+            @heirloom_found ||= true
+          elsif @opts[:name] && heirloom_exists_in_catalog?(@opts[:name])
+            @logger.debug("Heirloom \'#{@opts[:name]}\' found in catalog for #{region}.")
+            @heirloom_found ||= true
+            heirloom_details region,@opts[:name]
+          else
+            @logger.debug("Heirloom \'#{@opts[:name]}\' not found in catalog for #{region}.")
+          end
         end
-        @logger.info "Heirloom #{@opts[:name]} not found in any region." unless results.any?
+        @logger.info "Heirloom \'#{@opts[:name]}\' not found in any regions." unless @heirloom_found
+
       end
 
       private
 
-      def get_heirloom_info(region)
-        f = formatter.format :region  => region,
-                             :catalog => Hash[@catalog.all],
-                             :name    => @opts[:name]
-
-        f ? puts(f) : @logger.debug("Heirloom #{@opts[:name]} not found in catalog for #{region}.")
-        f
+      def heirloom_summary(region)
+        puts formatter.summary_format :region  => region
       end
 
-      def formatter
-        @formatter ||= Heirloom::CLI::Formatter::Catalog.new
+      def heirloom_details(region,name)
+        puts formatter.detailed_format :region  => region,
+                                       :name    => name
       end
 
       def catalog_domain_exists?
@@ -56,6 +62,7 @@ module Heirloom
                                      :continue_on_error => true
       end
 
+
       def default_regions
         %w(us-east-1 us-west-1 us-west-2)
       end
@@ -63,6 +70,14 @@ module Heirloom
       def detected_regions
         return default_regions if @opts[:all_regions]
         Array(@opts[:metadata_region] || @config.metadata_region || default_regions)
+      end
+
+      def formatter
+        @formatter = Heirloom::CLI::Formatter::Catalog.new  :catalog => @catalog_list
+      end
+
+      def heirloom_exists_in_catalog?(name)
+        @catalog_list.include? "heirloom_#{name}"
       end
 
       def read_options

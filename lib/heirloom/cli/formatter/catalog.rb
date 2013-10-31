@@ -2,16 +2,23 @@ module Heirloom
   module CLI
     module Formatter
       class Catalog
-        def format(args)
+
+        def initialize(args)
           @catalog = args[:catalog]
+        end
+
+        def detailed_format(args)
           @name    = args[:name]
           @region  = args[:region]
 
-          return summary unless @name
-          return false unless name_exists?
-
           filter_by_name
           details
+         end
+
+        def summary_format(args)
+          @region  = args[:region]
+
+          summary
         end
 
         private
@@ -24,9 +31,9 @@ module Heirloom
           Hash[remove_heirloom_prefix.sort.map { |k, v| [k.sub(/^/, '  '), v] }]
         end
 
-        def name_exists?
-          @catalog.include? "heirloom_#{@name}"
-        end
+        #def name_exists?
+        #  @catalog.include? "heirloom_#{@name}"
+        #end
 
         def filter_by_name
           @catalog.select! {|k| "heirloom_#{@name}" == k }

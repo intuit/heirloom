@@ -7,7 +7,7 @@ describe Heirloom do
     @options = { :level           => 'info',
                  :metadata_region => 'us-west-1' }
 
-    @result = { 'heirloom_test' => 
+    @result = { 'heirloom_test' =>
                 { 'regions'       => ['us-west-1'],
                   'bucket_prefix' => ['bp'] } }
     @logger_stub = stub :debug => true
@@ -45,7 +45,7 @@ describe Heirloom do
                   :name => nil
                 }
       Heirloom::CLI::Formatter::Catalog.stub :new => formatter_mock
-      formatter_mock.should_receive(:format).with(catalog).and_return 'theoutput'
+      formatter_mock.should_receive(:summary_format).with(:region=>"us-west-1").and_return('theoutput')
       @cli_catalog.should_receive(:puts).with 'theoutput'
       @cli_catalog.all
     end

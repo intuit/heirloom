@@ -12,16 +12,15 @@ describe Heirloom do
                    { 'regions'       => ['us-west-2'],
                      'bucket_prefix' => ['bp2'] }
                } 
-    @formatter = Heirloom::CLI::Formatter::Catalog.new
+    @formatter = Heirloom::CLI::Formatter::Catalog.new :catalog => @catalog
 
 
   end
 
   context "unfiltered" do
-    it "should return the formatted list" do
+    it "should return the summary formatted list" do
 
-      @formatter.format(:region  => 'us-west-1',
-                        :catalog => @catalog,
+      @formatter.summary_format(:region  => 'us-west-1',
                         :details => nil,
                         :name    => nil ).should == "us-west-1\n  test1\n  test2"
     end
@@ -36,16 +35,10 @@ describe Heirloom do
           "  us-east-1-s3-url : s3://bp1-us-east-1/test1\n" +
           "  us-west-1-s3-url : s3://bp1-us-west-1/test1"
 
-      @formatter.format(:region  => 'us-west-1',
-                        :catalog => @catalog,
+      @formatter.detailed_format(:region  => 'us-west-1',
                         :details => nil,
                         :name    => 'test1').should == format
 
-    end
-
-    it "should return false if name does not exist in catalog" do
-      @formatter.format(:catalog => @catalog,
-                        :name    => 'not_here').should == false
     end
   end
 

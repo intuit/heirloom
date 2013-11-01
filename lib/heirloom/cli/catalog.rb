@@ -20,7 +20,7 @@ module Heirloom
       end
 
       def all
-        detected_regions.each do |region|
+        results = detected_regions.select do |region|
           @config.metadata_region = region
 
           ensure_valid_region :region => region,
@@ -31,16 +31,17 @@ module Heirloom
 
           if @opts[:name].nil?
             heirloom_summary region
-            @heirloom_found ||= true
+            true
           elsif @opts[:name] && heirloom_exists_in_catalog?(@opts[:name])
             @logger.debug("Heirloom \'#{@opts[:name]}\' found in catalog for #{region}.")
-            @heirloom_found ||= true
             heirloom_details region,@opts[:name]
+            true
           else
             @logger.debug("Heirloom \'#{@opts[:name]}\' not found in catalog for #{region}.")
+            false
           end
         end
-        @logger.info "Heirloom \'#{@opts[:name]}\' not found in any regions." unless @heirloom_found
+        @logger.info "Heirloom \'#{@opts[:name]}\' not found in any regions." unless results.any?
 
       end
 

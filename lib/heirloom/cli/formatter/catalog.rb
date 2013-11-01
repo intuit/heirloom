@@ -31,10 +31,6 @@ module Heirloom
           Hash[remove_heirloom_prefix.sort.map { |k, v| [k.sub(/^/, '  '), v] }]
         end
 
-        #def name_exists?
-        #  @catalog.include? "heirloom_#{@name}"
-        #end
-
         def filter_by_name
           @catalog.select! {|k| "heirloom_#{@name}" == k }
         end

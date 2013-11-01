@@ -1,5 +1,5 @@
 [![Build Status](https://secure.travis-ci.org/intuit/heirloom.png)](http://travis-ci.org/intuit/heirloom)
-
+[![Code Climate](https://codeclimate.com/github/intuit/heirloom.png)](https://codeclimate.com/github/intuit/heirloom)
 Heirloom
 ========
 

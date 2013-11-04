@@ -27,10 +27,10 @@ module Heirloom
         s3_acl = ACL::S3.new :config => @config,
                              :region => region
 
-        s3_acl.allow_read_access_from_accounts :key_name   => key_name,
-                                               :key_folder => @name,
-                                               :accounts   => @accounts,
-                                               :bucket     => bucket
+        break unless s3_acl.allow_read_access_from_accounts :key_name   => key_name,
+                                                            :key_folder => @name,
+                                                            :accounts   => @accounts,
+                                                            :bucket     => bucket
       end
 
       @logger.info "Authorization complete."

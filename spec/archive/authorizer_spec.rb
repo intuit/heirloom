@@ -39,7 +39,7 @@ describe Heirloom do
              with(:key_name   => '123.tar.gz',
                   :key_folder => 'tim',
                   :bucket     => 'the-bucket',
-                  :accounts   => accounts)
+                  :accounts   => accounts).and_return true
       @authorizer.authorize(:accounts => accounts,
                             :regions  => ['us-west-1', 'us-west-2']).
                   should be_true

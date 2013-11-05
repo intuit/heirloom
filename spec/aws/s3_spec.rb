@@ -254,6 +254,7 @@ describe Heirloom do
     end
 
     it "should return true if Excon::Errors::BadRequest raised when account is invalid" do
+      pending "temporarily disabled"
       body = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>UnresolvableGrantByEmailAddress</Code><Message>The e-mail address you provided does not match any account on record.</Message><RequestId>1FF76C053626CF97</RequestId><EmailAddress>brett@weav.net1</EmailAddress><HostId>AXpUoV59+WbDr++4ffoKlSdbFAlPjpoyJd5riKJ9bTZLoobnGRaboeeFmkkI7vg6</HostId></Error>'
       @response_stub = stub 'response', :body => body
 

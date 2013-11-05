@@ -263,16 +263,7 @@ describe Heirloom do
                 with('bucket', 'object', 'grants').
                 and_raise Excon::Errors::BadRequest.new 'msg', 'req', @response_stub
       @s3.put_object_acl('bucket', 'object','grants').should be_false
-
     end
-
-
-
-
-
-
-
-
 
     it "should call put bucket with location_constraint us-west-1" do
       options = { 'LocationConstraint' => 'us-west-1',

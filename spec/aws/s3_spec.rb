@@ -34,11 +34,17 @@ describe Heirloom do
 
     before do
       @directories_mock = mock 'directories'
+      @logger_mock = double 'logger'
+
       @bucket_mock = mock 'bucket'
       @fog_mock = mock 'fog'
       @fog_mock.stub :directories => @directories_mock
+
       Fog::Storage.stub :new => @fog_mock
-      @s3 = Heirloom::AWS::S3.new :config => mock_config, :region => 'us-west-1'
+      @s3 = Heirloom::AWS::S3.new :config => mock_config,
+                                  :region => 'us-west-1',
+                                  :logger => @logger_mock
+
     end
 
     context "bucket_exists?" do
@@ -246,6 +252,26 @@ describe Heirloom do
                 with 'bucket', 'object', 'grants'
       @s3.put_object_acl 'bucket', 'object', 'grants'
     end
+
+    it "should return true if Excon::Errors::BadRequest raised when account is invalid" do
+      body = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>UnresolvableGrantByEmailAddress</Code><Message>The e-mail address you provided does not match any account on record.</Message><RequestId>1FF76C053626CF97</RequestId><EmailAddress>brett@weav.net1</EmailAddress><HostId>AXpUoV59+WbDr++4ffoKlSdbFAlPjpoyJd5riKJ9bTZLoobnGRaboeeFmkkI7vg6</HostId></Error>'
+      @response_stub = stub 'response', :body => body
+
+      @logger_mock.should_receive(:error).with('The e-mail address you provided does not match any account on record.')
+      @fog_mock.should_receive(:put_object_acl).
+                with('bucket', 'object', 'grants').
+                and_raise Excon::Errors::BadRequest.new 'msg', 'req', @response_stub
+      @s3.put_object_acl('bucket', 'object','grants').should be_false
+
+    end
+
+
+
+
+
+
+
+
 
     it "should call put bucket with location_constraint us-west-1" do
       options = { 'LocationConstraint' => 'us-west-1',

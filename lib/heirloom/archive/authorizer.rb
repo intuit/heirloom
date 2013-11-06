@@ -24,8 +24,7 @@ module Heirloom
       regions.each do |region|
         @bucket = reader.get_bucket :region => region
 
-        break unless able_to_grant_read_access? region
-
+        return false unless able_to_grant_read_access? region
       end
 
       @logger.info "Authorization complete."

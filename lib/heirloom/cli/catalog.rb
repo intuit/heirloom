@@ -20,29 +20,32 @@ module Heirloom
       end
 
       def all
-        results = detected_regions.select do |region|
+        detected_regions.each do |region|
           @config.metadata_region = region
 
           ensure_valid_region :region => region,
                               :config => @config
 
           next unless catalog_domain_exists?
+
           @catalog_list = Hash[@catalog.all]
 
-          if @opts[:name].nil?
+          unless @opts[:name]
             heirloom_summary region
-            true
-          elsif @opts[:name] && heirloom_exists_in_catalog?(@opts[:name])
-            @logger.debug("Heirloom \'#{@opts[:name]}\' found in catalog for #{region}.")
-            heirloom_details region,@opts[:name]
-            true
+            @heirloom_found = true
+            next
+          end
+
+          if heirloom_exists_in_catalog? @opts[:name]
+            @logger.debug "Heirloom \'#{@opts[:name]}\' found in catalog for #{region}."
+            heirloom_details region, @opts[:name]
+            @heirloom_found = true
           else
-            @logger.debug("Heirloom \'#{@opts[:name]}\' not found in catalog for #{region}.")
-            false
+            @logger.debug "Heirloom \'#{@opts[:name]}\' not found in catalog for #{region}."
           end
         end
-        @logger.info "Heirloom \'#{@opts[:name]}\' not found in any regions." unless results.any?
 
+        @logger.info "Heirloom \'#{@opts[:name]}\' not found in any regions." unless @heirloom_found
       end
 
       private

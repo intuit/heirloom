@@ -1,6 +1,8 @@
 ## HEAD:
 
 * Upgrade to fog 1.21.0
+* Remove VCR
+* Update specs to use double
 
 ## 0.12.1 (09/04/2013):
 

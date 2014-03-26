@@ -12,11 +12,11 @@ module Heirloom
     end
 
     def load_config
-      @access_key      = @opts.fetch :aws_access_key, 
+      @access_key      = @opts.fetch :aws_access_key,
                                      @config['access_key']
-      @secret_key      = @opts.fetch :aws_secret_key, 
+      @secret_key      = @opts.fetch :aws_secret_key,
                                      @config['secret_key']
-      @metadata_region = @opts.fetch :metadata_region, 
+      @metadata_region = @opts.fetch :metadata_region,
                                      @config['metadata_region']
       @use_iam_profile = @opts.fetch :use_iam_profile,
                                      false
@@ -31,7 +31,7 @@ module Heirloom
     def load_config_file
       if File.exists? config_file
         data = YAML::load File.open(config_file)
-        if data.has_key? @environment
+        if data && data.has_key?(@environment)
           return data[@environment]
         else
           @logger.warn "Environment '#{@environment}' not found in config file."

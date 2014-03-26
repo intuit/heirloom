@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Heirloom::Teardowner do
   before do
     @regions = ['us-west-1', 'us-west-2']
-    @logger_stub = stub 'logger', :info => true, :debug => true
-    @config_stub = stub 'config', :logger          => @logger_stub,
+    @logger_stub = double 'logger', :info => true, :debug => true
+    @config_stub = double 'config', :logger          => @logger_stub,
                                   :metadata_region => 'us-west-1'
-    @verifier_stub = stub :bucket_exists? => true,
+    @verifier_stub = double :bucket_exists? => true,
                           :domain_exists? => true 
     @teardowner = Heirloom::Teardowner.new :config => @config_stub,
                                            :name   => 'archive'

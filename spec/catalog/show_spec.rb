@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Heirloom::Catalog::Show do
 
   before do
-    @config_stub = stub 'config'
+    @config_stub = double 'config'
     @sdb_double = double 'sdb'
     Heirloom::AWS::SimpleDB.should_receive(:new).
                             with(:config => @config_stub).

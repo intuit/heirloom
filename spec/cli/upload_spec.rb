@@ -14,7 +14,7 @@ describe Heirloom do
                 :id              => '1.0.0', 
                 :metadata_region => 'us-west-1' }
 
-    @logger_stub = stub 'logger', :error => true, :info => true
+    @logger_stub = double 'logger', :error => true, :info => true
     @config_double = double_config(:logger => @logger_stub)
     @archive_double = double 'archive'
     @catalog_double = double 'catalog'
@@ -22,7 +22,7 @@ describe Heirloom do
                        :bucket_prefix          => 'bp',
                        :catalog_domain_exists? => true
     Trollop.stub(:options).and_return options
-    tempfile_stub = stub 'tempfile', :path   => '/tmp/file.tar.gz',
+    tempfile_stub = double 'tempfile', :path   => '/tmp/file.tar.gz',
                                      :close! => true
     Tempfile.stub :new => tempfile_stub
     

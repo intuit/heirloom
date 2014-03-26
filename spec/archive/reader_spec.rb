@@ -5,7 +5,7 @@ describe Heirloom do
   before do
     @sdb_double = double 'sdb'
     @config_double = double 'config'
-    @logger_stub = stub :debug => true
+    @logger_stub = double :debug => true
     @config_double.stub :logger => @logger_stub
     @reader = Heirloom::Reader.new :config => @config_double,
                                    :name   => 'tim',
@@ -141,7 +141,7 @@ describe Heirloom do
                 { "Grantee" => { "ID" => "123", "DisplayName" => "lc" },
                                  "Permission" => "FULL_CONTROL" }]
              }
-      s3_stub = stub 's3', :get_object_acl => data
+      s3_stub = double 's3', :get_object_acl => data
 
       regions.each do |region|
         Heirloom::AWS::S3.should_receive(:new).

@@ -4,9 +4,9 @@ describe Heirloom::Catalog::Verify do
 
   before do
     @sdb_double    = double 'sdb'
-    @logger_stub = stub 'logger', :info => true,
+    @logger_stub = double 'logger', :info => true,
                                   :debug => true
-    @config_stub = stub 'config', :logger          => @logger_stub,
+    @config_stub = double 'config', :logger          => @logger_stub,
                                   :metadata_region => 'us-west-1'
     Heirloom::AWS::SimpleDB.should_receive(:new).
                             with(:config => @config_stub).

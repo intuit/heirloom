@@ -4,7 +4,7 @@ describe Heirloom do
 
   before do
     @config_double = double 'config'
-    @logger_stub = stub 'logger', :info => true
+    @logger_stub = double 'logger', :info => true
     @config_double.stub :logger => @logger_stub
     @uploader = Heirloom::Uploader.new :config => @config_double,
                                        :name   => 'tim',

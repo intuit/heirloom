@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Heirloom::Catalog::Setup do
 
   before do
-    @logger_stub = stub 'logger', :info => true
-    @config_stub = stub 'config', :logger          => @logger_stub,
+    @logger_stub = double 'logger', :info => true
+    @config_stub = double 'config', :logger          => @logger_stub,
                                   :metadata_region => 'us-west-1'
-    @verify_stub = stub 'verify', :catalog_domain_exists? => false
+    @verify_stub = double 'verify', :catalog_domain_exists? => false
     Heirloom::Catalog::Verify.should_receive(:new).
                               with(:config => @config_stub).
                               and_return @verify_stub

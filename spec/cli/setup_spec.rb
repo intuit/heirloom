@@ -11,7 +11,7 @@ describe Heirloom do
                 :name            => 'archive_name',
                 :metadata_region => 'us-west-1' }
 
-    @logger_stub = stub 'logger', :error => true, :info => true
+    @logger_stub = double 'logger', :error => true, :info => true
     @config_double = double_config :logger => @logger_stub
     @archive_double = double 'archive'
     @catalog_double = double 'catalog'

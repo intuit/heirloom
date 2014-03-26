@@ -26,7 +26,7 @@ describe Heirloom do
   context "when unsuccesful" do
     before do
       body = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>AccessDenied</Code><Message>Access Denied</Message><RequestId>7A737B6941146062</RequestId><HostId>8DlaCTOXO2aBxLnM2cZs+C8pQ2a5IDI/NQJRlPGRbPbBU2U1jH67i0zA376utqyR</HostId></Error>'
-      @response_stub = stub 'response', :body => body
+      @response_stub = double 'response', :body => body
     end
 
     it "should return an error if the bucket not found" do

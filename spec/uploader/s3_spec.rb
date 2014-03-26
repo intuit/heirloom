@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe Heirloom::Uploader::S3 do
   before do
-    @logger_stub = stub 'logger stub', :info  => true,
+    @logger_stub = double 'logger double', :info  => true,
                                        :warn  => true,
                                        :debug => true
-    @config_stub = stub 'config stub', :logger => @logger_stub
+    @config_stub = double 'config double', :logger => @logger_stub
     @s3 = Heirloom::Uploader::S3.new :config => @config_stub,
                                      :logger => @logger_stub,
                                      :region => 'us-west-1'

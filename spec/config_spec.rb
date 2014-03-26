@@ -126,9 +126,9 @@ describe Heirloom do
       logger_double = double 'logger'
       logger_double.should_receive(:warn)
 
-      lambda {
+      expect {
         config = Heirloom::Config.new :environment => 'missing', :logger => logger_double
-      }.should_not raise_error SystemExit
+      }.not_to raise_error
     end
   end
 end

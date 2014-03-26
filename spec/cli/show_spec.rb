@@ -9,7 +9,7 @@ describe Heirloom do
                  :id              => '1.0.0',
                  :level           => 'info',
                  :metadata_region => 'us-west-1' }
-    @logger_stub = stub :debug => true
+    @logger_stub = double :debug => true
     @config_double = double_config(:logger => @logger_stub)
     @archive_double = double 'archive'
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').

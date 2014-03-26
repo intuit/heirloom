@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Heirloom do
   before do
     @config_double = double 'config'
-    @logger_stub = stub 'logger', :info => true, :debug => true
+    @logger_stub = double 'logger', :info => true, :debug => true
     @config_double.stub :logger => @logger_stub
 
     @s3 = Heirloom::ACL::S3.new :config  => @config_double,

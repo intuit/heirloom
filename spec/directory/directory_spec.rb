@@ -5,7 +5,7 @@ describe Heirloom::Directory do
   describe 'build_artifact_from_directory' do
     before do
       @config_double = double 'config'
-      @logger_stub = stub :debug => 'true', 
+      @logger_stub = double :debug => 'true', 
                           :info  => 'true', 
                           :warn  => 'true',
                           :error => 'true'

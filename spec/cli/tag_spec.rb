@@ -10,7 +10,7 @@ describe Heirloom do
                 :attribute       => 'att',
                 :value           => 'val',
                 :metadata_region => 'us-west-1' }
-    @logger_stub = stub :debug => true, :error => true
+    @logger_stub = double :debug => true, :error => true
     @config_double = double_config(:logger => @logger_stub)
     @archive_double = double 'archive'
     

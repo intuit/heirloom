@@ -55,7 +55,7 @@ describe Heirloom::Catalog do
 
   context "testing add" do
     it "should call setup to create catalog_domain" do
-      @catalog_setup_stub = stub 'setup'
+      @catalog_setup_stub = double 'setup'
       @catalog_setup_stub.stub :create_catalog_domain => true
       Heirloom::Catalog::Setup.should_receive(:new).
                                with(:config => @config_double).
@@ -83,7 +83,7 @@ describe Heirloom::Catalog do
 
   context "testing show" do
     before do
-      @catalog_show_stub = stub 'show', :regions       => @regions,
+      @catalog_show_stub = double 'show', :regions       => @regions,
                                         :bucket_prefix => @bucket_prefix
       Heirloom::Catalog::Show.should_receive(:new).
                               with(:config => @config_double,
@@ -102,7 +102,7 @@ describe Heirloom::Catalog do
 
   context "testing catalog_domain_exists?" do
     before do
-      @catalog_verify_stub = stub 'show'
+      @catalog_verify_stub = double 'show'
       Heirloom::Catalog::Verify.should_receive(:new).
                                 with(:config => @config_double).
                                 and_return @catalog_verify_stub

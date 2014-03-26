@@ -9,7 +9,7 @@ describe Heirloom do
                 :name            => 'archive_name',
                 :id              => '1.0.0',
                 :metadata_region => 'us-west-1' }
-    @logger_stub = stub 'logger', :error => true
+    @logger_stub = double 'logger', :error => true
     @config_double = double_config :logger => @logger_stub
     @archive_double = double 'archive'
     Trollop.stub(:options).and_return options

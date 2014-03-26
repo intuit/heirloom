@@ -10,7 +10,7 @@ describe Heirloom do
     @result = { 'heirloom_test' =>
                 { 'regions'       => ['us-west-1'],
                   'bucket_prefix' => ['bp'] } }
-    @logger_stub = stub :debug => true
+    @logger_stub = double :debug => true
     @config_double = double_config :logger => @logger_stub
     @catalog_double = double 'catalog'
     @catalog_double.stub :catalog_domain_exists? => true

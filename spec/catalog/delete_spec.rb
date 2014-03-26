@@ -3,9 +3,9 @@ require 'spec_helper'
 describe Heirloom::Catalog::Delete do
 
   before do
-    @logger_stub = stub 'logger', :info => true
-    @config_stub = stub 'config', :logger => @logger_stub
-    @verify_stub = stub 'verify'
+    @logger_stub = double 'logger', :info => true
+    @config_stub = double 'config', :logger => @logger_stub
+    @verify_stub = double 'verify'
     Heirloom::Catalog::Verify.should_receive(:new).
                               with(:config => @config_stub).
                               and_return @verify_stub

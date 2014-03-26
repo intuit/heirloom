@@ -4,7 +4,7 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    @logger_stub = stub 'logger'
+    @logger_stub = double 'logger'
     @config_double = double_config :logger => @logger_stub
     @archive_double = double 'archive'
     Heirloom::HeirloomLogger.should_receive(:new).
@@ -56,7 +56,7 @@ describe Heirloom do
 
   context "id, region and bucket prefix not specified" do
     before do
-      @catalog_stub = stub 'catalog', :regions       => ['us-east-1', 'us-west-1'],
+      @catalog_stub = double 'catalog', :regions       => ['us-east-1', 'us-west-1'],
                                       :bucket_prefix => 'bp'
       @archive_double.stub :exists? => true
       options = { :name            => 'archive_name',
@@ -74,7 +74,7 @@ describe Heirloom do
                         with(:name   => 'archive_name',
                              :config => @config_double).
                         and_return @catalog_stub
-      archive_stub_to_lookup_latest = stub 'latest', :list => ['1.0.0']
+      archive_stub_to_lookup_latest = double 'latest', :list => ['1.0.0']
       Heirloom::Archive.should_receive(:new).
                         with(:name => 'archive_name',
                              :config => @config_double).

@@ -3,7 +3,7 @@ require 'heirloom/cli'
 
 describe Heirloom::CLI::Teardown do
 
-  def stubbed_teardown
+  def doublebed_teardown
     teardown = Heirloom::CLI::Teardown.new
     teardown.stub(
       :ensure_domain_exists => true,
@@ -44,14 +44,14 @@ describe Heirloom::CLI::Teardown do
       .and_return @config_double
     Heirloom::Archive.stub :new => @archive_double
     Heirloom::Catalog.stub :new => @catalog_double
-    @teardown = stubbed_teardown
+    @teardown = doublebed_teardown
   end
 
   context "delete existing archives force option" do
     
     it "should ask archive to delete when passed the 'force' option" do
       Trollop.stub :options => @defaults.merge(:force => true)
-      @teardown = stubbed_teardown
+      @teardown = doublebed_teardown
       @catalog_double.should_receive(:cleanup).with(
         :num_to_keep => 0,
         :remove_preserved => true
@@ -61,7 +61,7 @@ describe Heirloom::CLI::Teardown do
 
     it "should not ask archive to delete when not passed the 'force' option" do
       Trollop.stub :options => @defaults.merge(:force => nil)
-      @teardown = stubbed_teardown
+      @teardown = doublebed_teardown
       @catalog_double.should_not_receive(:cleanup)
       @teardown.teardown
     end

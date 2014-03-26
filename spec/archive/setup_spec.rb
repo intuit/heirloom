@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @logger_stub = stub 'logger', :debug => true, :info => true
+    @logger_stub = double 'logger', :debug => true, :info => true
     @config_double = double 'config'
     @config_double.stub :logger => @logger_stub, :metadata_region => 'us-west-1'
     @verifier_double = double 'verifier'

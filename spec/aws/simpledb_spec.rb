@@ -73,7 +73,7 @@ describe Heirloom::AWS::SimpleDB do
 
     context "testing counts" do
       before do
-        @body_stub = stub 'body'
+        @body_stub = double 'body'
       end
 
       it "should count the number of entries in the domain" do

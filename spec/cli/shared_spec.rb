@@ -67,7 +67,7 @@ describe Heirloom do
 
     before do
       @config_double = double 'config'
-      @logger_stub = stub 'logger', :debug => true
+      @logger_stub = double 'logger', :debug => true
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
       Heirloom::Config.should_receive(:new).with(:logger => @logger_stub, :environment => nil).
@@ -102,7 +102,7 @@ describe Heirloom do
 
   context "test ensure directory" do
     before do
-      @logger_stub = stub 'logger', :error => true
+      @logger_stub = double 'logger', :error => true
       @config_double = double 'config'
       @config_double.stub :logger => @logger_stub
       @object = Object.new
@@ -142,8 +142,8 @@ describe Heirloom do
   context "testing ensure domain" do
     before do
       @archive_double = double 'archive'
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
@@ -163,8 +163,8 @@ describe Heirloom do
   context "testing ensure metadata domain" do
     before do
       @archive_double = double 'archive'
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
@@ -179,8 +179,8 @@ describe Heirloom do
 
   context "testing ensure valid regions" do
     before do
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
@@ -197,8 +197,8 @@ describe Heirloom do
   context "testing ensure archive exists" do
     before do
       @archive_double = double 'archive'
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
@@ -214,9 +214,9 @@ describe Heirloom do
 
   context "testing ensure archive domain empty" do
     before do
-      @archive_stub = stub 'archive'
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @archive_stub = double 'archive'
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @options = { :config => @config_stub, :archive => @archive_stub }
       @object = Object.new
@@ -233,8 +233,8 @@ describe Heirloom do
   context "testing ensure catalog domain exists" do
     before do
       @catalog_double = double 'catalog'
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @options = { :config => @config_stub, :catalog => @catalog_double }
       @object = Object.new
@@ -251,8 +251,8 @@ describe Heirloom do
   context "testing ensure entry (does not) exists in catalog" do
     before do
       @catalog_double = double 'catalog'
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @options = { :config  => @config_stub,
                    :catalog => @catalog_double,
@@ -274,7 +274,7 @@ describe Heirloom do
   context "testing latest id" do
     before do
       @archive_double = double 'archive'
-      @config_stub = stub 'config'
+      @config_stub = double 'config'
       @options = { :config => @config_stub, :archive => @archive_stub }
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
@@ -298,8 +298,8 @@ describe Heirloom do
   context "read secret from file" do
     before do
       @archive_double = double 'archive'
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger => @logger_stub
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger => @logger_stub
       @options = { :config => @config_stub, :opts => {} }
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
@@ -332,8 +332,8 @@ describe Heirloom do
 
   context "ensure buckets are available or owned by account" do
     before do
-      @logger_stub  = stub 'logger', :error => true
-      @config_stub  = stub 'config', :logger => @logger_stub
+      @logger_stub  = double 'logger', :error => true
+      @config_stub  = double 'config', :logger => @logger_stub
       @checker_double = double 'checker'
       @args = { :config        => @config_stub,
                 :bucket_prefix => 'intu-lc',
@@ -368,8 +368,8 @@ describe Heirloom do
   context "testing ensure entry does not exist in catalog unless forced" do
     before do
       @catalog_double = double 'catalog'
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
@@ -412,8 +412,8 @@ describe Heirloom do
 
   context "testing ensure valid name" do
     before do
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared
@@ -445,8 +445,8 @@ describe Heirloom do
 
   context "testing ensure valid bucket prefix" do
     before do
-      @logger_stub = stub 'logger', :error => true
-      @config_stub = stub 'config', :logger          => @logger_stub,
+      @logger_stub = double 'logger', :error => true
+      @config_stub = double 'config', :logger          => @logger_stub,
                                     :metadata_region => 'us-west-1'
       @object = Object.new
       @object.extend Heirloom::CLI::Shared

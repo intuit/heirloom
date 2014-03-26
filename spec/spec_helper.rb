@@ -16,12 +16,12 @@ module SpecHelpers
     ENV.stub(:fetch).with(name, nil).and_return(value)
   end
 
-  def mock_log
-    mock 'log', :debug => true, :info => true, :warn => true, :error => true, :level= => true
+  def double_log
+    double 'log', :debug => true, :info => true, :warn => true, :error => true, :level= => true
   end
 
-  def mock_config(args = {})
-    args[:logger]          ||= mock_log
+  def double_config(args = {})
+    args[:logger]          ||= double_log
     args[:access_key]      ||= 'key'
     args[:secret_key]      ||= 'secret'
     args[:metadata_region] ||= 'us-west-1'

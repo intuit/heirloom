@@ -3,51 +3,51 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @sdb_mock = mock 'sdb'
-    @config_mock = mock 'config'
+    @sdb_double = double 'sdb'
+    @config_double = double 'config'
     @logger_stub = stub :debug => true
-    @config_mock.stub :logger => @logger_stub
-    @reader = Heirloom::Reader.new :config => @config_mock,
+    @config_double.stub :logger => @logger_stub
+    @reader = Heirloom::Reader.new :config => @config_double,
                                    :name   => 'tim',
                                    :id     => '123'
   end
 
   context "domain does exist" do
     before do
-      Heirloom::AWS::SimpleDB.stub :new => @sdb_mock
-      @sdb_mock.stub :domain_exists? => true
+      Heirloom::AWS::SimpleDB.stub :new => @sdb_double
+      @sdb_double.stub :domain_exists? => true
     end
 
     it "should show the item record" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                with("select * from `heirloom_tim` where itemName() = '123'").
                and_return( { '123' => { 'value' => [ 'details' ] } } )
       @reader.show.should == { 'value' => 'details' }
     end
 
     it "should return an empty hash if item does not exist" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return({})
       @reader.show.should == {}
     end
 
     it "should return true if the record exists" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' => { 'value' => [ 'details' ] } } )
       @reader.exists?.should == true
     end
 
     it "should return false if the record does not exist" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return({})
       @reader.exists?.should == false
     end
 
     it "should return the bucket if it exists" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 at_least(:once).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' =>
@@ -59,21 +59,21 @@ describe Heirloom do
     end
 
     it "should return nil if the key does not exist" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { } )
       @reader.get_key(:region => 'us-west-1').should == nil
     end
 
     it "should return nil if the bucket does not exist" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { } )
       @reader.get_bucket(:region => 'us-west-1').should == nil
     end
 
     it "should return the key if it exists" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 at_least(:once).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' =>
@@ -85,21 +85,21 @@ describe Heirloom do
     end
 
     it "should return the encrypted key name" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' => { 'encrypted' => [ 'true' ] } } )
       @reader.key_name.should == '123.tar.gz.gpg'
     end
 
     it "should return the unencrypted key name" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' => { 'encrypted' => [ 'false' ] } } )
       @reader.key_name.should == '123.tar.gz'
     end
 
     it "should return the regions the archive has been uploaded to" do
-      @sdb_mock.should_receive(:select).
+      @sdb_double.should_receive(:select).
                 with("select * from `heirloom_tim` where itemName() = '123'").
                 and_return( { '123' =>
                               { 'us-west-1-s3-url' =>
@@ -117,8 +117,8 @@ describe Heirloom do
 
   context "domain does not exist" do
     before do
-      Heirloom::AWS::SimpleDB.stub :new => @sdb_mock
-      @sdb_mock.stub :domain_exists? => false
+      Heirloom::AWS::SimpleDB.stub :new => @sdb_double
+      @sdb_double.stub :domain_exists? => false
     end
 
     it "should return false if the simpledb domain does not exist" do
@@ -129,11 +129,11 @@ describe Heirloom do
   context "object_acl verify" do
     it "should get object_acls" do
       regions = ['us-west-1', 'us-west-2']
-      @config_mock.stub :access_key => 'the-key',
+      @config_double.stub :access_key => 'the-key',
                         :secret_key => 'the-secret'
       @reader.stub :regions    => regions,
-                   :key_name   => 'mockvalue',
-                   :get_bucket => 'mockvalue'
+                   :key_name   => 'doublevalue',
+                   :get_bucket => 'doublevalue'
       data = { "Owner" => { "ID" => "123", "DisplayName" => "lc" },
                "AccessControlList" => [
                 { "Grantee" => { "ID" => "321", "DisplayName" => "rickybobby" },
@@ -145,7 +145,7 @@ describe Heirloom do
 
       regions.each do |region|
         Heirloom::AWS::S3.should_receive(:new).
-                          with(:config => @config_mock,
+                          with(:config => @config_double,
                                :region => region).
                           and_return s3_stub
       end

@@ -13,8 +13,8 @@ describe Heirloom::CLI::Teardown do
   end
 
   before do
-    Heirloom.stub :log => mock_log
-    @config_mock = mock_config
+    Heirloom.stub :log => double_log
+    @config_double = double_config
 
     @defaults = { 
       :level           => 'info',
@@ -23,14 +23,14 @@ describe Heirloom::CLI::Teardown do
     }
 
 
-    @archive_mock = mock 'archive'
-    @archive_mock.stub(
+    @archive_double = double 'archive'
+    @archive_double.stub(
       :delete_buckets => true,
       :delete_domain  => true
     )
 
-    @catalog_mock = mock 'catalog'
-    @catalog_mock.stub(
+    @catalog_double = double 'catalog'
+    @catalog_double.stub(
       :regions                  => ['us-west-1', 'us-west-2'],
       :bucket_prefix            => 'bp', 
       :catalog_domain_exists?   => true,
@@ -41,9 +41,9 @@ describe Heirloom::CLI::Teardown do
     Trollop.stub :options => @defaults
     Heirloom::HeirloomLogger.stub :new => @logger_stub
     Heirloom::CLI::Teardown.any_instance.stub(:load_config)
-      .and_return @config_mock
-    Heirloom::Archive.stub :new => @archive_mock
-    Heirloom::Catalog.stub :new => @catalog_mock
+      .and_return @config_double
+    Heirloom::Archive.stub :new => @archive_double
+    Heirloom::Catalog.stub :new => @catalog_double
     @teardown = stubbed_teardown
   end
 
@@ -52,7 +52,7 @@ describe Heirloom::CLI::Teardown do
     it "should ask archive to delete when passed the 'force' option" do
       Trollop.stub :options => @defaults.merge(:force => true)
       @teardown = stubbed_teardown
-      @catalog_mock.should_receive(:cleanup).with(
+      @catalog_double.should_receive(:cleanup).with(
         :num_to_keep => 0,
         :remove_preserved => true
       )
@@ -62,7 +62,7 @@ describe Heirloom::CLI::Teardown do
     it "should not ask archive to delete when not passed the 'force' option" do
       Trollop.stub :options => @defaults.merge(:force => nil)
       @teardown = stubbed_teardown
-      @catalog_mock.should_not_receive(:cleanup)
+      @catalog_double.should_not_receive(:cleanup)
       @teardown.teardown
     end
     
@@ -71,13 +71,13 @@ describe Heirloom::CLI::Teardown do
   it "should delete s3 buckets, catalog and simpledb domain" do
     @teardown.should_receive(:ensure_domain_exists).
               with(:name   => 'archive_name',
-                   :config => @config_mock)
+                   :config => @config_double)
     @teardown.should_receive(:ensure_archive_domain_empty).
-              with(:archive => @archive_mock,
-                   :config  => @config_mock)
-    @archive_mock.should_receive(:delete_buckets)
-    @archive_mock.should_receive(:delete_domain)
-    @catalog_mock.should_receive(:delete_from_catalog)
+              with(:archive => @archive_double,
+                   :config  => @config_double)
+    @archive_double.should_receive(:delete_buckets)
+    @archive_double.should_receive(:delete_domain)
+    @catalog_double.should_receive(:delete_from_catalog)
     @teardown.teardown 
   end
 

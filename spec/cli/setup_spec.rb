@@ -12,44 +12,44 @@ describe Heirloom do
                 :metadata_region => 'us-west-1' }
 
     @logger_stub = stub 'logger', :error => true, :info => true
-    @config_mock = mock_config :logger => @logger_stub
-    @archive_mock = mock 'archive'
-    @catalog_mock = mock 'catalog'
-    @checker_mock = mock 'checker'
+    @config_double = double_config :logger => @logger_stub
+    @archive_double = double 'archive'
+    @catalog_double = double 'catalog'
+    @checker_double = double 'checker'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_stub
     Heirloom::CLI::Setup.any_instance.should_receive(:load_config).
                          with(:logger => @logger_stub,
                                :opts   => options).
-                          and_return @config_mock
+                          and_return @config_double
     Heirloom::Archive.should_receive(:new).
                       with(:name => 'archive_name',
-                           :config => @config_mock).
-                      and_return @archive_mock
+                           :config => @config_double).
+                      and_return @archive_double
     Heirloom::Catalog.should_receive(:new).
                       with(:name => 'archive_name',
-                           :config => @config_mock).
-                      and_return @catalog_mock
+                           :config => @config_double).
+                      and_return @catalog_double
     Heirloom::Checker.should_receive(:new).
-                      with(:config => @config_mock).
-                      and_return @checker_mock
+                      with(:config => @config_double).
+                      and_return @checker_double
     @setup = Heirloom::CLI::Setup.new
   end
 
   it "should setup s3 buckets, catalog and simpledb domain" do
-    @checker_mock.should_receive(:bucket_name_available?).
+    @checker_double.should_receive(:bucket_name_available?).
                   with(:bucket_prefix => "bp", 
                        :regions       => @regions, 
-                       :config        => @config_mock).
+                       :config        => @config_double).
                   and_return true
-    @catalog_mock.should_receive(:create_catalog_domain)
-    @catalog_mock.stub :entry_exists_in_catalog? => false
-    @catalog_mock.should_receive(:add_to_catalog).
+    @catalog_double.should_receive(:create_catalog_domain)
+    @catalog_double.stub :entry_exists_in_catalog? => false
+    @catalog_double.should_receive(:add_to_catalog).
                   with(:regions       => @regions, 
                        :bucket_prefix => 'bp').
                   and_return true
-    @archive_mock.should_receive(:setup).
+    @archive_double.should_receive(:setup).
                   with(:regions       => @regions,
                        :bucket_prefix => 'bp')
     @setup.setup 

@@ -23,9 +23,9 @@ describe Heirloom do
     it "should open the HEIRLOOM_CONFIG_FILE if set" do
       File.stub :exists? => true
       File.should_receive(:open).with('~/.special_config.yml').and_return(@config_file.to_yaml)
-      env_mock = mock 'env'
-      env_mock.should_receive(:load).with('HEIRLOOM_CONFIG_FILE').and_return('~/.special_config.yml')
-      Heirloom::Env.stub(:new).and_return(env_mock)
+      env_double = double 'env'
+      env_double.should_receive(:load).with('HEIRLOOM_CONFIG_FILE').and_return('~/.special_config.yml')
+      Heirloom::Env.stub(:new).and_return(env_double)
       config = Heirloom::Config.new :opts   => @opts,
                                     :logger => 'da-logger'
     end
@@ -33,10 +33,10 @@ describe Heirloom do
     it "should open the default config file if HEIRLOOM_CONFIG_FILE is not set" do
       File.stub :exists? => true
       File.should_receive(:open).with('~/.heirloom.yml').and_return(@config_file.to_yaml)
-      env_mock = mock 'env'
-      env_mock.should_receive(:load).with('HEIRLOOM_CONFIG_FILE').and_return(nil)
-      env_mock.should_receive(:load).with('HOME').and_return('~')
-      Heirloom::Env.stub(:new).and_return(env_mock)
+      env_double = double 'env'
+      env_double.should_receive(:load).with('HEIRLOOM_CONFIG_FILE').and_return(nil)
+      env_double.should_receive(:load).with('HOME').and_return('~')
+      Heirloom::Env.stub(:new).and_return(env_double)
       config = Heirloom::Config.new :opts   => @opts,
                                     :logger => 'da-logger'
     end
@@ -44,11 +44,11 @@ describe Heirloom do
 
   context "#reading env variables" do
     it "should return the proxy as set by https_proxy" do
-      env_mock = mock 'env'
-      env_mock.should_receive(:load).with('HEIRLOOM_CONFIG_FILE').and_return(nil)
-      env_mock.should_receive(:load).with('HOME').and_return('~')
-      env_mock.should_receive(:load).with('https_proxy').and_return('https://proxy.example.com:3128')
-      Heirloom::Env.stub(:new).and_return(env_mock)
+      env_double = double 'env'
+      env_double.should_receive(:load).with('HEIRLOOM_CONFIG_FILE').and_return(nil)
+      env_double.should_receive(:load).with('HOME').and_return('~')
+      env_double.should_receive(:load).with('https_proxy').and_return('https://proxy.example.com:3128')
+      Heirloom::Env.stub(:new).and_return(env_double)
       config = Heirloom::Config.new :opts => @opts
       expect(config.proxy).to eq('https://proxy.example.com:3128')
     end
@@ -56,10 +56,10 @@ describe Heirloom do
 
   context "#with config file set" do
     before do
-      env_mock = mock 'env'
-      env_mock.should_receive(:load).with('HEIRLOOM_CONFIG_FILE').and_return(nil)
-      env_mock.should_receive(:load).with('HOME').and_return('~')
-      Heirloom::Env.stub(:new).and_return(env_mock)
+      env_double = double 'env'
+      env_double.should_receive(:load).with('HEIRLOOM_CONFIG_FILE').and_return(nil)
+      env_double.should_receive(:load).with('HOME').and_return('~')
+      Heirloom::Env.stub(:new).and_return(env_double)
     end
 
     it "should create a new config object from the hash passed as config" do
@@ -123,11 +123,11 @@ describe Heirloom do
     it "should log a warning if a non-existing environment is requested from existing config file" do
       File.stub :exists? => true
       File.should_receive(:open).with("~/.heirloom.yml").and_return(@config_file.to_yaml)
-      logger_mock = mock 'logger'
-      logger_mock.should_receive(:warn)
+      logger_double = double 'logger'
+      logger_double.should_receive(:warn)
 
       lambda {
-        config = Heirloom::Config.new :environment => 'missing', :logger => logger_mock
+        config = Heirloom::Config.new :environment => 'missing', :logger => logger_double
       }.should_not raise_error SystemExit
     end
   end

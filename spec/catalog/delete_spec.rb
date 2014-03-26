@@ -15,11 +15,11 @@ describe Heirloom::Catalog::Delete do
 
   it "should delete the entry from the catalog" do
     @verify_stub.stub :catalog_domain_exists? => true
-    @sdb_mock = mock 'sdb'
+    @sdb_double = double 'sdb'
     Heirloom::AWS::SimpleDB.should_receive(:new).
                             with(:config => @config_stub).
-                            and_return @sdb_mock
-    @sdb_mock.should_receive(:delete).
+                            and_return @sdb_double
+    @sdb_double.should_receive(:delete).
               with('heirloom', 'heirloom_old_archive').
               and_return true
     @delete.delete_from_catalog.should be_true

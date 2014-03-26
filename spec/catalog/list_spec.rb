@@ -4,15 +4,15 @@ describe Heirloom::Catalog::List do
 
   before do
     @config_stub = stub 'config'
-    @sdb_mock = mock 'sdb'
+    @sdb_double = double 'sdb'
     Heirloom::AWS::SimpleDB.should_receive(:new).
                             with(:config => @config_stub).
-                            and_return @sdb_mock
+                            and_return @sdb_double
     @list = Heirloom::Catalog::List.new :config => @config_stub
   end
 
   it "should list all heirlooms in the catalog" do
-    @sdb_mock.should_receive(:select).
+    @sdb_double.should_receive(:select).
               with("SELECT * FROM heirloom").
               and_return 'result'
     @list.all.should == 'result'

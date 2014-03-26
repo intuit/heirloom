@@ -17,12 +17,12 @@ describe Heirloom::Catalog::Add do
   end
 
   it "should call sdb to add the entry to the catalog" do
-    @sdb_mock = mock 'sdb'
+    @sdb_double = double 'sdb'
     @verify_stub.stub :entry_exists_in_catalog? => false
     Heirloom::AWS::SimpleDB.should_receive(:new).
                             with(:config => @config_stub).
-                            and_return @sdb_mock
-    @sdb_mock.should_receive(:put_attributes).
+                            and_return @sdb_double
+    @sdb_double.should_receive(:put_attributes).
               with 'heirloom',
                    'heirloom_new_archive',
                    "regions" => @regions, "bucket_prefix" => @bucket_prefix

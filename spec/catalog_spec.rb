@@ -3,17 +3,17 @@ require 'spec_helper'
 describe Heirloom::Catalog do
 
   before do 
-    @config_mock   = mock 'catalog'
+    @config_double   = double 'catalog'
     @regions       = ['us-west-1', 'us-west-2']
     @bucket_prefix = 'bp'
-    @catalog       = Heirloom::Catalog.new :config => @config_mock, :name => 'new_archive'
+    @catalog       = Heirloom::Catalog.new :config => @config_double, :name => 'new_archive'
 
-    Heirloom.stub :log => mock_log
+    Heirloom.stub :log => double_log
   end
 
   context "cleanup" do
     before do
-      @sdb = mock 'sdb'
+      @sdb = double 'sdb'
       @sdb.stub(:select)
         .and_yield('123', { 'preserve' => ['true'] })
         .and_yield('abc', { 'preserve' => ['true'] })
@@ -22,7 +22,7 @@ describe Heirloom::Catalog do
 
     it "should not destroy archives marked with 'preserve'" do
 
-      archive = mock 'archive', :destroy => true
+      archive = double 'archive', :destroy => true
       @catalog.stub :sdb => @sdb
 
       Heirloom::Archive.should_receive(:new)
@@ -33,7 +33,7 @@ describe Heirloom::Catalog do
     end
 
     it "should destroy archives when removed_preserved is true" do
-      archive = mock 'archive', :destroy => true
+      archive = double 'archive', :destroy => true
       @catalog.stub :sdb => @sdb
 
       Heirloom::Archive.should_receive(:new)
@@ -58,7 +58,7 @@ describe Heirloom::Catalog do
       @catalog_setup_stub = stub 'setup'
       @catalog_setup_stub.stub :create_catalog_domain => true
       Heirloom::Catalog::Setup.should_receive(:new).
-                               with(:config => @config_mock).
+                               with(:config => @config_double).
                                and_return @catalog_setup_stub
       @catalog.create_catalog_domain.should be_true
     end
@@ -66,12 +66,12 @@ describe Heirloom::Catalog do
 
   context "testing setup" do
     it "should call setup to add_to_catalog" do
-      @catalog_add_mock = mock 'add'
+      @catalog_add_double = double 'add'
       Heirloom::Catalog::Add.should_receive(:new).
-                             with(:config => @config_mock,
+                             with(:config => @config_double,
                                   :name   => 'new_archive').
-                             and_return @catalog_add_mock
-      @catalog_add_mock.should_receive(:add_to_catalog).
+                             and_return @catalog_add_double
+      @catalog_add_double.should_receive(:add_to_catalog).
                         with(:bucket_prefix => @bucket_prefix,
                              :regions       => @regions).
                         and_return true
@@ -86,7 +86,7 @@ describe Heirloom::Catalog do
       @catalog_show_stub = stub 'show', :regions       => @regions,
                                         :bucket_prefix => @bucket_prefix
       Heirloom::Catalog::Show.should_receive(:new).
-                              with(:config => @config_mock,
+                              with(:config => @config_double,
                                    :name   => 'new_archive').
                               and_return @catalog_show_stub
     end
@@ -104,7 +104,7 @@ describe Heirloom::Catalog do
     before do
       @catalog_verify_stub = stub 'show'
       Heirloom::Catalog::Verify.should_receive(:new).
-                                with(:config => @config_mock).
+                                with(:config => @config_double).
                                 and_return @catalog_verify_stub
     end
     it "should return true if the catalog domain exists" do
@@ -120,20 +120,20 @@ describe Heirloom::Catalog do
 
   context "testing entry_exists_in_catalog?" do
     before do
-      @catalog_verify_mock = mock 'show'
+      @catalog_verify_double = double 'show'
       Heirloom::Catalog::Verify.should_receive(:new).
-                                with(:config => @config_mock).
-                                and_return @catalog_verify_mock
+                                with(:config => @config_double).
+                                and_return @catalog_verify_double
     end
     it "should return true if the entry exists in the catalog" do
-      @catalog_verify_mock.should_receive(:entry_exists_in_catalog?).
+      @catalog_verify_double.should_receive(:entry_exists_in_catalog?).
                            with('entry').
                            and_return true
       @catalog.entry_exists_in_catalog?('entry').should be_true
     end
 
     it "should return false if the entry does not exists in the catalog" do
-      @catalog_verify_mock.should_receive(:entry_exists_in_catalog?).
+      @catalog_verify_double.should_receive(:entry_exists_in_catalog?).
                            with('entry').
                            and_return false
       @catalog.entry_exists_in_catalog?('entry').should be_false

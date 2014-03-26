@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Heirloom::Builder do
   before do
-    @config_mock   = double 'config'
+    @config_double   = double 'config'
     @logger_stub   = stub :debug => 'true', :info => 'true', :warn => 'true'
-    @config_mock.stub(:logger).and_return(@logger_stub)
-    @simpledb_mock = double 'simple db'
-    @builder       = Heirloom::Builder.new :config => @config_mock,
+    @config_double.stub(:logger).and_return(@logger_stub)
+    @simpledb_double = double 'simple db'
+    @builder       = Heirloom::Builder.new :config => @config_double,
                                            :name   => 'tim',
                                            :id     => '123'
   end
@@ -22,7 +22,7 @@ describe Heirloom::Builder do
                               with(:path    => 'path_to_build',
                                    :exclude => ['.dir_to_exclude'],
                                    :file    => '/tmp/file.tar.gz',
-                                   :config  => @config_mock).
+                                   :config  => @config_double).
                               and_return @directory_stub
           @builder.should_receive(:create_artifact_record)
       end
@@ -34,7 +34,7 @@ describe Heirloom::Builder do
       Heirloom::Directory.should_receive(:new).with(:path    => 'path_to_build',
                                                     :exclude => ['.dir_to_exclude'],
                                                     :file    => '/tmp/file.tar.gz',
-                                                    :config  => @config_mock).
+                                                    :config  => @config_double).
                                                and_return directory_stub
       @builder.build(:exclude   => ['.dir_to_exclude'],
                      :directory => 'path_to_build',

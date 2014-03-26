@@ -14,28 +14,28 @@ describe Heirloom::Teardowner do
   end
 
   it "should delete the buckets" do
-    @s3_mock1 = mock 's31'
-    @s3_mock2 = mock 's32'
+    @s3_double1 = double 's31'
+    @s3_double2 = double 's32'
     Heirloom::AWS::S3.should_receive(:new).
                       with(:config => @config_stub,
                            :region => 'us-west-1').
-                      and_return @s3_mock1
+                      and_return @s3_double1
     Heirloom::AWS::S3.should_receive(:new).
                       with(:config => @config_stub,
                            :region => 'us-west-2').
-                      and_return @s3_mock2
-    @s3_mock1.should_receive(:delete_bucket).with('bp-us-west-1')
-    @s3_mock2.should_receive(:delete_bucket).with('bp-us-west-2')
+                      and_return @s3_double2
+    @s3_double1.should_receive(:delete_bucket).with('bp-us-west-1')
+    @s3_double2.should_receive(:delete_bucket).with('bp-us-west-2')
     @teardowner.delete_buckets :regions       => @regions,
                                :bucket_prefix => 'bp'
   end
 
   it "should delete the domain" do
-    @sdb_mock = mock 'sdb'
+    @sdb_double = double 'sdb'
     Heirloom::AWS::SimpleDB.should_receive(:new).
                             with(:config => @config_stub).
-                            and_return @sdb_mock
-    @sdb_mock.should_receive(:delete_domain).
+                            and_return @sdb_double
+    @sdb_double.should_receive(:delete_domain).
               with 'heirloom_archive'
     @teardowner.delete_domain
   end

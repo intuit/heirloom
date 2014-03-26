@@ -15,11 +15,11 @@ describe Heirloom::Catalog::Setup do
   end
 
   it "should call sdb to create the catalog domain" do
-    @sdb_mock = mock 'sdb'
+    @sdb_double = double 'sdb'
     Heirloom::AWS::SimpleDB.should_receive(:new).
                             with(:config => @config_stub).
-                            and_return @sdb_mock
-    @sdb_mock.should_receive(:create_domain).
+                            and_return @sdb_double
+    @sdb_double.should_receive(:create_domain).
               with 'heirloom'
     @setup.create_catalog_domain
   end

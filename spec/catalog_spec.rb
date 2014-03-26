@@ -55,11 +55,11 @@ describe Heirloom::Catalog do
 
   context "testing add" do
     it "should call setup to create catalog_domain" do
-      @catalog_setup_stub = double 'setup'
-      @catalog_setup_stub.stub :create_catalog_domain => true
+      @catalog_setup_double = double 'setup'
+      @catalog_setup_double.stub :create_catalog_domain => true
       Heirloom::Catalog::Setup.should_receive(:new).
                                with(:config => @config_double).
-                               and_return @catalog_setup_stub
+                               and_return @catalog_setup_double
       @catalog.create_catalog_domain.should be_true
     end
   end
@@ -83,12 +83,12 @@ describe Heirloom::Catalog do
 
   context "testing show" do
     before do
-      @catalog_show_stub = double 'show', :regions       => @regions,
+      @catalog_show_double = double 'show', :regions       => @regions,
                                         :bucket_prefix => @bucket_prefix
       Heirloom::Catalog::Show.should_receive(:new).
                               with(:config => @config_double,
                                    :name   => 'new_archive').
-                              and_return @catalog_show_stub
+                              and_return @catalog_show_double
     end
 
     it "should call regions from show object" do
@@ -102,18 +102,18 @@ describe Heirloom::Catalog do
 
   context "testing catalog_domain_exists?" do
     before do
-      @catalog_verify_stub = double 'show'
+      @catalog_verify_double = double 'show'
       Heirloom::Catalog::Verify.should_receive(:new).
                                 with(:config => @config_double).
-                                and_return @catalog_verify_stub
+                                and_return @catalog_verify_double
     end
     it "should return true if the catalog domain exists" do
-      @catalog_verify_stub.stub :catalog_domain_exists? => true
+      @catalog_verify_double.stub :catalog_domain_exists? => true
       @catalog.catalog_domain_exists?.should be_true
     end
 
     it "should return false if the catalog domain does not exist" do
-      @catalog_verify_stub.stub :catalog_domain_exists? => false
+      @catalog_verify_double.stub :catalog_domain_exists? => false
       @catalog.catalog_domain_exists?.should be_false
     end
   end

@@ -4,9 +4,9 @@ describe Heirloom do
 
   before do
     @config_double = double 'config'
-    @logger_stub = double 'logger', :debug => true, :info => true
+    @logger_double = double 'logger', :debug => true, :info => true
     @s3_double = double 's3_double'
-    @config_double.stub :logger => @logger_stub
+    @config_double.stub :logger => @logger_double
     @verifier = Heirloom::Verifier.new :config => @config_double,
                                        :name   => 'heirloom-name'
   end

@@ -3,25 +3,25 @@ require 'spec_helper'
 describe Heirloom::Teardowner do
   before do
     @regions = ['us-west-1', 'us-west-2']
-    @logger_stub = double 'logger', :info => true, :debug => true
-    @config_stub = double 'config', :logger          => @logger_stub,
+    @logger_double = double 'logger', :info => true, :debug => true
+    @config_double = double 'config', :logger          => @logger_double,
                                   :metadata_region => 'us-west-1'
-    @verifier_stub = double :bucket_exists? => true,
+    @verifier_double = double :bucket_exists? => true,
                           :domain_exists? => true 
-    @teardowner = Heirloom::Teardowner.new :config => @config_stub,
+    @teardowner = Heirloom::Teardowner.new :config => @config_double,
                                            :name   => 'archive'
-    Heirloom::Verifier.stub :new => @verifier_stub
+    Heirloom::Verifier.stub :new => @verifier_double
   end
 
   it "should delete the buckets" do
     @s3_double1 = double 's31'
     @s3_double2 = double 's32'
     Heirloom::AWS::S3.should_receive(:new).
-                      with(:config => @config_stub,
+                      with(:config => @config_double,
                            :region => 'us-west-1').
                       and_return @s3_double1
     Heirloom::AWS::S3.should_receive(:new).
-                      with(:config => @config_stub,
+                      with(:config => @config_double,
                            :region => 'us-west-2').
                       and_return @s3_double2
     @s3_double1.should_receive(:delete_bucket).with('bp-us-west-1')
@@ -33,7 +33,7 @@ describe Heirloom::Teardowner do
   it "should delete the domain" do
     @sdb_double = double 'sdb'
     Heirloom::AWS::SimpleDB.should_receive(:new).
-                            with(:config => @config_stub).
+                            with(:config => @config_double).
                             and_return @sdb_double
     @sdb_double.should_receive(:delete_domain).
               with 'heirloom_archive'

@@ -3,9 +3,9 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @logger_stub = double 'logger', :debug => true, :info => true
+    @logger_double = double 'logger', :debug => true, :info => true
     @config_double = double 'config'
-    @config_double.stub :logger => @logger_stub, :metadata_region => 'us-west-1'
+    @config_double.stub :logger => @logger_double, :metadata_region => 'us-west-1'
     @verifier_double = double 'verifier'
     Heirloom::Verifier.should_receive(:new).
                        with(:config => @config_double,

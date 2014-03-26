@@ -4,15 +4,15 @@ describe Heirloom do
 
   before do
     @config_double = double 'config'
-    @logger_stub = double 'logger', :info => true, :debug => true
-    @config_double.stub :logger => @logger_stub
+    @logger_double = double 'logger', :info => true, :debug => true
+    @config_double.stub :logger => @logger_double
     @downloader = Heirloom::Downloader.new :config => @config_double,
                                            :name   => 'tim',
                                            :id     => '123'
     @s3_downloader_double = double 's3 downloader'
     Heirloom::Downloader::S3.should_receive(:new).
                              with(:config => @config_double,
-                                  :logger => @logger_stub,
+                                  :logger => @logger_double,
                                   :region => 'us-west-1').
                              and_return @s3_downloader_double
     @cipher_double = double 'cipher'

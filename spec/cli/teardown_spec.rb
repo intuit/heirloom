@@ -39,7 +39,7 @@ describe Heirloom::CLI::Teardown do
     )
     
     Trollop.stub :options => @defaults
-    Heirloom::HeirloomLogger.stub :new => @logger_stub
+    Heirloom::HeirloomLogger.stub :new => @logger_double
     Heirloom::CLI::Teardown.any_instance.stub(:load_config)
       .and_return @config_double
     Heirloom::Archive.stub :new => @archive_double

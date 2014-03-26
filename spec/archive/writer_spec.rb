@@ -7,8 +7,8 @@ describe Heirloom do
     @logger_double.stub :info => true, :debug => true
     @config_double = double 'config'
     @config_double.stub :logger => @logger_double
-    @tempfile_stub = double 'tempfile', :path => '/tmp/tempfile'
-    Tempfile.stub :new => @tempfile_stub
+    @tempfile_double = double 'tempfile', :path => '/tmp/tempfile'
+    Tempfile.stub :new => @tempfile_double
     @writer = Heirloom::Writer.new :config => @config_double
   end
 

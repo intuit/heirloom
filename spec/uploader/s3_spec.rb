@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe Heirloom::Uploader::S3 do
   before do
-    @logger_stub = double 'logger double', :info  => true,
+    @logger_double = double 'logger double', :info  => true,
                                        :warn  => true,
                                        :debug => true
-    @config_stub = double 'config double', :logger => @logger_stub
-    @s3 = Heirloom::Uploader::S3.new :config => @config_stub,
-                                     :logger => @logger_stub,
+    @config_double = double 'config double', :logger => @logger_double
+    @s3 = Heirloom::Uploader::S3.new :config => @config_double,
+                                     :logger => @logger_double,
                                      :region => 'us-west-1'
   end
 
@@ -25,7 +25,7 @@ describe Heirloom::Uploader::S3 do
     @file_double   = double 'file mock'
     @body_double   = double 'body mock'
     Heirloom::AWS::S3.should_receive(:new).
-                      with(:config => @config_stub,
+                      with(:config => @config_double,
                            :region => 'us-west-1').
                       and_return @s3_double
     @s3_double.should_receive(:get_bucket).
@@ -48,7 +48,7 @@ describe Heirloom::Uploader::S3 do
                 :key_name        => 'key_name',
                 :name            => 'name' }
     Heirloom::AWS::SimpleDB.should_receive(:new).
-                            with(:config => @config_stub).
+                            with(:config => @config_double).
                             and_return simpledb_double
     simpledb_double.should_receive(:put_attributes).
                   with("heirloom_name", "id", 

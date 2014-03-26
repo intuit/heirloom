@@ -3,12 +3,12 @@ require 'spec_helper'
 describe Heirloom::Catalog::List do
 
   before do
-    @config_stub = double 'config'
+    @config_double = double 'config'
     @sdb_double = double 'sdb'
     Heirloom::AWS::SimpleDB.should_receive(:new).
-                            with(:config => @config_stub).
+                            with(:config => @config_double).
                             and_return @sdb_double
-    @list = Heirloom::Catalog::List.new :config => @config_stub
+    @list = Heirloom::Catalog::List.new :config => @config_double
   end
 
   it "should list all heirlooms in the catalog" do

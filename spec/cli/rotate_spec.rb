@@ -14,8 +14,8 @@ describe Heirloom do
                 :aws_secret_key => 'secret' }
     Trollop.stub(:options).and_return options
 
-    catalog_stub = double :regions => ['us-east-1', 'us-west-1']
-    Heirloom::Catalog.stub(:new).and_return catalog_stub
+    catalog_double = double :regions => ['us-east-1', 'us-west-1']
+    Heirloom::Catalog.stub(:new).and_return catalog_double
 
     @archive_double = double 'archive'
     @logger_double = double_log

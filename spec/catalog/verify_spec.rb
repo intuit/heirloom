@@ -4,14 +4,14 @@ describe Heirloom::Catalog::Verify do
 
   before do
     @sdb_double    = double 'sdb'
-    @logger_stub = double 'logger', :info => true,
+    @logger_double = double 'logger', :info => true,
                                   :debug => true
-    @config_stub = double 'config', :logger          => @logger_stub,
+    @config_double = double 'config', :logger          => @logger_double,
                                   :metadata_region => 'us-west-1'
     Heirloom::AWS::SimpleDB.should_receive(:new).
-                            with(:config => @config_stub).
+                            with(:config => @config_double).
                             and_return @sdb_double
-    @verify = Heirloom::Catalog::Verify.new :config => @config_stub,
+    @verify = Heirloom::Catalog::Verify.new :config => @config_double,
                                             :name   => 'a_archive'
 
   end

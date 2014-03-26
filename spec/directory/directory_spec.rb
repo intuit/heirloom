@@ -5,11 +5,11 @@ describe Heirloom::Directory do
   describe 'build_artifact_from_directory' do
     before do
       @config_double = double 'config'
-      @logger_stub = double :debug => 'true', 
+      @logger_double = double :debug => 'true', 
                           :info  => 'true', 
                           :warn  => 'true',
                           :error => 'true'
-      @config_double.stub(:logger).and_return(@logger_stub)
+      @config_double.stub(:logger).and_return(@logger_double)
       @directory = Heirloom::Directory.new :config  => @config_double,
                                            :exclude => ['dont_pack_me', 'dont_pack_me1'],
                                            :path    => '/dir',

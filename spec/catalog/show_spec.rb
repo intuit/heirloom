@@ -3,12 +3,12 @@ require 'spec_helper'
 describe Heirloom::Catalog::Show do
 
   before do
-    @config_stub = double 'config'
+    @config_double = double 'config'
     @sdb_double = double 'sdb'
     Heirloom::AWS::SimpleDB.should_receive(:new).
-                            with(:config => @config_stub).
+                            with(:config => @config_double).
                             and_return @sdb_double
-    @show = Heirloom::Catalog::Show.new :config => @config_stub,
+    @show = Heirloom::Catalog::Show.new :config => @config_double,
                                         :name   => 'a_archive'
   end
 

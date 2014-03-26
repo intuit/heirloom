@@ -73,15 +73,15 @@ describe Heirloom::AWS::SimpleDB do
 
     context "testing counts" do
       before do
-        @body_stub = double 'body'
+        @body_double = double 'body'
       end
 
       it "should count the number of entries in the domain" do
         data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
         @fog_double.should_receive(:select).
                   with('SELECT count(*) FROM `heirloom_domain`').
-                  and_return @body_stub
-        @body_stub.stub :body => data
+                  and_return @body_double
+        @body_double.stub :body => data
         sdb.count('heirloom_domain').should == 1
       end
 
@@ -89,8 +89,8 @@ describe Heirloom::AWS::SimpleDB do
         data = { 'Items' => { 'Domain' => { 'Count' => ['0'] } } }
         @fog_double.should_receive(:select).
                   with('SELECT count(*) FROM `heirloom_domain`').
-                  and_return @body_stub
-        @body_stub.stub :body => data
+                  and_return @body_double
+        @body_double.stub :body => data
         sdb.domain_empty?('heirloom_domain').should be_true
       end
 
@@ -98,8 +98,8 @@ describe Heirloom::AWS::SimpleDB do
         data = { 'Items' => { 'Domain' => { 'Count' => ['50'] } } }
         @fog_double.should_receive(:select).
                   with('SELECT count(*) FROM `heirloom_domain`').
-                  and_return @body_stub
-        @body_stub.stub :body => data
+                  and_return @body_double
+        @body_double.stub :body => data
         sdb.domain_empty?('heirloom_domain').should be_false
       end
 
@@ -107,8 +107,8 @@ describe Heirloom::AWS::SimpleDB do
         data = { 'Items' => { 'Domain' => { 'Count' => ['1'] } } }
         @fog_double.should_receive(:select).
                   with("SELECT count(*) FROM `heirloom` WHERE itemName() = 'archive'").
-                  and_return @body_stub
-        @body_stub.stub :body => data
+                  and_return @body_double
+        @body_double.stub :body => data
         sdb.item_count('heirloom', 'archive').should == 1
       end
     end

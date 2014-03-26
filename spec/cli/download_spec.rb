@@ -4,12 +4,12 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    @logger_stub = double 'logger'
-    @config_double = double_config :logger => @logger_stub
+    @logger_double = double 'logger'
+    @config_double = double_config :logger => @logger_double
     @archive_double = double 'archive'
     Heirloom::HeirloomLogger.should_receive(:new).
                              with(:log_level => 'info').
-                             and_return @logger_stub
+                             and_return @logger_double
     Heirloom::Archive.should_receive(:new).
                       with(:id   => '1.0.0',
                            :name => 'archive_name',
@@ -29,7 +29,7 @@ describe Heirloom do
                   :metadata_region => 'us-west-1' }
       Trollop.stub(:options).and_return options
       Heirloom::CLI::Download.any_instance.should_receive(:load_config).
-                              with(:logger => @logger_stub,
+                              with(:logger => @logger_double,
                                    :opts   => options).
                               and_return @config_double
       @cli_download = Heirloom::CLI::Download.new
@@ -56,7 +56,7 @@ describe Heirloom do
 
   context "id, region and bucket prefix not specified" do
     before do
-      @catalog_stub = double 'catalog', :regions       => ['us-east-1', 'us-west-1'],
+      @catalog_double = double 'catalog', :regions       => ['us-east-1', 'us-west-1'],
                                       :bucket_prefix => 'bp'
       @archive_double.stub :exists? => true
       options = { :name            => 'archive_name',
@@ -67,18 +67,18 @@ describe Heirloom do
                   :metadata_region => 'us-west-1' }
       Trollop.stub(:options).and_return options
       Heirloom::CLI::Download.any_instance.should_receive(:load_config).
-                              with(:logger => @logger_stub,
+                              with(:logger => @logger_double,
                                    :opts   => options).
                               and_return @config_double
       Heirloom::Catalog.should_receive(:new).
                         with(:name   => 'archive_name',
                              :config => @config_double).
-                        and_return @catalog_stub
-      archive_stub_to_lookup_latest = double 'latest', :list => ['1.0.0']
+                        and_return @catalog_double
+      archive_double_to_lookup_latest = double 'latest', :list => ['1.0.0']
       Heirloom::Archive.should_receive(:new).
                         with(:name => 'archive_name',
                              :config => @config_double).
-                        and_return archive_stub_to_lookup_latest
+                        and_return archive_double_to_lookup_latest
       @cli_download = Heirloom::CLI::Download.new
     end
 

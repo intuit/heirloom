@@ -11,16 +11,16 @@ describe Heirloom do
                 :name            => 'archive_name',
                 :metadata_region => 'us-west-1' }
 
-    @logger_stub = double 'logger', :error => true, :info => true
-    @config_double = double_config :logger => @logger_stub
+    @logger_double = double 'logger', :error => true, :info => true
+    @config_double = double_config :logger => @logger_double
     @archive_double = double 'archive'
     @catalog_double = double 'catalog'
     @checker_double = double 'checker'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
-                             and_return @logger_stub
+                             and_return @logger_double
     Heirloom::CLI::Setup.any_instance.should_receive(:load_config).
-                         with(:logger => @logger_stub,
+                         with(:logger => @logger_double,
                                :opts   => options).
                           and_return @config_double
     Heirloom::Archive.should_receive(:new).

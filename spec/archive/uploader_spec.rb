@@ -4,8 +4,8 @@ describe Heirloom do
 
   before do
     @config_double = double 'config'
-    @logger_stub = double 'logger', :info => true
-    @config_double.stub :logger => @logger_stub
+    @logger_double = double 'logger', :info => true
+    @config_double.stub :logger => @logger_double
     @uploader = Heirloom::Uploader.new :config => @config_double,
                                        :name   => 'tim',
                                        :id     => '123'
@@ -15,7 +15,7 @@ describe Heirloom do
   it "should upload a new archive" do
     Heirloom::Uploader::S3.should_receive(:new).
                            with(:config => @config_double,
-                                :logger => @logger_stub,
+                                :logger => @logger_double,
                                 :region => 'us-west-1').
                            and_return @s3_double
     @s3_double.should_receive(:upload_file).
@@ -41,7 +41,7 @@ describe Heirloom do
   it "should upload a new archive with .gpg if secret provided" do
     Heirloom::Uploader::S3.should_receive(:new).
                            with(:config => @config_double,
-                                :logger => @logger_stub,
+                                :logger => @logger_double,
                                 :region => 'us-west-1').
                            and_return @s3_double
     @s3_double.should_receive(:upload_file).

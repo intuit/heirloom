@@ -4,10 +4,10 @@ describe Heirloom do
 
   before do
     @config_double = double 'config'
-    @logger_stub = double 'logger', :debug => true, 
+    @logger_double = double 'logger', :debug => true, 
                                   :info  => true,
                                   :warn  => true
-    @config_double.stub :logger => @logger_stub
+    @config_double.stub :logger => @logger_double
     @checker = Heirloom::Checker.new :config => @config_double
     @regions = ['us-west-1', 'us-west-2']
   end

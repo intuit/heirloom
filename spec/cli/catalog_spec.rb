@@ -10,14 +10,14 @@ describe Heirloom do
     @result = { 'heirloom_test' =>
                 { 'regions'       => ['us-west-1'],
                   'bucket_prefix' => ['bp'] } }
-    @logger_stub = double :debug => true
-    @config_double = double_config :logger => @logger_stub
+    @logger_double = double :debug => true
+    @config_double = double_config :logger => @logger_double
     @catalog_double = double 'catalog'
     @catalog_double.stub :catalog_domain_exists? => true
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
-                             and_return @logger_stub
+                             and_return @logger_double
     Heirloom::CLI::Catalog.any_instance.should_receive(:load_config).
-                           with(:logger => @logger_stub,
+                           with(:logger => @logger_double,
                                 :opts   => @options).
                            and_return @config_double
     Heirloom::Catalog.should_receive(:new).

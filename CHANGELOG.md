@@ -1,5 +1,9 @@
 ## HEAD:
 
+## 0.12.3 (03/26/2014):
+
+* Added dependent gems for fog
+
 ## 0.12.2 (03/26/2014):
 
 * Upgrade to fog 1.21.0

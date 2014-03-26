@@ -18,7 +18,7 @@ describe Heirloom do
                             with(:config => @config_double).
                             and_return sdb_double
     sdb_double.should_receive(:put_attributes).
-             with('heirloom_tim', '123', { 'attr' => 'val' }, { :replace => 'attr' })
+               with('heirloom_tim', '123', { 'attr' => 'val' }, { :replace => 'attr' })
     @updater.update :attribute => 'attr',
                     :value     => 'val'
   end

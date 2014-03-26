@@ -18,7 +18,7 @@ describe Heirloom do
       Heirloom::Writer.any_instance.should_receive(:`).
                        with('tar xzf /tmp/tempfile -C /output')
       $?.stub :success? => true
-      @writer.save_archive(:archive => 'archive_data', 
+      @writer.save_archive(:archive => 'archive_data',
                            :output  => '/output',
                            :file    => 'id.tar.gz',
                            :extract => true).should be_true
@@ -30,7 +30,7 @@ describe Heirloom do
                        with('tar xzf /tmp/tempfile -C /output')
       $?.stub :success? => false
       @logger_double.should_receive(:error)
-      @writer.save_archive(:archive => 'archive_data', 
+      @writer.save_archive(:archive => 'archive_data',
                            :output  => '/output',
                            :file    => 'id.tar.gz',
                            :extract => true).should be_false
@@ -41,7 +41,7 @@ describe Heirloom do
     it "should save the given archive object into the output directory" do
       File.should_receive(:open).with('/output/id.tar.gz', 'w').
            and_return true
-      @writer.save_archive :archive => 'archive_data', 
+      @writer.save_archive :archive => 'archive_data',
                            :output  => '/output',
                            :file    => 'id.tar.gz',
                            :extract => false

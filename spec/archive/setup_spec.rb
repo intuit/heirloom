@@ -29,7 +29,7 @@ describe Heirloom do
       @sdb_double.should_receive(:create_domain).with 'heirloom_archive'
       @setuper.setup :regions       => ['us-west-1'],
                      :bucket_prefix => 'bp'
-                     
+
     end
 
     it "should not create the domain if alrady exists" do
@@ -46,18 +46,18 @@ describe Heirloom do
 
     it "should create required buckets that don't exist" do
       @verifier_double.should_receive(:bucket_exists?).
-                     with(:region => "us-west-1", :bucket_prefix => "bp").
-                     and_return true
+                       with(:region => "us-west-1", :bucket_prefix => "bp").
+                       and_return true
       @verifier_double.should_receive(:bucket_exists?).
-                     with(:region => "us-east-1", :bucket_prefix => "bp").
-                     and_return false
+                       with(:region => "us-east-1", :bucket_prefix => "bp").
+                       and_return false
       @s3_double = double 's3'
       Heirloom::AWS::S3.should_receive(:new).
                         with(:config => @config_double,
                              :region => 'us-east-1').
                         and_return @s3_double
       @s3_double.should_receive(:put_bucket).
-               with 'bp-us-east-1', 'us-east-1'
+                 with 'bp-us-east-1', 'us-east-1'
       @setuper.setup :regions       => ['us-west-1', 'us-east-1'],
                      :bucket_prefix => 'bp'
     end

@@ -45,18 +45,18 @@ describe Heirloom do
                                 :region => 'us-west-1').
                            and_return @s3_double
     @s3_double.should_receive(:upload_file).
-             with(:bucket          => 'prefix-us-west-1',
-                  :file            => '/tmp/file',
-                  :id              => '123',
-                  :key_folder      => 'tim',
-                  :key_name        => "123.tar.gz.gpg",
-                  :name            => 'tim',
-                  :public_readable => true)
+               with(:bucket          => 'prefix-us-west-1',
+                    :file            => '/tmp/file',
+                    :id              => '123',
+                    :key_folder      => 'tim',
+                    :key_name        => "123.tar.gz.gpg",
+                    :name            => 'tim',
+                    :public_readable => true)
     @s3_double.should_receive(:add_endpoint_attributes).
-             with(:bucket   => 'prefix-us-west-1',
-                  :id       => '123',
-                  :key_name => '123.tar.gz.gpg',
-                  :name     => 'tim')
+               with(:bucket   => 'prefix-us-west-1',
+                    :id       => '123',
+                    :key_name => '123.tar.gz.gpg',
+                    :name     => 'tim')
     @uploader.upload :file            => '/tmp/file',
                      :bucket_prefix   => 'prefix',
                      :regions         => ['us-west-1'],

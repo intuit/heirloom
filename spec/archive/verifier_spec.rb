@@ -25,9 +25,9 @@ describe Heirloom do
 
     it "should return false if a bucket does not exist in a region" do
       @s3_double.should_receive(:get_bucket).with('bucket123-us-west-1').
-               and_return nil
+                 and_return nil
       @s3_double.should_receive(:get_bucket).with('bucket123-us-east-1').
-               and_return 'an s3 bucket'
+                 and_return 'an s3 bucket'
       @verifier.buckets_exist?(:bucket_prefix => 'bucket123',
                                :regions       => ['us-west-1', 'us-east-1']).
                 should be_false
@@ -35,9 +35,9 @@ describe Heirloom do
 
     it "should true if all buckets exist" do
       @s3_double.should_receive(:get_bucket).with('bucket123-us-west-1').
-               and_return 'an s3 bucket'
+                 and_return 'an s3 bucket'
       @s3_double.should_receive(:get_bucket).with('bucket123-us-east-1').
-               and_return 'an s3 bucket'
+                 and_return 'an s3 bucket'
       @verifier.buckets_exist?(:bucket_prefix => 'bucket123',
                                :regions       => ['us-west-1', 'us-east-1']).
                 should be_true
@@ -51,7 +51,7 @@ describe Heirloom do
                              :region => 'us-west-1').
                         and_return @s3_double
       @s3_double.should_receive(:get_bucket).with('bucket123-us-west-1').
-               and_return 'an s3 bucket'
+                 and_return 'an s3 bucket'
       @verifier.bucket_exists?(:bucket_prefix => 'bucket123',
                                :region        => 'us-west-1').should be_true
     end
@@ -62,7 +62,7 @@ describe Heirloom do
                              :region => 'us-west-1').
                         and_return @s3_double
       @s3_double.should_receive(:get_bucket).with('bucket123-us-west-1').
-               and_return 'an s3 bucket'
+                 and_return 'an s3 bucket'
       @verifier.bucket_exists?(:bucket_prefix => 'bucket123',
                                :region        => 'us-west-1').should be_true
     end

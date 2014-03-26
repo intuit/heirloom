@@ -15,8 +15,8 @@ describe Heirloom do
       @reader_double = double 'archive reader'
       @destroyer.stub :reader => @reader_double
       @reader_double.should_receive(:get_bucket).
-                  with(:region => 'us-west-1').
-                  and_return 'bucket-us-west-1'
+                     with(:region => 'us-west-1').
+                     and_return 'bucket-us-west-1'
       @reader_double.stub :key_name => '123.tar.gz'
 
       @s3_destroyer_double = double 's3 destroyer'
@@ -25,9 +25,9 @@ describe Heirloom do
                                    :region => 'us-west-1').
                               and_return @s3_destroyer_double
       @s3_destroyer_double.should_receive(:destroy_file).
-                        with :key_name   => '123.tar.gz',
-                             :key_folder => 'tim',
-                             :bucket     => 'bucket-us-west-1'
+                           with :key_name   => '123.tar.gz',
+                                :key_folder => 'tim',
+                                :bucket     => 'bucket-us-west-1'
       @sdb_double = double 'sdb'
       @destroyer.stub :sdb => @sdb_double
     end

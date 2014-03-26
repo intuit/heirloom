@@ -6,7 +6,7 @@ describe Heirloom::Builder do
     @logger_double   = double :debug => 'true', :info => 'true', :warn => 'true'
     @config_double.stub(:logger).and_return(@logger_double)
     @simpledb_double = double 'simple db'
-    @builder       = Heirloom::Builder.new :config => @config_double,
+    @builder         = Heirloom::Builder.new :config => @config_double,
                                            :name   => 'tim',
                                            :id     => '123'
   end
@@ -16,7 +16,7 @@ describe Heirloom::Builder do
       before do
           @author_double    = double :name => 'weaver'
           @directory_double = double :build_artifact_from_directory => '/tmp/build_dir',
-                                 :local_build                   => '/var/tmp/file.tar.gz'
+                                     :local_build                   => '/var/tmp/file.tar.gz'
 
           Heirloom::Directory.should_receive(:new).
                               with(:path    => 'path_to_build',

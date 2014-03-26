@@ -4,9 +4,9 @@ describe Heirloom do
 
   before do
     @config_double = double 'config'
-    @logger_double = double 'logger', :debug => true, 
-                                  :info  => true,
-                                  :warn  => true
+    @logger_double = double 'logger', :debug => true,
+                                      :info  => true,
+                                      :warn  => true
     @config_double.stub :logger => @logger_double
     @checker = Heirloom::Checker.new :config => @config_double
     @regions = ['us-west-1', 'us-west-2']
@@ -23,11 +23,11 @@ describe Heirloom do
                            :region => 'us-west-2').
                       and_return s3_double
     s3_double.should_receive(:bucket_name_available?).
-            with('bp-us-west-1').
-            and_return true
+              with('bp-us-west-1').
+              and_return true
     s3_double.should_receive(:bucket_name_available?).
-            with('bp-us-west-2').
-            and_return true
+              with('bp-us-west-2').
+              and_return true
     @checker.bucket_name_available?(:bucket_prefix => 'bp',
                                     :regions       => @regions).
                                    should be_true

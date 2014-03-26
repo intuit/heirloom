@@ -5,9 +5,9 @@ describe Heirloom::Teardowner do
     @regions = ['us-west-1', 'us-west-2']
     @logger_double = double 'logger', :info => true, :debug => true
     @config_double = double 'config', :logger          => @logger_double,
-                                  :metadata_region => 'us-west-1'
+                                      :metadata_region => 'us-west-1'
     @verifier_double = double :bucket_exists? => true,
-                          :domain_exists? => true 
+                              :domain_exists? => true
     @teardowner = Heirloom::Teardowner.new :config => @config_double,
                                            :name   => 'archive'
     Heirloom::Verifier.stub :new => @verifier_double

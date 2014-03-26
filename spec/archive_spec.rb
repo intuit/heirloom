@@ -79,7 +79,7 @@ describe Heirloom do
                                 :id     => '123').
                            and_return double
       double.should_receive(:authorize).with :regions  => ['us-west-1', 'us-west-2'],
-                                           :accounts => ['acct1', 'acct2']
+                                             :accounts => ['acct1', 'acct2']
       @archive.authorize ['acct1', 'acct2']
     end
 
@@ -106,23 +106,21 @@ describe Heirloom do
     end
 
     it "should call show method"  do
-      reader_double = double 'reader' 
+      reader_double = double 'reader'
       show_data = { 'id'               => '0.0.7',
                     'encrypted'        => 'true',
                     'bucket_prefix'    => 'rickybobby',
-                    'us-west-2-s3-url' => 's3://rickybobby-us-west-2/demo2/0.0.7.tar.gz.gpg'
-                  }
+                    'us-west-2-s3-url' => 's3://rickybobby-us-west-2/demo2/0.0.7.tar.gz.gpg' }
       object_acls_data = { 'us-west-2-perms' => 'rickybobby:read, lc:full_control',
-                           'us-west-1-perms' => 'rickybobby:read, lc:full_control'
-                         }
+                           'us-west-1-perms' => 'rickybobby:read, lc:full_control' }
       merge_data = show_data.merge object_acls_data
- 
+
       Heirloom::Reader.should_receive(:new).
                         with(:config => @config_double,
                              :name   => 'chef',
                              :id     => '123').
                         and_return reader_double
- 
+
       reader_double.stub(:show).and_return(show_data)
       reader_double.stub(:object_acls).and_return(object_acls_data)
       @archive.show.should == merge_data
@@ -145,7 +143,7 @@ describe Heirloom do
                               :name   => 'chef').
                          and_return double
       double.should_receive(:buckets_exist?).
-           with(:bucket_prefix => 'test-123').and_return true
+             with(:bucket_prefix => 'test-123').and_return true
       @archive.buckets_exist?(:bucket_prefix => 'test-123').
                should be_true
     end
@@ -157,7 +155,7 @@ describe Heirloom do
                               :name   => 'chef').
                          and_return double
       double.should_receive(:buckets_exist?).
-           with(:bucket_prefix => 'test-123').and_return false
+             with(:bucket_prefix => 'test-123').and_return false
       @archive.buckets_exist?(:bucket_prefix => 'test-123').
                should be_false
     end
@@ -177,7 +175,7 @@ describe Heirloom do
                                :id      => '123').
                           and_return destroyer_double
       destroyer_double.should_receive(:destroy).
-                     with :regions => ['us-west-1', 'us-west-2']
+                       with :regions => ['us-west-1', 'us-west-2']
       @archive.destroy
     end
 
@@ -263,7 +261,7 @@ describe Heirloom do
       before do
         @archive.stub :download => false, :build => true, :destroy => nil, :upload => true
       end
-      
+
       it "should raise an exception when download fails" do
         expect {
           @archive.rotate({ :new_secret => "new", :old_secret => "old" }) 
@@ -285,7 +283,7 @@ describe Heirloom do
       before do
         @archive.stub :download => true, :build => false, :destroy => nil, :upload => true
       end
-      
+
       it "should raise an exception when build fails" do
         expect {
           @archive.rotate({ :new_secret => "new", :old_secret => "old" })

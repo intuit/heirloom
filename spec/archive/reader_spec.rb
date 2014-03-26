@@ -20,41 +20,41 @@ describe Heirloom do
 
     it "should show the item record" do
       @sdb_double.should_receive(:select).
-               with("select * from `heirloom_tim` where itemName() = '123'").
-               and_return( { '123' => { 'value' => [ 'details' ] } } )
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return( { '123' => { 'value' => [ 'details' ] } } )
       @reader.show.should == { 'value' => 'details' }
     end
 
     it "should return an empty hash if item does not exist" do
       @sdb_double.should_receive(:select).
-                with("select * from `heirloom_tim` where itemName() = '123'").
-                and_return({})
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return({})
       @reader.show.should == {}
     end
 
     it "should return true if the record exists" do
       @sdb_double.should_receive(:select).
-                with("select * from `heirloom_tim` where itemName() = '123'").
-                and_return( { '123' => { 'value' => [ 'details' ] } } )
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return( { '123' => { 'value' => [ 'details' ] } } )
       @reader.exists?.should == true
     end
 
     it "should return false if the record does not exist" do
       @sdb_double.should_receive(:select).
-                with("select * from `heirloom_tim` where itemName() = '123'").
-                and_return({})
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return({})
       @reader.exists?.should == false
     end
 
     it "should return the bucket if it exists" do
       @sdb_double.should_receive(:select).
-                at_least(:once).
-                with("select * from `heirloom_tim` where itemName() = '123'").
-                and_return( { '123' =>
-                              { 'us-west-1-s3-url' =>
-                                [ 's3://the-bucket/the-name/123.tar.gz' ]
-                              }
-                            } )
+                  at_least(:once).
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return( { '123' =>
+                                { 'us-west-1-s3-url' =>
+                                  [ 's3://the-bucket/the-name/123.tar.gz' ]
+                                }
+                              } )
       @reader.get_bucket(:region => 'us-west-1').should == 'the-bucket'
     end
 
@@ -67,49 +67,49 @@ describe Heirloom do
 
     it "should return nil if the bucket does not exist" do
       @sdb_double.should_receive(:select).
-                with("select * from `heirloom_tim` where itemName() = '123'").
-                and_return( { } )
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return( { } )
       @reader.get_bucket(:region => 'us-west-1').should == nil
     end
 
     it "should return the key if it exists" do
       @sdb_double.should_receive(:select).
-                at_least(:once).
-                with("select * from `heirloom_tim` where itemName() = '123'").
-                and_return( { '123' =>
-                              { 'us-west-1-s3-url' =>
-                                ['s3://the-url/the-bucket/123.tar.gz']
-                              }
-                            } )
+                  at_least(:once).
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return( { '123' =>
+                                { 'us-west-1-s3-url' =>
+                                  ['s3://the-url/the-bucket/123.tar.gz']
+                                }
+                              } )
       @reader.get_key(:region => 'us-west-1').should == 'the-bucket/123.tar.gz'
     end
 
     it "should return the encrypted key name" do
       @sdb_double.should_receive(:select).
-                with("select * from `heirloom_tim` where itemName() = '123'").
-                and_return( { '123' => { 'encrypted' => [ 'true' ] } } )
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return( { '123' => { 'encrypted' => [ 'true' ] } } )
       @reader.key_name.should == '123.tar.gz.gpg'
     end
 
     it "should return the unencrypted key name" do
       @sdb_double.should_receive(:select).
-                with("select * from `heirloom_tim` where itemName() = '123'").
-                and_return( { '123' => { 'encrypted' => [ 'false' ] } } )
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return( { '123' => { 'encrypted' => [ 'false' ] } } )
       @reader.key_name.should == '123.tar.gz'
     end
 
     it "should return the regions the archive has been uploaded to" do
       @sdb_double.should_receive(:select).
-                with("select * from `heirloom_tim` where itemName() = '123'").
-                and_return( { '123' =>
-                              { 'us-west-1-s3-url' =>
-                                ['s3://the-url-us-west-1/the-bucket/123.tar.gz'],
-                                'build_by' =>
-                                ['user'],
-                                'us-east-1-s3-url' =>
-                                ['s3://the-url-us-east-1/the-bucket/123.tar.gz']
-                              }
-                            } )
+                  with("select * from `heirloom_tim` where itemName() = '123'").
+                  and_return( { '123' =>
+                                { 'us-west-1-s3-url' =>
+                                  ['s3://the-url-us-west-1/the-bucket/123.tar.gz'],
+                                  'build_by' =>
+                                  ['user'],
+                                  'us-east-1-s3-url' =>
+                                  ['s3://the-url-us-east-1/the-bucket/123.tar.gz']
+                                }
+                              } )
       @reader.regions.should == ['us-west-1', 'us-east-1']
     end
 
@@ -130,7 +130,7 @@ describe Heirloom do
     it "should get object_acls" do
       regions = ['us-west-1', 'us-west-2']
       @config_double.stub :access_key => 'the-key',
-                        :secret_key => 'the-secret'
+                          :secret_key => 'the-secret'
       @reader.stub :regions    => regions,
                    :key_name   => 'doublevalue',
                    :get_bucket => 'doublevalue'

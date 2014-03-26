@@ -140,7 +140,7 @@ describe Heirloom do
                              :bucket_prefix => 'bucket',
                              :extract       => false,
                              :secret        => 'badsecret').should be_false
-      end 
+      end
 
     end
   end

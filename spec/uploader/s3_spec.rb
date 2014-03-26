@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Heirloom::Uploader::S3 do
   before do
     @logger_double = double 'logger double', :info  => true,
-                                       :warn  => true,
-                                       :debug => true
+                                             :warn  => true,
+                                             :debug => true
     @config_double = double 'config double', :logger => @logger_double
     @s3 = Heirloom::Uploader::S3.new :config => @config_double,
                                      :logger => @logger_double,
@@ -29,14 +29,14 @@ describe Heirloom::Uploader::S3 do
                            :region => 'us-west-1').
                       and_return @s3_double
     @s3_double.should_receive(:get_bucket).
-             with('bucket').
-             and_return @bucket_double
+               with('bucket').
+               and_return @bucket_double
     @bucket_double.should_receive(:files).and_return(@files_double)
     File.should_receive(:open).with('file').and_return @body_double
     @files_double.should_receive(:create).
-                with :key    => "key_folder/key_name",
-                     :body   => @body_double,
-                     :public => true
+                  with :key    => "key_folder/key_name",
+                       :body   => @body_double,
+                       :public => true
     @body_double.should_receive(:close)
     @s3.upload_file @options
   end
@@ -51,14 +51,14 @@ describe Heirloom::Uploader::S3 do
                             with(:config => @config_double).
                             and_return simpledb_double
     simpledb_double.should_receive(:put_attributes).
-                  with("heirloom_name", "id", 
-                       { "us-west-1-s3-url" => "s3://bucket/name/key_name" } )
+                    with("heirloom_name", "id",
+                         { "us-west-1-s3-url" => "s3://bucket/name/key_name" } )
     simpledb_double.should_receive(:put_attributes).
-                  with("heirloom_name", "id", 
-                       { "us-west-1-http-url" => "http://s3-us-west-1.amazonaws.com/bucket/name/key_name" } )
+                    with("heirloom_name", "id",
+                         { "us-west-1-http-url" => "http://s3-us-west-1.amazonaws.com/bucket/name/key_name" } )
     simpledb_double.should_receive(:put_attributes).
-                  with("heirloom_name", "id", 
-                       { "us-west-1-https-url" => "https://s3-us-west-1.amazonaws.com/bucket/name/key_name" } )
+                    with("heirloom_name", "id",
+                         { "us-west-1-https-url" => "https://s3-us-west-1.amazonaws.com/bucket/name/key_name" } )
     @s3.add_endpoint_attributes options
   end
 end

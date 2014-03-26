@@ -13,7 +13,7 @@ describe Heirloom do
     @logger_double = double :debug => true, :error => true
     @config_double = double_config(:logger => @logger_double)
     @archive_double = double 'archive'
-    
+
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_double
@@ -38,8 +38,8 @@ describe Heirloom do
   it "should tag an archive attribute with a given id" do
     @archive_double.stub :exists? => true
     @archive_double.should_receive(:update).
-                  with(:attribute => 'att',
-                       :value     => 'val')
+                    with(:attribute => 'att',
+                         :value     => 'val')
     @cli_tag.tag
   end
 

@@ -11,7 +11,7 @@ describe Heirloom do
                 :public          => false,
                 :secret          => 'secret12',
                 :name            => 'archive_name',
-                :id              => '1.0.0', 
+                :id              => '1.0.0',
                 :metadata_region => 'us-west-1' }
 
     @logger_double = double 'logger', :error => true, :info => true
@@ -23,9 +23,9 @@ describe Heirloom do
                        :catalog_domain_exists? => true
     Trollop.stub(:options).and_return options
     tempfile_double = double 'tempfile', :path   => '/tmp/file.tar.gz',
-                                     :close! => true
+                                         :close! => true
     Tempfile.stub :new => tempfile_double
-    
+
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
                              and_return @logger_double
     Heirloom::CLI::Upload.any_instance.should_receive(:load_config).
@@ -42,8 +42,8 @@ describe Heirloom do
                            :config => @config_double).
                       and_return @catalog_double
     @catalog_double.should_receive(:entry_exists_in_catalog?).
-                  with('archive_name').
-                  and_return true
+                    with('archive_name').
+                    and_return true
     @upload = Heirloom::CLI::Upload.new
   end
 
@@ -64,18 +64,18 @@ describe Heirloom do
                  :config => @config_double)
     @archive_double.stub :exists? => false
     @archive_double.should_receive(:build).
-                  with(:bucket_prefix => 'bp',
-                       :directory     => '/buildme',
-                       :exclude       => ["exclude1", "exclude2"],
-                       :secret        => 'secret12',
-                       :file          => '/tmp/file.tar.gz').
-                  and_return true
+                    with(:bucket_prefix => 'bp',
+                         :directory     => '/buildme',
+                         :exclude       => ["exclude1", "exclude2"],
+                         :secret        => 'secret12',
+                         :file          => '/tmp/file.tar.gz').
+                    and_return true
     @archive_double.should_receive(:upload).
-                  with(:bucket_prefix   => 'bp',
-                       :regions         => @regions,
-                       :public_readable => false,
-                       :secret          => 'secret12',
-                       :file            => '/tmp/file.tar.gz')
+                    with(:bucket_prefix   => 'bp',
+                         :regions         => @regions,
+                         :public_readable => false,
+                         :secret          => 'secret12',
+                         :file            => '/tmp/file.tar.gz')
     @upload.upload
   end
 

@@ -12,7 +12,7 @@ describe Heirloom do
       s3_double = double 's3 mock'
       @s3.should_receive(:s3).and_return(s3_double)
       s3_double.should_receive(:delete_object).
-              with('bucket', "key_folder/key_name")
+                with('bucket', "key_folder/key_name")
       @s3.destroy_file :key_name   => 'key_name',
                        :key_folder => 'key_folder',
                        :bucket     => 'bucket'

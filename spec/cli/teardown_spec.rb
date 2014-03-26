@@ -16,7 +16,7 @@ describe Heirloom::CLI::Teardown do
     Heirloom.stub :log => double_log
     @config_double = double_config
 
-    @defaults = { 
+    @defaults = {
       :level           => 'info',
       :name            => 'archive_name',
       :metadata_region => 'us-west-1'
@@ -32,12 +32,12 @@ describe Heirloom::CLI::Teardown do
     @catalog_double = double 'catalog'
     @catalog_double.stub(
       :regions                  => ['us-west-1', 'us-west-2'],
-      :bucket_prefix            => 'bp', 
+      :bucket_prefix            => 'bp',
       :catalog_domain_exists?   => true,
       :delete_from_catalog      => true,
       :entry_exists_in_catalog? => true
     )
-    
+
     Trollop.stub :options => @defaults
     Heirloom::HeirloomLogger.stub :new => @logger_double
     Heirloom::CLI::Teardown.any_instance.stub(:load_config)
@@ -48,7 +48,7 @@ describe Heirloom::CLI::Teardown do
   end
 
   context "delete existing archives force option" do
-    
+
     it "should ask archive to delete when passed the 'force' option" do
       Trollop.stub :options => @defaults.merge(:force => true)
       @teardown = doublebed_teardown
@@ -65,7 +65,7 @@ describe Heirloom::CLI::Teardown do
       @catalog_double.should_not_receive(:cleanup)
       @teardown.teardown
     end
-    
+
   end
 
   it "should delete s3 buckets, catalog and simpledb domain" do
@@ -78,7 +78,7 @@ describe Heirloom::CLI::Teardown do
     @archive_double.should_receive(:delete_buckets)
     @archive_double.should_receive(:delete_domain)
     @catalog_double.should_receive(:delete_from_catalog)
-    @teardown.teardown 
+    @teardown.teardown
   end
 
 end

@@ -6,9 +6,9 @@ describe Heirloom::Directory do
     before do
       @config_double = double 'config'
       @logger_double = double :debug => 'true', 
-                          :info  => 'true', 
-                          :warn  => 'true',
-                          :error => 'true'
+                              :info  => 'true', 
+                              :warn  => 'true',
+                              :error => 'true'
       @config_double.stub(:logger).and_return(@logger_double)
       @directory = Heirloom::Directory.new :config  => @config_double,
                                            :exclude => ['dont_pack_me', 'dont_pack_me1'],
@@ -45,9 +45,9 @@ describe Heirloom::Directory do
 
         it "should build and encrypt an archive from the path" do
           @cipher_double.should_receive(:encrypt_file).
-                       with(:file => '/tmp/file.tar.gz', 
-                            :secret => 'supersecret').
-                       and_return true
+                         with(:file => '/tmp/file.tar.gz', 
+                              :secret => 'supersecret').
+                         and_return true
           @directory.build_artifact_from_directory(:secret => 'supersecret').
                      should be_true
        end

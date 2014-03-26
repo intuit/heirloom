@@ -16,8 +16,8 @@ describe Heirloom do
   context "when succesful" do
     it "should download the specified file from s3" do
       @s3_double.should_receive(:get_object).
-               with('bucket', 'key_name').
-               and_return 'data'
+                 with('bucket', 'key_name').
+                 and_return 'data'
       @s3.download_file(:key    => 'key_name',
                         :bucket => 'bucket').should == 'data' 
     end
@@ -32,8 +32,8 @@ describe Heirloom do
     it "should return an error if the bucket not found" do
       @logger_double.should_receive(:error).with('Access Denied')
       @s3_double.should_receive(:get_object).
-               with('bucket', 'key_name').
-               and_raise Excon::Errors::Forbidden.new 'msg', 'req', @response_double
+                 with('bucket', 'key_name').
+                 and_raise Excon::Errors::Forbidden.new 'msg', 'req', @response_double
       @s3.download_file(:key    => 'key_name',
                         :bucket => 'bucket').should be_false
     end
@@ -41,8 +41,8 @@ describe Heirloom do
     it "should return an error if the object not found / forbidden" do
       @logger_double.should_receive(:error).with('Access Denied')
       @s3_double.should_receive(:get_object).
-               with('bucket', 'key_name').
-               and_raise Excon::Errors::NotFound.new 'msg', 'req', @response_double
+                 with('bucket', 'key_name').
+                 and_raise Excon::Errors::NotFound.new 'msg', 'req', @response_double
       @s3.download_file(:key    => 'key_name',
                         :bucket => 'bucket').should be_false
     end

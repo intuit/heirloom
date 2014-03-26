@@ -63,9 +63,9 @@ describe Heirloom do
         formatter_double = double 'format'
         Heirloom::CLI::Formatter::Show.stub :new => formatter_double
         formatter_double.should_receive(:format).
-                       with(:attributes => @attributes,
-                            :all        => true).
-                       and_return 'the attribs'
+                         with(:attributes => @attributes,
+                              :all        => true).
+                         and_return 'the attribs'
         @cli_show.should_receive(:puts).with 'the attribs'
         @cli_show.show
       end

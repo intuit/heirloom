@@ -20,8 +20,8 @@ describe Heirloom::Catalog::Delete do
                             with(:config => @config_double).
                             and_return @sdb_double
     @sdb_double.should_receive(:delete).
-              with('heirloom', 'heirloom_old_archive').
-              and_return true
+                with('heirloom', 'heirloom_old_archive').
+                and_return true
     @delete.delete_from_catalog.should be_true
   end
 

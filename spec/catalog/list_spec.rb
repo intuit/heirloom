@@ -13,8 +13,8 @@ describe Heirloom::Catalog::List do
 
   it "should list all heirlooms in the catalog" do
     @sdb_double.should_receive(:select).
-              with("SELECT * FROM heirloom").
-              and_return 'result'
+                with("SELECT * FROM heirloom").
+                and_return 'result'
     @list.all.should == 'result'
   end
 

@@ -20,7 +20,7 @@ describe Heirloom::Catalog::Setup do
                             with(:config => @config_double).
                             and_return @sdb_double
     @sdb_double.should_receive(:create_domain).
-              with 'heirloom'
+                with 'heirloom'
     @setup.create_catalog_domain
   end
 

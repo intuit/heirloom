@@ -5,9 +5,9 @@ describe Heirloom::Catalog::Add do
   before do
     @regions       = ['us-west-1', 'us-west-2']
     @bucket_prefix = 'bucket_prefix'
-    @logger_double   = double 'logger', :info => true
-    @config_double   = double 'config', :logger => @logger_double
-    @verify_double   = double 'verify'
+    @logger_double = double 'logger', :info => true
+    @config_double = double 'config', :logger => @logger_double
+    @verify_double = double 'verify'
 
     @add = Heirloom::Catalog::Add.new :config => @config_double,
                                       :name   => 'new_archive'

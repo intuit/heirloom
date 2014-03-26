@@ -57,9 +57,9 @@ describe Heirloom do
     it "should return true if all options are present" do
       @logger_double.should_receive(:error).exactly(0).times
       @object.ensure_valid_options(:provided => { :array  => ['present'],
-                                            :string => 'present' },
-                             :required => [:array, :string],
-                             :config   => @config_double)
+                                                  :string => 'present' },
+                                   :required => [:array, :string],
+                                   :config   => @config_double)
     end
   end
 
@@ -133,7 +133,7 @@ describe Heirloom do
 
     it "should not exit when directory is writable" do
       File.should_receive(:writable?).with('/tmp/test').
-                                       and_return true
+                                      and_return true
       @object.ensure_directory_is_writable :path => '/tmp/test', :config => @config_double
     end
 
@@ -263,8 +263,8 @@ describe Heirloom do
 
     it "should exit if the entry does not exist in catalog" do
       @catalog_double.should_receive(:entry_exists_in_catalog?).
-                    with('entry').
-                    and_return false
+                      with('entry').
+                      and_return false
       lambda { @object.ensure_entry_exists_in_catalog @options }.
                        should raise_error SystemExit
     end

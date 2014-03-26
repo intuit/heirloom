@@ -6,10 +6,10 @@ describe Heirloom do
     @decrypted_file_double = double 'decrypted mock'
     @encrypted_file_double.stub :path => '/tmp/enc'
     @decrypted_file_double.stub :path => '/tmp/dec',
-                              :read => 'plaintext'
+                                :read => 'plaintext'
     @logger_double = double 'logger', :info => true
     @logger_double.stub :info  => true,
-                      :debug => true
+                        :debug => true
     @config_double = double 'config'
     @config_double.stub :logger => @logger_double
     @data = Heirloom::Cipher::Data.new :config => @config_double

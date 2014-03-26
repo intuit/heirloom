@@ -35,13 +35,13 @@ describe Heirloom do
 
   it "should authorize an account" do
     @archive_double.should_receive(:authorize).with(['test@test.com']).
-                  and_return true
+                    and_return true
     @cli_authorize.authorize
   end
 
   it "should exit if authorize returns false" do
     @archive_double.should_receive(:authorize).with(['test@test.com']).
-                  and_return false
+                    and_return false
     lambda { @cli_authorize.authorize }.should raise_error SystemExit
   end
 

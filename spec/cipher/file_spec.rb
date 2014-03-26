@@ -4,11 +4,11 @@ describe Heirloom do
   before do
     @logger_double = double 'logger', :info => true
     @logger_double.stub :info  => true,
-                      :debug => true
+                        :debug => true
     @config_double = double 'config'
     @config_double.stub :logger => @logger_double
     @tempfile_double = double 'tempfile', :path   => '/path_to_encrypted_archive', 
-                                      :close! => true
+                                          :close! => true
     Tempfile.stub :new => @tempfile_double
     @file = Heirloom::Cipher::File.new :config => @config_double
   end

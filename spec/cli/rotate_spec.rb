@@ -18,7 +18,7 @@ describe Heirloom do
     Heirloom::Catalog.stub(:new).and_return catalog_double
 
     @archive_double = double 'archive'
-    @logger_double = double_log
+    @logger_double  = double_log
     Heirloom::HeirloomLogger.stub :new => @logger_double
     Heirloom::Archive.stub(:new).and_return @archive_double
 

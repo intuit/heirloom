@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Heirloom::Catalog do
 
-  before do 
-    @config_double   = double 'catalog'
+  before do
+    @config_double = double 'catalog'
     @regions       = ['us-west-1', 'us-west-2']
     @bucket_prefix = 'bp'
     @catalog       = Heirloom::Catalog.new :config => @config_double, :name => 'new_archive'
@@ -50,7 +50,7 @@ describe Heirloom::Catalog do
 
       @catalog.cleanup :num_to_keep => 10, :remove_preserved => true
     end
-        
+
   end
 
   context "testing add" do
@@ -72,9 +72,9 @@ describe Heirloom::Catalog do
                                   :name   => 'new_archive').
                              and_return @catalog_add_double
       @catalog_add_double.should_receive(:add_to_catalog).
-                        with(:bucket_prefix => @bucket_prefix,
-                             :regions       => @regions).
-                        and_return true
+                          with(:bucket_prefix => @bucket_prefix,
+                               :regions       => @regions).
+                          and_return true
       @catalog.add_to_catalog(:bucket_prefix => @bucket_prefix,
                               :regions       => @regions).
                should be_true
@@ -127,15 +127,15 @@ describe Heirloom::Catalog do
     end
     it "should return true if the entry exists in the catalog" do
       @catalog_verify_double.should_receive(:entry_exists_in_catalog?).
-                           with('entry').
-                           and_return true
+                             with('entry').
+                             and_return true
       @catalog.entry_exists_in_catalog?('entry').should be_true
     end
 
     it "should return false if the entry does not exists in the catalog" do
       @catalog_verify_double.should_receive(:entry_exists_in_catalog?).
-                           with('entry').
-                           and_return false
+                             with('entry').
+                             and_return false
       @catalog.entry_exists_in_catalog?('entry').should be_false
     end
   end

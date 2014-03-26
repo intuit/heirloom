@@ -11,8 +11,8 @@ describe Heirloom do
                              with(:log_level => 'info').
                              and_return @logger_double
     Heirloom::Archive.should_receive(:new).
-                      with(:id   => '1.0.0',
-                           :name => 'archive_name',
+                      with(:id     => '1.0.0',
+                           :name   => 'archive_name',
                            :config => @config_double).
                       and_return @archive_double
   end
@@ -37,13 +37,13 @@ describe Heirloom do
 
     it "should download an archive" do
       @archive_double.should_receive(:download).with(:output        => '/tmp/test123',
-                                                   :region        => 'us-east-1',
-                                                   :bucket_prefix => 'bp',
-                                                   :extract     => false,
-                                                   :secret      => nil).
+                                                     :region        => 'us-east-1',
+                                                     :bucket_prefix => 'bp',
+                                                     :extract     => false,
+                                                     :secret      => nil).
                     and_return '/tmp/test123'
       @cli_download.should_receive(:ensure_path_is_directory).
-                    with(:config => @config_double, 
+                    with(:config => @config_double,
                          :path => '/tmp/test123').
                     and_return true
       @cli_download.should_receive(:ensure_directory_is_writable).
@@ -57,7 +57,7 @@ describe Heirloom do
   context "id, region and bucket prefix not specified" do
     before do
       @catalog_double = double 'catalog', :regions       => ['us-east-1', 'us-west-1'],
-                                      :bucket_prefix => 'bp'
+                                          :bucket_prefix => 'bp'
       @archive_double.stub :exists? => true
       options = { :name            => 'archive_name',
                   :level           => 'info',
@@ -88,9 +88,9 @@ describe Heirloom do
                                                    :bucket_prefix => 'bp',
                                                    :extract       => false,
                                                    :secret        => nil).
-                    and_return '/tmp/test123'
+                      and_return '/tmp/test123'
       @cli_download.should_receive(:ensure_path_is_directory).
-                    with(:config => @config_double, 
+                    with(:config => @config_double,
                          :path => '/tmp/test123').
                     and_return true
       @cli_download.should_receive(:ensure_directory_is_writable).

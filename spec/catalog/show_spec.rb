@@ -13,12 +13,12 @@ describe Heirloom::Catalog::Show do
   end
 
   it "should return the bucket_prefix" do
-    result = { 'heirloom_a_archive' => 
-               { 'bucket_prefix' => [ 'bp' ] } 
+    result = { 'heirloom_a_archive' =>
+               { 'bucket_prefix' => [ 'bp' ] }
              }
     @sdb_double.should_receive(:select).
-              with("select bucket_prefix from heirloom where itemName() = 'heirloom_a_archive'").
-              and_return result
+                with("select bucket_prefix from heirloom where itemName() = 'heirloom_a_archive'").
+                and_return result
     @show.bucket_prefix.should == 'bp'
   end
 
@@ -26,8 +26,8 @@ describe Heirloom::Catalog::Show do
     regions = ['us-west-1', 'us-west-2']
     result = { 'heirloom_a_archive' => { 'regions' => @regions } }
     @sdb_double.should_receive(:select).
-              with("select regions from heirloom where itemName() = 'heirloom_a_archive'").
-              and_return result
+                with("select regions from heirloom where itemName() = 'heirloom_a_archive'").
+                and_return result
     @show.regions.should == @regions
   end
 

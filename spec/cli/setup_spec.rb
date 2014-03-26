@@ -11,8 +11,8 @@ describe Heirloom do
                 :name            => 'archive_name',
                 :metadata_region => 'us-west-1' }
 
-    @logger_double = double 'logger', :error => true, :info => true
-    @config_double = double_config :logger => @logger_double
+    @logger_double  = double 'logger', :error => true, :info => true
+    @config_double  = double_config :logger => @logger_double
     @archive_double = double 'archive'
     @catalog_double = double 'catalog'
     @checker_double = double 'checker'
@@ -22,7 +22,7 @@ describe Heirloom do
     Heirloom::CLI::Setup.any_instance.should_receive(:load_config).
                          with(:logger => @logger_double,
                                :opts   => options).
-                          and_return @config_double
+                         and_return @config_double
     Heirloom::Archive.should_receive(:new).
                       with(:name => 'archive_name',
                            :config => @config_double).
@@ -39,20 +39,20 @@ describe Heirloom do
 
   it "should setup s3 buckets, catalog and simpledb domain" do
     @checker_double.should_receive(:bucket_name_available?).
-                  with(:bucket_prefix => "bp", 
-                       :regions       => @regions, 
-                       :config        => @config_double).
-                  and_return true
+                    with(:bucket_prefix => "bp",
+                         :regions       => @regions,
+                         :config        => @config_double).
+                    and_return true
     @catalog_double.should_receive(:create_catalog_domain)
     @catalog_double.stub :entry_exists_in_catalog? => false
     @catalog_double.should_receive(:add_to_catalog).
-                  with(:regions       => @regions, 
-                       :bucket_prefix => 'bp').
-                  and_return true
+                    with(:regions       => @regions,
+                         :bucket_prefix => 'bp').
+                    and_return true
     @archive_double.should_receive(:setup).
-                  with(:regions       => @regions,
-                       :bucket_prefix => 'bp')
-    @setup.setup 
+                    with(:regions       => @regions,
+                         :bucket_prefix => 'bp')
+    @setup.setup
   end
 
 end

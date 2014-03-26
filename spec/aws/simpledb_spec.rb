@@ -28,36 +28,6 @@ describe Heirloom::AWS::SimpleDB do
 
   end
 
-  # Data recorded with VCR after running ./spec/fixtures/create_test_data.sh
-  context "select", :vcr => true do
-    let(:sdb) { Heirloom::AWS::SimpleDB.new :config => integration_or_mock_config }
-
-    before do
-      @q = "select * from `heirloom_test_data` where built_at > '2000-01-01T00:00:00.000Z' order by built_at desc"
-    end
-
-    it "should get results" do
-      keys = sdb.select(@q).keys
-      keys.size.should == 10
-      keys.first.should == "v10"
-    end
-
-    it "should be able to offset results" do
-      keys = sdb.select(@q, :offset => 2).keys
-      keys.size.should == 8
-      keys.first.should == "v8"
-    end
-
-    it "should yield when requested" do
-      num_yields = 0
-      sdb.select(@q, :offset => 2) do |k, v|
-        num_yields += 1
-      end
-      num_yields.should == 8
-    end
-
-  end
-
   context "sdb operations" do
     before do
       @fog_mock = mock 'fog'

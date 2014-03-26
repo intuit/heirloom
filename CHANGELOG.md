@@ -1,5 +1,7 @@
 ## HEAD:
 
+* Upgrade to fog 1.21.0
+
 ## 0.12.1 (09/04/2013):
 
 * Upgraded to fog 1.15.0

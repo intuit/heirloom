@@ -26,18 +26,24 @@ To get started, copy the sample below to ~/.heirloom.yml and update the specifie
 
 ```
 # default environment
+
 default:
   access_key: UPDATE_ME
   secret_key: UPDATE_ME
   metadata_region: us-west-1
-  
+
 # multiple environments can be defined and 
 # selected via cli with -e or --environment
 
-# prod:
-#   access_key: UPDATE_ME
-#   secret_key: UPDATE_ME
-#   metadata_region: us-west-1
+prod:
+  access_key: UPDATE_ME
+  secret_key: UPDATE_ME
+  metadata_region: us-west-1
+
+preprod:
+  access_key: UPDATE_ME
+  secret_key: UPDATE_ME
+  metadata_region: us-west-1
 ```
 
 You can specify an alternate config file by setting "HEIRLOOM_CONFIG_FILE" 

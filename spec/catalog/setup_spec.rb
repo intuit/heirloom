@@ -3,24 +3,24 @@ require 'spec_helper'
 describe Heirloom::Catalog::Setup do
 
   before do
-    @logger_stub = stub 'logger', :info => true
-    @config_stub = stub 'config', :logger          => @logger_stub,
+    @logger_double = double 'logger', :info => true
+    @config_double = double 'config', :logger          => @logger_double,
                                   :metadata_region => 'us-west-1'
-    @verify_stub = stub 'verify', :catalog_domain_exists? => false
+    @verify_double = double 'verify', :catalog_domain_exists? => false
     Heirloom::Catalog::Verify.should_receive(:new).
-                              with(:config => @config_stub).
-                              and_return @verify_stub
-    @setup = Heirloom::Catalog::Setup.new :config => @config_stub,
+                              with(:config => @config_double).
+                              and_return @verify_double
+    @setup = Heirloom::Catalog::Setup.new :config => @config_double,
                                           :name   => 'new_archive'
   end
 
   it "should call sdb to create the catalog domain" do
-    @sdb_mock = mock 'sdb'
+    @sdb_double = double 'sdb'
     Heirloom::AWS::SimpleDB.should_receive(:new).
-                            with(:config => @config_stub).
-                            and_return @sdb_mock
-    @sdb_mock.should_receive(:create_domain).
-              with 'heirloom'
+                            with(:config => @config_double).
+                            and_return @sdb_double
+    @sdb_double.should_receive(:create_domain).
+                with 'heirloom'
     @setup.create_catalog_domain
   end
 

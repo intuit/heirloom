@@ -3,13 +3,13 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @logger_mock = mock 'logger'
-    @logger_mock.stub :info => true, :debug => true
-    @config_mock = mock 'config'
-    @config_mock.stub :logger => @logger_mock
-    @tempfile_stub = stub 'tempfile', :path => '/tmp/tempfile'
-    Tempfile.stub :new => @tempfile_stub
-    @writer = Heirloom::Writer.new :config => @config_mock
+    @logger_double = double 'logger'
+    @logger_double.stub :info => true, :debug => true
+    @config_double = double 'config'
+    @config_double.stub :logger => @logger_double
+    @tempfile_double = double 'tempfile', :path => '/tmp/tempfile'
+    Tempfile.stub :new => @tempfile_double
+    @writer = Heirloom::Writer.new :config => @config_double
   end
 
   context "extract is set to true" do
@@ -18,7 +18,7 @@ describe Heirloom do
       Heirloom::Writer.any_instance.should_receive(:`).
                        with('tar xzf /tmp/tempfile -C /output')
       $?.stub :success? => true
-      @writer.save_archive(:archive => 'archive_data', 
+      @writer.save_archive(:archive => 'archive_data',
                            :output  => '/output',
                            :file    => 'id.tar.gz',
                            :extract => true).should be_true
@@ -29,8 +29,8 @@ describe Heirloom do
       Heirloom::Writer.any_instance.should_receive(:`).
                        with('tar xzf /tmp/tempfile -C /output')
       $?.stub :success? => false
-      @logger_mock.should_receive(:error)
-      @writer.save_archive(:archive => 'archive_data', 
+      @logger_double.should_receive(:error)
+      @writer.save_archive(:archive => 'archive_data',
                            :output  => '/output',
                            :file    => 'id.tar.gz',
                            :extract => true).should be_false
@@ -41,7 +41,7 @@ describe Heirloom do
     it "should save the given archive object into the output directory" do
       File.should_receive(:open).with('/output/id.tar.gz', 'w').
            and_return true
-      @writer.save_archive :archive => 'archive_data', 
+      @writer.save_archive :archive => 'archive_data',
                            :output  => '/output',
                            :file    => 'id.tar.gz',
                            :extract => false

@@ -3,42 +3,42 @@ require 'spec_helper'
 describe Heirloom do
 
   before do
-    @config_mock = mock 'config'
-    @logger_stub = mock 'logger', :info => true, :debug => true
-    @config_mock.stub :logger => @logger_stub
-    @downloader = Heirloom::Downloader.new :config => @config_mock,
+    @config_double = double 'config'
+    @logger_double = double 'logger', :info => true, :debug => true
+    @config_double.stub :logger => @logger_double
+    @downloader = Heirloom::Downloader.new :config => @config_double,
                                            :name   => 'tim',
                                            :id     => '123'
-    @s3_downloader_mock = mock 's3 downloader'
+    @s3_downloader_double = double 's3 downloader'
     Heirloom::Downloader::S3.should_receive(:new).
-                             with(:config => @config_mock,
-                                  :logger => @logger_stub,
+                             with(:config => @config_double,
+                                  :logger => @logger_double,
                                   :region => 'us-west-1').
-                             and_return @s3_downloader_mock
-    @cipher_mock = mock 'cipher'
+                             and_return @s3_downloader_double
+    @cipher_double = double 'cipher'
   end
 
   context "no secret given" do
     context "when succesful" do
       before do
-        @writer_mock = mock 'writer'
+        @writer_double = double 'writer'
         Heirloom::Writer.should_receive(:new).
-                         with(:config => @config_mock).
-                         and_return @writer_mock
-        @s3_downloader_mock.should_receive(:download_file).
+                         with(:config => @config_double).
+                         and_return @writer_double
+        @s3_downloader_double.should_receive(:download_file).
                             with(:bucket => 'bucket-us-west-1',
                                  :key    => 'tim/123.tar.gz').
                             and_return 'plaintext'
-        @cipher_mock.should_receive(:decrypt_data).
+        @cipher_double.should_receive(:decrypt_data).
                      with(:secret => nil,
                           :data   => 'plaintext').and_return 'plaintext'
         Heirloom::Cipher::Data.should_receive(:new).
-                               with(:config => @config_mock).
-                               and_return @cipher_mock
+                               with(:config => @config_double).
+                               and_return @cipher_double
       end
 
       it "should download to the current path if output is not specified" do
-        @writer_mock.should_receive(:save_archive).
+        @writer_double.should_receive(:save_archive).
                      with(:archive => 'plaintext',
                           :file    => "123.tar.gz",
                           :output  => './',
@@ -50,7 +50,7 @@ describe Heirloom do
       end
 
       it "should download arhcive to specified output" do
-        @writer_mock.should_receive(:save_archive).
+        @writer_double.should_receive(:save_archive).
                      with(:archive => 'plaintext',
                           :file    => "123.tar.gz",
                           :output  => '/tmp/dir',
@@ -65,7 +65,7 @@ describe Heirloom do
 
     context "when unsuccesful" do
       before do
-        @s3_downloader_mock.should_receive(:download_file).
+        @s3_downloader_double.should_receive(:download_file).
                             with(:bucket => 'bucket-us-west-1',
                                  :key    => 'tim/123.tar.gz').
                             and_return false
@@ -83,28 +83,28 @@ describe Heirloom do
 
   context "secret given" do
     before do
-      @s3_downloader_mock.should_receive(:download_file).
+      @s3_downloader_double.should_receive(:download_file).
                           with(:bucket => 'bucket-us-west-1',
                                :key    => 'tim/123.tar.gz.gpg').
                           and_return 'encrypted_data'
       Heirloom::Cipher::Data.should_receive(:new).
-                             with(:config => @config_mock).
-                             and_return @cipher_mock
+                             with(:config => @config_double).
+                             and_return @cipher_double
     end
 
     context "valid secret" do
       before do
-        @writer_mock = mock 'writer'
+        @writer_double = double 'writer'
         Heirloom::Writer.should_receive(:new).
-                         with(:config => @config_mock).
-                         and_return @writer_mock
-        @cipher_mock.should_receive(:decrypt_data).
+                         with(:config => @config_double).
+                         and_return @writer_double
+        @cipher_double.should_receive(:decrypt_data).
                      with(:secret => 'supersecret',
                           :data   => 'encrypted_data').and_return 'plaintext'
       end
 
       it "should decrypt and save the downloaded file with secret" do
-        @writer_mock.should_receive(:save_archive).
+        @writer_double.should_receive(:save_archive).
                      with(:archive => 'plaintext',
                           :file    => "123.tar.gz",
                           :output  => './',
@@ -116,7 +116,7 @@ describe Heirloom do
       end
 
       it "should decrypt and extract the downloaded file with secret" do
-        @writer_mock.should_receive(:save_archive).
+        @writer_double.should_receive(:save_archive).
                      with(:archive => 'plaintext',
                           :file    => "123.tar.gz",
                           :output  => './',
@@ -130,7 +130,7 @@ describe Heirloom do
 
     context "invalid secret" do
       before do
-        @cipher_mock.should_receive(:decrypt_data).
+        @cipher_double.should_receive(:decrypt_data).
                      with(:secret => 'badsecret',
                           :data   => 'encrypted_data').and_return false
       end
@@ -140,7 +140,7 @@ describe Heirloom do
                              :bucket_prefix => 'bucket',
                              :extract       => false,
                              :secret        => 'badsecret').should be_false
-      end 
+      end
 
     end
   end

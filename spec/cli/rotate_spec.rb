@@ -14,19 +14,19 @@ describe Heirloom do
                 :aws_secret_key => 'secret' }
     Trollop.stub(:options).and_return options
 
-    catalog_stub = stub :regions => ['us-east-1', 'us-west-1']
-    Heirloom::Catalog.stub(:new).and_return catalog_stub
+    catalog_double = double :regions => ['us-east-1', 'us-west-1']
+    Heirloom::Catalog.stub(:new).and_return catalog_double
 
-    @archive_mock = mock 'archive'
-    @logger_mock = mock_log
-    Heirloom::HeirloomLogger.stub :new => @logger_mock
-    Heirloom::Archive.stub(:new).and_return @archive_mock
+    @archive_double = double 'archive'
+    @logger_double  = double_log
+    Heirloom::HeirloomLogger.stub :new => @logger_double
+    Heirloom::Archive.stub(:new).and_return @archive_double
 
   end
 
   it "should delegate to archive object" do
 
-    @archive_mock.should_receive :rotate
+    @archive_double.should_receive :rotate
 
     Heirloom::CLI::Rotate.new.rotate
 
@@ -34,9 +34,9 @@ describe Heirloom do
 
   it "should log and do a SystemExit when a rotate fails" do
     
-    @archive_mock.stub(:rotate).and_raise Heirloom::Exceptions::RotateFailed.new("failed")
+    @archive_double.stub(:rotate).and_raise Heirloom::Exceptions::RotateFailed.new("failed")
 
-    @logger_mock.should_receive(:error).with "failed"
+    @logger_double.should_receive(:error).with "failed"
     expect {
       Heirloom::CLI::Rotate.new.rotate
     }.to raise_error SystemExit

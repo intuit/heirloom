@@ -10,19 +10,19 @@ describe Heirloom do
     @result = { 'heirloom_test' =>
                 { 'regions'       => ['us-west-1'],
                   'bucket_prefix' => ['bp'] } }
-    @logger_stub = stub :debug => true
-    @config_mock = mock_config :logger => @logger_stub
-    @catalog_mock = mock 'catalog'
-    @catalog_mock.stub :catalog_domain_exists? => true
+    @logger_double = double :debug => true
+    @config_double = double_config :logger => @logger_double
+    @catalog_double = double 'catalog'
+    @catalog_double.stub :catalog_domain_exists? => true
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
-                             and_return @logger_stub
+                             and_return @logger_double
     Heirloom::CLI::Catalog.any_instance.should_receive(:load_config).
-                           with(:logger => @logger_stub,
+                           with(:logger => @logger_double,
                                 :opts   => @options).
-                           and_return @config_mock
+                           and_return @config_double
     Heirloom::Catalog.should_receive(:new).
-                      with(:config => @config_mock).
-                      and_return @catalog_mock
+                      with(:config => @config_double).
+                      and_return @catalog_double
   end
 
   context "as human readable" do
@@ -32,8 +32,8 @@ describe Heirloom do
 
     it "should list all heirlooms in the catalog" do
       @cli_catalog = Heirloom::CLI::Catalog.new
-      @catalog_mock.stub :all => @result
-      formatter_mock = mock 'formatter'
+      @catalog_double.stub :all => @result
+      formatter_double = double 'formatter'
       catalog = { :region  => "us-west-1",
                   :catalog =>
                   { "heirloom_test" =>
@@ -44,8 +44,8 @@ describe Heirloom do
                   },
                   :name => nil
                 }
-      Heirloom::CLI::Formatter::Catalog.stub :new => formatter_mock
-      formatter_mock.should_receive(:summary_format).with(:region=>"us-west-1").and_return('theoutput')
+      Heirloom::CLI::Formatter::Catalog.stub :new => formatter_double
+      formatter_double.should_receive(:summary_format).with(:region=>"us-west-1").and_return('theoutput')
       @cli_catalog.should_receive(:puts).with 'theoutput'
       @cli_catalog.all
     end

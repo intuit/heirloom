@@ -8,32 +8,32 @@ describe Heirloom do
                 :id              => '1.0.0',
                 :level           => 'info',
                 :metadata_region => 'us-west-1' }
-    @logger_stub = stub 'logger'
-    @config_mock = mock_config :logger => @logger_stub
-    @archive_mock = mock 'archive'
+    @logger_double = double 'logger'
+    @config_double = double_config :logger => @logger_double
+    @archive_double = double 'archive'
     Trollop.stub(:options).and_return options
     Heirloom::HeirloomLogger.should_receive(:new).with(:log_level => 'info').
-                             and_return @logger_stub
+                             and_return @logger_double
     Heirloom::CLI::Destroy.any_instance.should_receive(:load_config).
-                             with(:logger => @logger_stub,
+                             with(:logger => @logger_double,
                                   :opts   => options).
-                             and_return @config_mock
+                             and_return @config_double
     Heirloom::Archive.should_receive(:new).
                       with(:name => 'archive_name',
-                           :config => @config_mock).
-                      and_return @archive_mock
+                           :config => @config_double).
+                      and_return @archive_double
     Heirloom::Archive.should_receive(:new).
                       with(:id   => '1.0.0',
                            :name => 'archive_name',
-                           :config => @config_mock).
-                      and_return @archive_mock
-    @archive_mock.stub :exists? => true
-    @archive_mock.should_receive(:domain_exists?).and_return true
+                           :config => @config_double).
+                      and_return @archive_double
+    @archive_double.stub :exists? => true
+    @archive_double.should_receive(:domain_exists?).and_return true
     @cli_destroy = Heirloom::CLI::Destroy.new
   end
 
   it "should destroy an archive" do
-    @archive_mock.should_receive(:destroy)
+    @archive_double.should_receive(:destroy)
     @cli_destroy.destroy
   end
 

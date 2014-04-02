@@ -34,13 +34,9 @@ module Heirloom
 
       def show
         data = @archive.show
-        if @opts[:json]
-          jj data
-        else
-          formatter = Heirloom::CLI::Formatter::Show.new
-          puts formatter.format :attributes => data,
-                                :all        => @opts[:all]
-        end
+        formatter = Heirloom::CLI::Formatter::Show.new
+        puts formatter.format :attributes => data,
+                              :all        => @opts[:all]
       end
 
       private

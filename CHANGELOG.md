@@ -1,4 +1,4 @@
-## HEAD:
+## 0.12.4: (04/02/2014):
 
 * Bug fix in setup to properly read metadata region from config
 * Update to CLI environment message

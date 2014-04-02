@@ -11,6 +11,7 @@ describe Heirloom do
                 { 'regions'       => ['us-west-1'],
                   'bucket_prefix' => ['bp'] } }
     @logger_double = double :debug => true
+    @logger_double.stub :info => true
     @config_double = double_config :logger => @logger_double
     @catalog_double = double 'catalog'
     @catalog_double.stub :catalog_domain_exists? => true

@@ -1,5 +1,7 @@
 ## HEAD:
 
+* Bug fix in setup to properly read metadata region from config
+
 ## 0.12.3 (03/26/2014):
 
 * Added dependent gems for fog

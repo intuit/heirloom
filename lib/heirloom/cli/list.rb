@@ -14,6 +14,8 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
+        @opts[:metadata_region] ||= @config.metadata_region
+
         ensure_valid_options :provided => @opts,
                              :required => [:name],
                              :config   => @config
@@ -24,7 +26,7 @@ module Heirloom
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
       end
-      
+
       def list(count = @opts[:count])
         @logger.debug "#{@archive.count} IDs found."
         list = @archive.list count

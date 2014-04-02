@@ -17,9 +17,8 @@ module Heirloom
         ensure_valid_options :provided => @opts,
                              :required => [:name],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
-        ensure_domain_exists :name   => @opts[:name], 
+        ensure_valid_metadata_region @config
+        ensure_domain_exists :name   => @opts[:name],
                              :config => @config
 
         # Can't use fetch as Trollop sets :id to nil
@@ -32,7 +31,7 @@ module Heirloom
         ensure_archive_exists :archive => @archive,
                               :config  => @config
       end
-      
+
       def show
         data = @archive.show
         if @opts[:json]

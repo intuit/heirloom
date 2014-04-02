@@ -25,8 +25,7 @@ module Heirloom
         regions.each do |region|
           @config.metadata_region = region
 
-          ensure_valid_region :region => region,
-                              :config => @config
+          ensure_valid_metadata_region @config
 
           unless catalog_domain_exists?
             @logger.info "No heirloom catalog in '#{region}'."

@@ -14,24 +14,16 @@ module Heirloom
 
         Heirloom.log.level = @opts[:log_level]
 
-        ensure_valid_options(
-          :provided => @opts,
-          :required => [:name],
-          :config   => @config
-        )
+        ensure_valid_options :provided => @opts,
+                             :required => [:name],
+                             :config   => @config
 
-        ensure_valid_region(
-          :region => @opts[:metadata_region],
-          :config => @config
-        )
+        ensure_valid_metadata_region @config
 
-        ensure_domain_exists(
-          :name   => @opts[:name],
-          :config => @config
-        )
-
+        ensure_domain_exists :name   => @opts[:name],
+                             :config => @config
       end
-      
+
       def cleanup
         cat = Heirloom::Catalog.new :name => @opts[:name], :config => @config
         cat.cleanup :num_to_keep => @opts[:keep]

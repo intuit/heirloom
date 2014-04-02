@@ -17,8 +17,7 @@ module Heirloom
         ensure_valid_options :provided => @opts,
                              :required => [:name, :id],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
+        ensure_valid_metadata_region @config
         ensure_domain_exists :name => @opts[:name], :config => @config
 
         @name = @opts[:name]

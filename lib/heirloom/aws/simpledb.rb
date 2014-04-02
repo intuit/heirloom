@@ -54,10 +54,10 @@ module Heirloom
         if opts[:offset] && opts[:offset] > 0
           limit = @sdb.select("#{query} limit #{opts[:offset]}").body
           if limit['NextToken']
-            logger.debug "Next token found. Retrieving results"
+            logger.debug "Next token found. Retrieving results."
             next_token = limit['NextToken']
           else
-            logger.debug "No more results."
+            logger.debug "No more results. Query complete."
             has_more = false
           end
         end
@@ -69,10 +69,10 @@ module Heirloom
             block_given? ? yield(k, v) : results[k] = v
           end
           if more['NextToken']
-            logger.debug "Next token found. Retrieving results"
+            logger.debug "Next token found. Retrieving results."
             next_token = more['NextToken']
           else
-            logger.debug "No More results."
+            logger.debug "No more results. Query complete."
             has_more = false
           end
         end

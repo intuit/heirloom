@@ -33,8 +33,7 @@ module Heirloom
       end
 
       def upload
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
+        ensure_valid_metadata_region @config
         ensure_domain_exists :name   => @opts[:name],
                              :config => @config
         ensure_buckets_exist :bucket_prefix => @bucket_prefix,

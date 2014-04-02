@@ -14,11 +14,8 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        @opts[:metadata_region] ||= @config.metadata_region
-
         ensure_valid_options :provided => @opts,
-                             :required => [:metadata_region,
-                                           :bucket_prefix,
+                             :required => [:bucket_prefix,
                                            :region, :name],
                              :config   => @config
 
@@ -29,13 +26,12 @@ module Heirloom
       end
 
       def setup
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
+        ensure_valid_metadata_region @config
 
         ensure_valid_regions :regions => @opts[:region],
                              :config  => @config
 
-        ensure_metadata_in_upload_region :config  => @config, 
+        ensure_metadata_in_upload_region :config  => @config,
                                          :regions => @opts[:region]
 
         ensure_valid_name :config => @config,

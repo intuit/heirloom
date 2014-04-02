@@ -22,7 +22,7 @@ module Heirloom
                                          :config  => @config
 
         # Can't use fetch as Trollop sets :id to nil
-        id = @opts[:id] ||( latest_id :name   => @opts[:name],                                              
+        id = @opts[:id] ||( latest_id :name   => @opts[:name],
                                       :config => @config)
 
         @archive = Archive.new :name   => @opts[:name],
@@ -39,7 +39,7 @@ module Heirloom
         @region = @opts[:region] || @catalog.regions.first
         @bucket_prefix = @opts[:bucket_prefix] || @catalog.bucket_prefix
       end
-      
+
       def download
         ensure_path_is_directory     :path => @opts[:output], :config => @config
         ensure_directory_is_writable :path => @opts[:output], :config => @config

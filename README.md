@@ -32,8 +32,8 @@ default:
   secret_key: UPDATE_ME
   metadata_region: us-west-1
 
-# multiple environments can be defined and 
-# selected via cli with -e or --environment
+# multiple environments can be defined in heirloom.yml and selected
+# via the cli with the -e or --environment option
 
 prod:
   access_key: UPDATE_ME
@@ -46,7 +46,11 @@ preprod:
   metadata_region: us-west-1
 ```
 
-You can specify an alternate config file by setting "HEIRLOOM_CONFIG_FILE" 
+By default, heirloom will load **.heirloom.yml** from your home directory.
+
+You can specify an alternate config file by setting the HEIRLOOM_CONFIG_FILE
+environment variable
+
 ```
 export HEIRLOOM_CONFIG_FILE="~/special_config.yml"
 ```

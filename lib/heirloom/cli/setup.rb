@@ -14,9 +14,8 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        ensure_valid_options :provided => @opts, 
-                             :required => [:metadata_region, 
-                                           :bucket_prefix,
+        ensure_valid_options :provided => @opts,
+                             :required => [:bucket_prefix,
                                            :region, :name],
                              :config   => @config
 
@@ -27,13 +26,12 @@ module Heirloom
       end
 
       def setup
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
+        ensure_valid_metadata_region @config
 
         ensure_valid_regions :regions => @opts[:region],
                              :config  => @config
 
-        ensure_metadata_in_upload_region :config  => @config, 
+        ensure_metadata_in_upload_region :config  => @config,
                                          :regions => @opts[:region]
 
         ensure_valid_name :config => @config,
@@ -92,7 +90,7 @@ Can be specified multiple times.", :type  => :string,
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
 

@@ -33,8 +33,7 @@ module Heirloom
       end
 
       def upload
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
+        ensure_valid_metadata_region @config
         ensure_domain_exists :name   => @opts[:name],
                              :config => @config
         ensure_buckets_exist :bucket_prefix => @bucket_prefix,
@@ -104,7 +103,7 @@ Can be specified multiple times.", :type  => :string, :multi => true, :short => 
           opt :aws_secret_key, "AWS Secret Access Key", :type  => :string,
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
 

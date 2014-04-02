@@ -76,6 +76,11 @@ module Heirloom
         end
       end
 
+      def ensure_valid_metadata_region(config)
+        ensure_valid_region :region => config.metadata_region,
+                            :config => config
+      end
+
       def ensure_metadata_in_upload_region(args)
         config  = args[:config]
         regions = args[:regions]

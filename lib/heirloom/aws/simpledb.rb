@@ -6,6 +6,7 @@ module Heirloom
 
       def initialize(args)
         @config = args[:config]
+        @logger = @config.logger
 
         fog_args = { :region => @config.metadata_region }
 
@@ -44,26 +45,34 @@ module Heirloom
       end
 
       def select(query, opts = {})
-        has_more = true
+        has_more   = true
         next_token = nil
-        results = {}
+        results    = {}
+
+        logger.debug "Executing simpledb query '#{query}'."
 
         if opts[:offset] && opts[:offset] > 0
           limit = @sdb.select("#{query} limit #{opts[:offset]}").body
           if limit['NextToken']
+            logger.debug "Next token found. Retrieving results."
             next_token = limit['NextToken']
           else
+            logger.debug "No more results. Query complete."
             has_more = false
           end
         end
+
         while has_more
+          logger.debug "Retrieving results from next token '#{next_token}'." if next_token
           more = @sdb.select(query, 'NextToken' => next_token).body
           more['Items'].each do |k, v|
             block_given? ? yield(k, v) : results[k] = v
           end
           if more['NextToken']
+            logger.debug "Next token found. Retrieving results."
             next_token = more['NextToken']
           else
+            logger.debug "No more results. Query complete."
             has_more = false
           end
         end
@@ -82,6 +91,10 @@ module Heirloom
       def item_count(domain, item)
         query = "SELECT count(*) FROM `#{domain}` WHERE itemName() = '#{item}'"
         @sdb.select(query).body['Items']['Domain']['Count'].first.to_i
+      end
+
+      def logger
+        @logger
       end
 
     end

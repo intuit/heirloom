@@ -17,9 +17,8 @@ module Heirloom
         ensure_valid_options :provided => @opts,
                              :required => [:name],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
-        ensure_domain_exists :name   => @opts[:name], 
+        ensure_valid_metadata_region @config
+        ensure_domain_exists :name   => @opts[:name],
                              :config => @config
 
         # Can't use fetch as Trollop sets :id to nil
@@ -32,16 +31,12 @@ module Heirloom
         ensure_archive_exists :archive => @archive,
                               :config  => @config
       end
-      
+
       def show
         data = @archive.show
-        if @opts[:json]
-          jj data
-        else
-          formatter = Heirloom::CLI::Formatter::Show.new
-          puts formatter.format :attributes => data,
-                                :all        => @opts[:all]
-        end
+        formatter = Heirloom::CLI::Formatter::Show.new
+        puts formatter.format :attributes => data,
+                              :all        => @opts[:all]
       end
 
       private
@@ -72,7 +67,7 @@ EOS
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
 

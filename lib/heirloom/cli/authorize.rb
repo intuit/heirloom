@@ -17,9 +17,8 @@ module Heirloom
         ensure_valid_options :provided => @opts,
                              :required => [:accounts, :name, :id],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
-        ensure_domain_exists :name => @opts[:name], 
+        ensure_valid_metadata_region @config
+        ensure_domain_exists :name => @opts[:name],
                              :config => @config
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
@@ -64,7 +63,7 @@ EOS
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
 

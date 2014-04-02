@@ -20,13 +20,17 @@ module Heirloom
       end
 
       def all
-        detected_regions.each do |region|
+        regions = detected_regions
+        @logger.info "Querying regions #{regions.join(', ')} for Heirloom catalogs."
+        regions.each do |region|
           @config.metadata_region = region
 
-          ensure_valid_region :region => region,
-                              :config => @config
+          ensure_valid_metadata_region @config
 
-          next unless catalog_domain_exists?
+          unless catalog_domain_exists?
+            @logger.info "No heirloom catalog in '#{region}'."
+            next
+          end
 
           @catalog_list = Hash[@catalog.all]
 
@@ -37,15 +41,21 @@ module Heirloom
           end
 
           if heirloom_exists_in_catalog? @opts[:name]
-            @logger.debug "Heirloom \'#{@opts[:name]}\' found in catalog for #{region}."
+            @logger.info "Heirloom \'#{@opts[:name]}\' found in catalog for #{region}."
             heirloom_details region, @opts[:name]
             @heirloom_found = true
           else
-            @logger.debug "Heirloom \'#{@opts[:name]}\' not found in catalog for #{region}."
+            @logger.info "Heirloom \'#{@opts[:name]}\' not found in catalog for #{region}."
           end
         end
 
-        @logger.info "Heirloom \'#{@opts[:name]}\' not found in any regions." unless @heirloom_found
+        unless @heirloom_found
+          if @opts[:name]
+            @logger.info "Heirloom \'#{@opts[:name]}\' not found in any regions."
+          else
+            @logger.info "Heirloom catalog not found in any regions."
+          end
+        end
       end
 
       private
@@ -107,7 +117,7 @@ heirloom catalog
           opt :aws_secret_key, "AWS Secret Access Key", :type  => :string,
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
 

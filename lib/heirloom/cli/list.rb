@@ -17,22 +17,17 @@ module Heirloom
         ensure_valid_options :provided => @opts,
                              :required => [:name],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
+        ensure_valid_metadata_region @config
         ensure_domain_exists :name => @opts[:name], :config => @config
 
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config
       end
-      
+
       def list(count = @opts[:count])
         @logger.debug "#{@archive.count} IDs found."
         list = @archive.list count
-        if @opts[:json]
-          jj list
-        else
-          puts list.join "\n"
-        end
+        puts list.join "\n"
       end
 
       private
@@ -61,7 +56,7 @@ EOS
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
 

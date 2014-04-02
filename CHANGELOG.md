@@ -1,5 +1,11 @@
 ## HEAD:
 
+* Bug fix in setup to properly read metadata region from config
+* Update to CLI environment message
+* Added SimpleDB debug query logging
+* Bug fix in catalog to return proper errors when catalog not found
+* Removed unused JSON output from CLI
+
 ## 0.12.3 (03/26/2014):
 
 * Added dependent gems for fog

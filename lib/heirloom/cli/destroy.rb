@@ -58,7 +58,7 @@ EOS
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
     end

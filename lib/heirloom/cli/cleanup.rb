@@ -57,7 +57,7 @@ EOS
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type  => :string, 
                                                         :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
     end

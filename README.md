@@ -25,16 +25,16 @@ gem install heirloom --no-ri --no-rdoc
 To get started, copy the sample below to ~/.heirloom.yml and update the specified fields.
 
 ```
-# default environment
-
 default:
   access_key: UPDATE_ME
   secret_key: UPDATE_ME
   metadata_region: us-west-1
+```
 
-# multiple environments can be defined in heirloom.yml and selected
-# via the cli with the -e or --environment option
+Multiple environments can be defined in heirloom.yml and selected via the cli 
+with the -e or --environment option
 
+```
 prod:
   access_key: UPDATE_ME
   secret_key: UPDATE_ME
@@ -46,14 +46,17 @@ preprod:
   metadata_region: us-west-1
 ```
 
-By default, heirloom will load **.heirloom.yml** from your home directory.
+You can now use Heirloom. For a list of commands
 
-You can specify an alternate config file by setting the HEIRLOOM_CONFIG_FILE
-environment variable
+    heirloom -h
 
-```
-export HEIRLOOM_CONFIG_FILE="~/special_config.yml"
-```
+For help on a specific command, append -h to the command:
+
+    heirloom setup -h
+
+For help an overview of heirloom, see the [Overview Wiki](https://github.com/intuit/heirloom/wiki/Overview).
+
+For detailed setup instructions, see the [Getting Started Guide](https://github.com/intuit/heirloom/wiki/GettingStarted).
 
 Documentation
 -------------

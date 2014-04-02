@@ -29,20 +29,6 @@ describe Heirloom do
     @archive_double.should_receive(:count)
   end
 
-  context "as json" do
-    before do
-      @options[:json] = true
-      Trollop.stub :options => @options
-    end
-
-    it "should list ids for given archive" do
-      @cli_list = Heirloom::CLI::List.new
-      @archive_double.should_receive(:list).with(100).and_return(['1','2'])
-      @cli_list.should_receive(:jj).with ['1','2']
-      @cli_list.list
-    end
-  end
-
   context "as human readable" do
     before do
       @options[:json] = nil

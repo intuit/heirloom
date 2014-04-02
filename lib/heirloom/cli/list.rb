@@ -27,11 +27,7 @@ module Heirloom
       def list(count = @opts[:count])
         @logger.debug "#{@archive.count} IDs found."
         list = @archive.list count
-        if @opts[:json]
-          jj list
-        else
-          puts list.join "\n"
-        end
+        puts list.join "\n"
       end
 
       private

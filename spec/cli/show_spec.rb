@@ -36,20 +36,6 @@ describe Heirloom do
       @attributes = { 'id' => '1.0.0' }
     end
 
-    context "as json" do
-      before do
-        @options[:json] = true
-        Trollop.stub(:options).and_return @options
-      end
-
-      it "should show a given id as json" do
-        @cli_show = Heirloom::CLI::Show.new
-        @archive_double.stub :show => @attributes
-        @cli_show.should_receive(:jj).with @attributes
-        @cli_show.show
-      end
-    end
-
     context "as human readable" do
       before do
         @options[:json] = false

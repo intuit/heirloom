@@ -21,23 +21,30 @@ module Heirloom
         @catalog = Heirloom::Catalog.new :name    => @opts[:name],
                                          :config  => @config
 
+        missing_bypass_simpledb_args = [:bucket_prefix, :id, :region].select {|a| @opts[a] == nil }
+
+        if missing_bypass_simpledb_args.none?
+          @logger.info "Required arguments to download directly from S3 provided."
+        else
+          @logger.info "Add #{missing_bypass_simpledb_args.join(', ')} to bypass querying catalog."
+          @logger.info "Querying catalog in SimpleDB for '#{@opts[:name]}' information."
+          ensure_catalog_domain_exists :config  => @config,
+                                       :catalog => @catalog
+          ensure_entry_exists_in_catalog :config  => @config,
+                                         :catalog => @catalog,
+                                         :entry   => @opts[:name]
+        end
+
+        # Lookup id, region & bucket_prefix from simpledb unless specified
         # Can't use fetch as Trollop sets :id to nil
-        id = @opts[:id] ||( latest_id :name   => @opts[:name],
-                                      :config => @config)
+        @region        = @opts[:region] || @catalog.regions.first
+        @bucket_prefix = @opts[:bucket_prefix] || @catalog.bucket_prefix
+        id             = @opts[:id] || (latest_id :name   => @opts[:name],
+                                                  :config => @config)
 
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config,
                                :id     => id
-
-        unless @opts[:bucket_prefix]
-          ensure_archive_exists :archive => @archive,
-                                :config  => @config
-        end
-
-        # Lookup region & bucket_prefix from simpledb unless specified
-        # To Do, valid validation message that simpledb exists
-        @region = @opts[:region] || @catalog.regions.first
-        @bucket_prefix = @opts[:bucket_prefix] || @catalog.bucket_prefix
       end
 
       def download
@@ -80,8 +87,7 @@ EOS
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :output, "Path to output downloaded Heirloom. Must be existing directory.", :type => :string
-          opt :region, "Region to download Heirloom.", :type    => :string,
-                                                       :default => 'us-west-1'
+          opt :region, "Region to download Heirloom.", :type => :string
           opt :secret, "Secret for encrypted Heirloom.", :type => :string
           opt :secret_file, "Read secret from file.", :type  => :string,
                                                       :short => :none

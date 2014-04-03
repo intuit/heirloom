@@ -1,4 +1,8 @@
-## 0.12.4: (04/02/2014):
+## HEAD (04/03/2014):
+
+* Updated download CLI argument validation
+
+## 0.12.4 (04/02/2014):
 
 * Bug fix in setup to properly read metadata region from config
 * Update to CLI environment message

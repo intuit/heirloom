@@ -21,23 +21,20 @@ module Heirloom
         @catalog = Heirloom::Catalog.new :name    => @opts[:name],
                                          :config  => @config
 
+        # Determine if we can download directly from S3
+        # Or if we need to query additional information from the catalog
+        validate_or_bypass_catalog
+
+        # Lookup id, region & bucket_prefix from simpledb unless specified
         # Can't use fetch as Trollop sets :id to nil
-        id = @opts[:id] ||( latest_id :name   => @opts[:name],
-                                      :config => @config)
+        @region        = @opts[:region] || @catalog.regions.first
+        @bucket_prefix = @opts[:bucket_prefix] || @catalog.bucket_prefix
+        id             = @opts[:id] || (latest_id :name   => @opts[:name],
+                                                  :config => @config)
 
         @archive = Archive.new :name   => @opts[:name],
                                :config => @config,
                                :id     => id
-
-        unless @opts[:bucket_prefix]
-          ensure_archive_exists :archive => @archive,
-                                :config  => @config
-        end
-
-        # Lookup region & bucket_prefix from simpledb unless specified
-        # To Do, valid validation message that simpledb exists
-        @region = @opts[:region] || @catalog.regions.first
-        @bucket_prefix = @opts[:bucket_prefix] || @catalog.bucket_prefix
       end
 
       def download
@@ -54,6 +51,25 @@ module Heirloom
       end
 
       private
+
+      def validate_or_bypass_catalog
+        missing_bypass_catalog_args = [:bucket_prefix, :id, :region].reject {|a| @opts[a]}
+
+        if missing_bypass_catalog_args.none?
+          @logger.info "Required arguments to download Heirloom without querying catalog provided. Downloading..."
+        else
+          @logger.info "Querying catalog for '#{@opts[:name]}' information."
+          @logger.info "Add #{missing_bypass_catalog_args.join(', ')} to bypass querying catalog."
+
+          # Only verify the domain exists in Heirloom
+          # if we don't bypass the catalog
+          ensure_catalog_domain_exists :config  => @config,
+                                       :catalog => @catalog
+          ensure_entry_exists_in_catalog :config  => @config,
+                                         :catalog => @catalog,
+                                         :entry   => @opts[:name]
+        end
+      end
 
       def read_options
         Trollop::options do
@@ -80,14 +96,13 @@ EOS
           opt :metadata_region, "AWS region to store Heirloom metadata.", :type => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :output, "Path to output downloaded Heirloom. Must be existing directory.", :type => :string
-          opt :region, "Region to download Heirloom.", :type    => :string,
-                                                       :default => 'us-west-1'
+          opt :region, "Region to download Heirloom.", :type => :string
           opt :secret, "Secret for encrypted Heirloom.", :type => :string
           opt :secret_file, "Read secret from file.", :type  => :string,
                                                       :short => :none
-          opt :aws_access_key, "AWS Access Key ID", :type => :string, 
+          opt :aws_access_key, "AWS Access Key ID", :type => :string,
                                                     :short => :none
-          opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
+          opt :aws_secret_key, "AWS Secret Access Key", :type => :string,
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
           opt :environment, "Environment (defined in heirloom config file)", :type => :string

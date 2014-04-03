@@ -56,10 +56,10 @@ module Heirloom
         missing_bypass_catalog_args = [:bucket_prefix, :id, :region].reject {|a| @opts[a]}
 
         if missing_bypass_catalog_args.none?
-          @logger.info "Required arguments to download directly from S3 provided."
+          @logger.info "Required arguments to download Heirloom without querying catalog provided. Downloading..."
         else
+          @logger.info "Querying catalog for '#{@opts[:name]}' information."
           @logger.info "Add #{missing_bypass_catalog_args.join(', ')} to bypass querying catalog."
-          @logger.info "Querying catalog in SimpleDB for '#{@opts[:name]}' information."
 
           # Only verify the domain exists in Heirloom
           # if we don't bypass the catalog

@@ -56,8 +56,10 @@ describe Heirloom do
 
   context "id, region and bucket prefix not specified" do
     before do
-      @catalog_double = double 'catalog', :regions       => ['us-east-1', 'us-west-1'],
-                                          :bucket_prefix => 'bp'
+      @catalog_double = double 'catalog', :regions                  => ['us-east-1', 'us-west-1'],
+                                          :bucket_prefix            => 'bp',
+                                          :entry_exists_in_catalog? => true,
+                                          :catalog_domain_exists?   => true
       @archive_double.stub :exists? => true
       options = { :name            => 'archive_name',
                   :level           => 'info',
@@ -74,8 +76,6 @@ describe Heirloom do
                         with(:name   => 'archive_name',
                              :config => @config_double).
                         and_return @catalog_double
-      @catalog_double.stub :entry_exists_in_catalog? => true
-      @catalog_double.stub :catalog_domain_exists? => true
       archive_double_to_lookup_latest = double 'latest', :list => ['1.0.0']
       Heirloom::Archive.should_receive(:new).
                         with(:name => 'archive_name',

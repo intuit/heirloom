@@ -23,7 +23,7 @@ module Heirloom
 
         # Determine if we can download directly from S3
         # Or if we need to query additional information from the catalog
-        bypass_catalog
+        validate_or_bypass_catalog
 
         # Lookup id, region & bucket_prefix from simpledb unless specified
         # Can't use fetch as Trollop sets :id to nil
@@ -52,7 +52,7 @@ module Heirloom
 
       private
 
-      def bypass_catalog
+      def validate_or_bypass_catalog
         missing_bypass_catalog_args = [:bucket_prefix, :id, :region].reject {|a| @opts[a]}
 
         if missing_bypass_catalog_args.none?

@@ -4,7 +4,7 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    @logger_double = double 'logger'
+    @logger_double = double 'logger', :info => true
     @config_double = double_config :logger => @logger_double
     @archive_double = double 'archive'
     Heirloom::HeirloomLogger.should_receive(:new).
@@ -74,6 +74,8 @@ describe Heirloom do
                         with(:name   => 'archive_name',
                              :config => @config_double).
                         and_return @catalog_double
+      @catalog_double.stub :entry_exists_in_catalog? => true
+      @catalog_double.stub :catalog_domain_exists? => true
       archive_double_to_lookup_latest = double 'latest', :list => ['1.0.0']
       Heirloom::Archive.should_receive(:new).
                         with(:name => 'archive_name',
@@ -84,10 +86,10 @@ describe Heirloom do
 
     it "should download the latest archive from the first region" do
       @archive_double.should_receive(:download).with(:output        => '/tmp/test123',
-                                                   :region        => 'us-east-1',
-                                                   :bucket_prefix => 'bp',
-                                                   :extract       => false,
-                                                   :secret        => nil).
+                                                     :region        => 'us-east-1',
+                                                     :bucket_prefix => 'bp',
+                                                     :extract       => false,
+                                                     :secret        => nil).
                       and_return '/tmp/test123'
       @cli_download.should_receive(:ensure_path_is_directory).
                     with(:config => @config_double,

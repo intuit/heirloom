@@ -1,4 +1,4 @@
-## HEAD (04/03/2014):
+## 0.12.5 (04/03/2014):
 
 * Updated download CLI argument validation
 

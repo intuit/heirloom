@@ -24,7 +24,7 @@ module Heirloom
 
       raw_archive = s3_downloader.download_file :bucket => bucket,
                                                 :key    => key
-      
+
       return false unless raw_archive
 
       archive = cipher_data.decrypt_data :data   => raw_archive,

@@ -1,5 +1,5 @@
 [![Build Status](https://secure.travis-ci.org/intuit/heirloom.png)](http://travis-ci.org/intuit/heirloom)
-
+[![Code Climate](https://codeclimate.com/github/intuit/heirloom.png)](https://codeclimate.com/github/intuit/heirloom)
 Heirloom
 ========
 
@@ -26,21 +26,31 @@ To get started, copy the sample below to ~/.heirloom.yml and update the specifie
 
 ```
 # default environment
+
 default:
   access_key: UPDATE_ME
   secret_key: UPDATE_ME
   metadata_region: us-west-1
-  
-# multiple environments can be defined and 
-# selected via cli with -e or --environment
 
-# prod:
-#   access_key: UPDATE_ME
-#   secret_key: UPDATE_ME
-#   metadata_region: us-west-1
+# multiple environments can be defined in heirloom.yml and selected
+# via the cli with the -e or --environment option
+
+prod:
+  access_key: UPDATE_ME
+  secret_key: UPDATE_ME
+  metadata_region: us-west-1
+
+preprod:
+  access_key: UPDATE_ME
+  secret_key: UPDATE_ME
+  metadata_region: us-west-1
 ```
 
-You can specify an alternate config file by setting "HEIRLOOM_CONFIG_FILE" 
+By default, heirloom will load **.heirloom.yml** from your home directory.
+
+You can specify an alternate config file by setting the HEIRLOOM_CONFIG_FILE
+environment variable
+
 ```
 export HEIRLOOM_CONFIG_FILE="~/special_config.yml"
 ```

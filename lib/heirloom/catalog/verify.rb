@@ -10,10 +10,10 @@ module Heirloom
 
       def catalog_domain_exists?
         if sdb.domain_exists? 'heirloom'
-          @logger.debug "Catalog exists in #{@region}."
+          @logger.debug "Catalog of Heirlooms exists in #{@region}."
           true
         else
-          @logger.debug "Catalog does not exist in #{@region}."
+          @logger.debug "Catalog of Heirlooms does not exist in #{@region}."
           false
         end
       end

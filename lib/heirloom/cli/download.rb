@@ -22,7 +22,7 @@ module Heirloom
                                          :config  => @config
 
         # Can't use fetch as Trollop sets :id to nil
-        id = @opts[:id] ||( latest_id :name   => @opts[:name],                                              
+        id = @opts[:id] ||( latest_id :name   => @opts[:name],
                                       :config => @config)
 
         @archive = Archive.new :name   => @opts[:name],
@@ -39,7 +39,7 @@ module Heirloom
         @region = @opts[:region] || @catalog.regions.first
         @bucket_prefix = @opts[:bucket_prefix] || @catalog.bucket_prefix
       end
-      
+
       def download
         ensure_path_is_directory     :path => @opts[:output], :config => @config
         ensure_directory_is_writable :path => @opts[:output], :config => @config
@@ -77,13 +77,12 @@ EOS
           opt :id, "ID of the Heirloom to download.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :output, "Path to output downloaded Heirloom. Must be existing directory.", :type => :string
           opt :region, "Region to download Heirloom.", :type    => :string,
                                                        :default => 'us-west-1'
-          opt :secret, "Secret for ecrypted Heirloom.", :type => :string
+          opt :secret, "Secret for encrypted Heirloom.", :type => :string
           opt :secret_file, "Read secret from file.", :type  => :string,
                                                       :short => :none
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
@@ -91,7 +90,7 @@ EOS
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
     end

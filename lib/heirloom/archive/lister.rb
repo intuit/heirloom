@@ -4,7 +4,7 @@ module Heirloom
 
     def initialize(args)
       @config = args[:config]
-      @name = args[:name]
+      @name   = args[:name]
       @domain = "heirloom_#{@name}"
     end
 

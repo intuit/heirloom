@@ -17,9 +17,8 @@ module Heirloom
         ensure_valid_options :provided => @opts,
                              :required => [:accounts, :name, :id],
                              :config   => @config
-        ensure_valid_region :region => @opts[:metadata_region],
-                            :config => @config
-        ensure_domain_exists :name => @opts[:name], 
+        ensure_valid_metadata_region @config
+        ensure_domain_exists :name => @opts[:name],
                              :config => @config
         @archive = Archive.new :name   => @opts[:name],
                                :id     => @opts[:id],
@@ -57,15 +56,14 @@ EOS
           opt :id, "ID of the Heirloom to authorize.", :type => :string
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,   
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :aws_access_key, "AWS Access Key ID", :type => :string, 
                                                     :short => :none
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
 

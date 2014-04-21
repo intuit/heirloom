@@ -76,6 +76,11 @@ module Heirloom
         end
       end
 
+      def ensure_valid_metadata_region(config)
+        ensure_valid_region :region => config.metadata_region,
+                            :config => config
+      end
+
       def ensure_metadata_in_upload_region(args)
         config  = args[:config]
         regions = args[:regions]
@@ -167,13 +172,16 @@ module Heirloom
       def ensure_catalog_domain_exists(args)
         config  = args[:config]
         catalog = args[:catalog]
+        continue_on_error = args[:continue_on_error]
         logger  = config.logger
         region  = config.metadata_region
 
         unless catalog.catalog_domain_exists?
+          return false if continue_on_error
           logger.error "Catalog does not exist in #{region}."
           exit 1
         end
+        true
       end
 
       def ensure_entry_exists_in_catalog(args)

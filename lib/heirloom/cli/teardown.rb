@@ -14,7 +14,8 @@ module Heirloom
         @config = load_config :logger => @logger,
                               :opts   => @opts
 
-        ensure_valid_options :provided => @opts, 
+        ensure_valid_metadata_region @config
+        ensure_valid_options :provided => @opts,
                              :required => [:name],
                              :config   => @config
 
@@ -73,8 +74,7 @@ EOS
           opt :help, "Display Help"
           opt :level, "Log level [debug|info|warn|error].", :type    => :string,
                                                             :default => 'info'
-          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string,
-                                                                          :default => 'us-west-1'
+          opt :metadata_region, "AWS region to store Heirloom metadata.", :type    => :string
           opt :name, "Name of Heirloom.", :type => :string
           opt :force, "Forces recursive deletion of existing archives."
           opt :keep_buckets, "Do not delete S3 buckets."
@@ -83,7 +83,7 @@ EOS
           opt :aws_secret_key, "AWS Secret Access Key", :type => :string, 
                                                         :short => :none
           opt :use_iam_profile, "Use IAM EC2 Profile", :short => :none
-          opt :environment, "Environment (defined in ~/.heirloom.yml)", :type => :string
+          opt :environment, "Environment (defined in heirloom config file)", :type => :string
         end
       end
 

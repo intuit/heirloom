@@ -4,39 +4,41 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    @catalog = { 'test1' =>
+
+    @catalog = { 'heirloom_test1' =>
                    { 'regions'       => ['us-west-1', 'us-east-1'],
                      'bucket_prefix' => ['bp1'] },
-                 'test2' => 
+                 'heirloom_test2' =>
                    { 'regions'       => ['us-west-2'],
                      'bucket_prefix' => ['bp2'] }
                } 
-    @formatter = Heirloom::CLI::Formatter::Catalog.new
+    @formatter = Heirloom::CLI::Formatter::Catalog.new :catalog => @catalog
+
+
   end
 
   context "unfiltered" do
-    it "should return the formated list" do
-      @formatter.format(:catalog => @catalog,
+    it "should return the summary formatted list" do
+
+      @formatter.summary_format(:region  => 'us-west-1',
                         :details => nil,
-                        :name    => nil ).should == "test1\ntest2"
+                        :name    => nil ).should == "us-west-1\n  test1\n  test2"
     end
   end
 
   context "filtered" do
-    it "should return the name with details" do
+    it "should return the name with details when passed in the name and region" do
       format = "test1\n" +
-               "  regions          : us-west-1, us-east-1\n" +
-               "  bucket_prefix    : bp1\n" +
-               "  us-west-1-s3-url : s3://bp1-us-west-1/test1\n" +
-               "  us-east-1-s3-url : s3://bp1-us-east-1/test1"
-      @formatter.format(:catalog => @catalog,
-                        :name    => 'test1').should == format
-    end
+          "  metadata_region  : us-west-1\n" +
+          "  regions          : us-east-1, us-west-1\n" +
+          "  bucket_prefix    : bp1\n" +
+          "  us-east-1-s3-url : s3://bp1-us-east-1/test1\n" +
+          "  us-west-1-s3-url : s3://bp1-us-west-1/test1"
 
-    it "should return not found if name does not exist in catalog" do
-      format = "Heirloom not_here not found in catalog."
-      @formatter.format(:catalog => @catalog,
-                        :name    => 'not_here').should == format
+      @formatter.detailed_format(:region  => 'us-west-1',
+                        :details => nil,
+                        :name    => 'test1').should == format
+
     end
   end
 

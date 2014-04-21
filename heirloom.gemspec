@@ -20,13 +20,13 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   s.add_development_dependency "rake"
-  s.add_development_dependency "rspec", '~> 2.11.0'
+  s.add_development_dependency "rspec", '~> 2.14.1'
   s.add_development_dependency "simplecov"
-  s.add_development_dependency "vcr", '= 2.4.0'
-  s.add_development_dependency "watchr"
 
-  s.add_runtime_dependency 'fog', '= 1.15.0'
+  s.add_runtime_dependency 'fog', '= 1.21.0'
   s.add_runtime_dependency 'hashie', '= 2.0.5'
   s.add_runtime_dependency 'trollop', '= 2.0'
-  s.add_runtime_dependency 'xml-simple', '~> 1.1.2'
+  s.add_runtime_dependency 'xml-simple', '~> 1.1.3'
+  s.add_runtime_dependency "unf", "= 0.1.3"
+  s.add_runtime_dependency "unf_ext", "= 0.0.6"
 end

@@ -248,12 +248,10 @@ describe Heirloom do
     end
 
     it "should return true if Excon::Errors::BadRequest raised when account is invalid" do
-      pending "temporarily disabled"
       body = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>UnresolvableGrantByEmailAddress</Code><Message>The e-mail address you provided does not match any account on record.</Message><RequestId>1FF76C053626CF97</RequestId><EmailAddress>brett@weav.net1</EmailAddress><HostId>AXpUoV59+WbDr++4ffoKlSdbFAlPjpoyJd5riKJ9bTZLoobnGRaboeeFmkkI7vg6</HostId></Error>'
       @response_stub = stub 'response', :body => body
 
-      @logger_mock.should_receive(:error).with('The e-mail address you provided does not match any account on record.')
-      @fog_mock.should_receive(:put_object_acl).
+      @fog_double.should_receive(:put_object_acl).
                 with('bucket', 'object', 'grants').
                 and_raise Excon::Errors::BadRequest.new 'msg', 'req', @response_stub
       @s3.put_object_acl('bucket', 'object','grants').should be_false

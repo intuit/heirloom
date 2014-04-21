@@ -1,3 +1,6 @@
+## head (04/21/2014):
+* Added error handling for invalid account when accessing heirloom
+
 ## 0.12.4: (04/02/2014):
 
 * Bug fix in setup to properly read metadata region from config

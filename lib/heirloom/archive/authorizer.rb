@@ -24,7 +24,7 @@ module Heirloom
       regions.each do |region|
         @bucket = reader.get_bucket :region => region
 
-        return false unless able_to_grant_read_access? region
+        return false unless grant_read_access region
       end
 
       @logger.info "Authorization complete."
@@ -33,7 +33,7 @@ module Heirloom
 
     private
 
-    def able_to_grant_read_access?(region)
+    def grant_read_access(region)
       s3_acl = ACL::S3.new :config => @config,
                            :region => region
 

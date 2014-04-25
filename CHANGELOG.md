@@ -1,7 +1,11 @@
 ## head (04/21/2014):
 * Added error handling for invalid account when accessing heirloom
 
-## 0.12.4: (04/02/2014):
+## 0.12.5 (04/03/2014):
+
+* Updated download CLI argument validation
+
+## 0.12.4 (04/02/2014):
 
 * Bug fix in setup to properly read metadata region from config
 * Update to CLI environment message

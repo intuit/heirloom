@@ -4,7 +4,7 @@ require 'heirloom/cli'
 describe Heirloom do
 
   before do
-    @logger_double = double 'logger'
+    @logger_double = double 'logger', :info => true
     @config_double = double_config :logger => @logger_double
     @archive_double = double 'archive'
     Heirloom::HeirloomLogger.should_receive(:new).
@@ -56,8 +56,10 @@ describe Heirloom do
 
   context "id, region and bucket prefix not specified" do
     before do
-      @catalog_double = double 'catalog', :regions       => ['us-east-1', 'us-west-1'],
-                                          :bucket_prefix => 'bp'
+      @catalog_double = double 'catalog', :regions                  => ['us-east-1', 'us-west-1'],
+                                          :bucket_prefix            => 'bp',
+                                          :entry_exists_in_catalog? => true,
+                                          :catalog_domain_exists?   => true
       @archive_double.stub :exists? => true
       options = { :name            => 'archive_name',
                   :level           => 'info',
@@ -84,10 +86,10 @@ describe Heirloom do
 
     it "should download the latest archive from the first region" do
       @archive_double.should_receive(:download).with(:output        => '/tmp/test123',
-                                                   :region        => 'us-east-1',
-                                                   :bucket_prefix => 'bp',
-                                                   :extract       => false,
-                                                   :secret        => nil).
+                                                     :region        => 'us-east-1',
+                                                     :bucket_prefix => 'bp',
+                                                     :extract       => false,
+                                                     :secret        => nil).
                       and_return '/tmp/test123'
       @cli_download.should_receive(:ensure_path_is_directory).
                     with(:config => @config_double,

@@ -1,3 +1,6 @@
+## head (04/21/2014):
+* Added error handling for invalid account when accessing heirloom
+
 ## 0.12.5 (04/03/2014):
 
 * Updated download CLI argument validation

@@ -19,18 +19,12 @@ module Heirloom
 
       @logger.info "Authorizing #{@accounts.join(', ')}."
 
-      key_name = reader.key_name
+      @key_name = reader.key_name
 
       regions.each do |region|
-        bucket = reader.get_bucket :region => region
+        @bucket = reader.get_bucket :region => region
 
-        s3_acl = ACL::S3.new :config => @config,
-                             :region => region
-
-        s3_acl.allow_read_access_from_accounts :key_name   => key_name,
-                                               :key_folder => @name,
-                                               :accounts   => @accounts,
-                                               :bucket     => bucket
+        return false unless grant_read_access region
       end
 
       @logger.info "Authorization complete."
@@ -38,6 +32,16 @@ module Heirloom
     end
 
     private
+
+    def grant_read_access(region)
+      s3_acl = ACL::S3.new :config => @config,
+                           :region => region
+
+      s3_acl.allow_read_access_from_accounts :key_name   => @key_name,
+                                             :key_folder => @name,
+                                             :accounts   => @accounts,
+                                             :bucket     => @bucket
+    end
 
     def validate_format_of_accounts
       status = true

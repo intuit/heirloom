@@ -94,6 +94,13 @@ module Heirloom
 
       def put_object_acl(bucket, key, grants)
         @s3.put_object_acl(bucket, key, grants)
+        true
+      rescue Excon::Errors::BadRequest => e
+        error = XmlSimple.xml_in e.response.body
+        error['Message'].each do |msg|
+          @logger.error msg
+        end
+        false
       end
 
       def put_bucket(bucket_name, region)

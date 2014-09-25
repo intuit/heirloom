@@ -1,5 +1,15 @@
 [![Build Status](https://secure.travis-ci.org/intuit/heirloom.png)](http://travis-ci.org/intuit/heirloom)
 [![Code Climate](https://codeclimate.com/github/intuit/heirloom.png)](https://codeclimate.com/github/intuit/heirloom)
+
+**Heirloom is in maintenance mode!**
+
+**We will continue to provide support for bug fix requests, however new features will not be added.**
+
+We recommend using the [AWS CLI](http://aws.amazon.com/cli/) and [GPG](https://www.gnupg.org/)
+to distribute encrypted files in S3.
+
+--------
+
 Heirloom
 ========
 

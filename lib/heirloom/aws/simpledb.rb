@@ -68,10 +68,7 @@ module Heirloom
         logger.debug "Executing simpledb query '#{query}'."
 
         if opts[:offset] && opts[:offset] > 0
-          limit = with_retries(:max_retries => 3,
-                               :rescue => Excon::Errors::ServiceUnavailable,
-                               :base_sleep_seconds => 10,
-                               :max_sleep_seconds => 60) do
+          limit = with_retries(retry_options) do
             @sdb.select("#{query} limit #{opts[:offset]}").body
           end
           if limit['NextToken']
@@ -85,10 +82,7 @@ module Heirloom
 
         while has_more
           logger.debug "Retrieving results from next token '#{next_token}'." if next_token
-          more = with_retries(:max_retries => 3,
-                              :rescue => Excon::Errors::ServiceUnavailable,
-                              :base_sleep_seconds => 10,
-                              :max_sleep_seconds => 60) do
+          more = with_retries(retry_options) do
             @sdb.select(query, 'NextToken' => next_token).body
           end
           more['Items'].each do |k, v|

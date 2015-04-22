@@ -21,11 +21,15 @@ module Heirloom
         @sdb = Fog::AWS::SimpleDB.new fog_args
       end
 
+      def retry_options
+        {:max_retries => 3,
+         :rescue => Excon::Errors::ServiceUnavailable,
+         :base_sleep_seconds => 10,
+         :max_sleep_seconds => 60}
+      end
+
       def domains
-        with_retries(:max_retries => 3,
-                     :rescue => Excon::Errors::ServiceUnavailable,
-                     :base_sleep_seconds => 10,
-                     :max_sleep_seconds => 60) do
+        with_retries(retry_options) do
           @sdb.list_domains.body['Domains']
         end
       end
@@ -35,19 +39,13 @@ module Heirloom
       end
 
       def create_domain(domain)
-        with_retries(:max_retries => 3,
-                     :rescue => Excon::Errors::ServiceUnavailable,
-                     :base_sleep_seconds => 10,
-                     :max_sleep_seconds => 60) do
+        with_retries(retry_options) do
           @sdb.create_domain(domain) unless domain_exists?(domain)
         end
       end
 
       def delete_domain(domain)
-        with_retries(:max_retries => 3,
-                     :rescue => Excon::Errors::ServiceUnavailable,
-                     :base_sleep_seconds => 10,
-                     :max_sleep_seconds => 60) do
+        with_retries(retry_options) do
           @sdb.delete_domain(domain)
         end
       end
@@ -57,10 +55,7 @@ module Heirloom
       end
 
       def put_attributes(domain, key, attributes, options = {})
-        with_retries(:max_retries => 3,
-                     :rescue => Excon::Errors::ServiceUnavailable,
-                     :base_sleep_seconds => 10,
-                     :max_sleep_seconds => 60) do
+        with_retries(retry_options) do
           @sdb.put_attributes domain, key, attributes, options
         end
       end
@@ -111,29 +106,20 @@ module Heirloom
       end
 
       def delete(domain, key)
-        with_retries(:max_retries => 3,
-                     :rescue => Excon::Errors::ServiceUnavailable,
-                     :base_sleep_seconds => 10,
-                     :max_sleep_seconds => 60) do
+        with_retries(retry_options) do
           @sdb.delete_attributes domain, key
         end
       end
 
       def count(domain)
-        with_retries(:max_retries => 3,
-                     :rescue => Excon::Errors::ServiceUnavailable,
-                     :base_sleep_seconds => 10,
-                     :max_sleep_seconds => 60) do
+        with_retries(retry_options) do
           body = @sdb.select("SELECT count(*) FROM `#{domain}`").body
           body['Items']['Domain']['Count'].first.to_i
         end
       end
 
       def item_count(domain, item)
-        with_retries(:max_retries => 3,
-                     :rescue => Excon::Errors::ServiceUnavailable,
-                     :base_sleep_seconds => 10,
-                     :max_sleep_seconds => 60) do
+        with_retries(retry_options) do
           query = "SELECT count(*) FROM `#{domain}` WHERE itemName() = '#{item}'"
           @sdb.select(query).body['Items']['Domain']['Count'].first.to_i
         end

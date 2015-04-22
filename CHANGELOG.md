@@ -1,6 +1,10 @@
 ## head (04/21/2014):
 * Added error handling for invalid account when accessing heirloom
 
+## 0.12.7
+
+* Retry 503 errors from SimpleDB
+
 ## 0.12.6
 
 * Use fog 1.29.0

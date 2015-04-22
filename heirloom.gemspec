@@ -29,4 +29,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'xml-simple', '~> 1.1.3'
   s.add_runtime_dependency "unf", "= 0.1.3"
   s.add_runtime_dependency "unf_ext", "= 0.0.6"
+  s.add_runtime_dependency "retries", "= 0.0.5"
 end

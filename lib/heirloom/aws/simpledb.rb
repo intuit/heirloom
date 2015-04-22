@@ -1,4 +1,5 @@
 require 'fog'
+require 'retries'
 
 module Heirloom
   module AWS
@@ -20,8 +21,17 @@ module Heirloom
         @sdb = Fog::AWS::SimpleDB.new fog_args
       end
 
+      def retry_options
+        {:max_retries => 3,
+         :rescue => Excon::Errors::ServiceUnavailable,
+         :base_sleep_seconds => 10,
+         :max_sleep_seconds => 60}
+      end
+
       def domains
-        @sdb.list_domains.body['Domains']
+        with_retries(retry_options) do
+          @sdb.list_domains.body['Domains']
+        end
       end
 
       def domain_exists?(domain)
@@ -29,11 +39,15 @@ module Heirloom
       end
 
       def create_domain(domain)
-        @sdb.create_domain(domain) unless domain_exists?(domain)
+        with_retries(retry_options) do
+          @sdb.create_domain(domain) unless domain_exists?(domain)
+        end
       end
 
       def delete_domain(domain)
-        @sdb.delete_domain(domain)
+        with_retries(retry_options) do
+          @sdb.delete_domain(domain)
+        end
       end
 
       def domain_empty?(domain)
@@ -41,7 +55,9 @@ module Heirloom
       end
 
       def put_attributes(domain, key, attributes, options = {})
-        @sdb.put_attributes domain, key, attributes, options
+        with_retries(retry_options) do
+          @sdb.put_attributes domain, key, attributes, options
+        end
       end
 
       def select(query, opts = {})
@@ -52,7 +68,9 @@ module Heirloom
         logger.debug "Executing simpledb query '#{query}'."
 
         if opts[:offset] && opts[:offset] > 0
-          limit = @sdb.select("#{query} limit #{opts[:offset]}").body
+          limit = with_retries(retry_options) do
+            @sdb.select("#{query} limit #{opts[:offset]}").body
+          end
           if limit['NextToken']
             logger.debug "Next token found. Retrieving results."
             next_token = limit['NextToken']
@@ -64,7 +82,9 @@ module Heirloom
 
         while has_more
           logger.debug "Retrieving results from next token '#{next_token}'." if next_token
-          more = @sdb.select(query, 'NextToken' => next_token).body
+          more = with_retries(retry_options) do
+            @sdb.select(query, 'NextToken' => next_token).body
+          end
           more['Items'].each do |k, v|
             block_given? ? yield(k, v) : results[k] = v
           end
@@ -80,17 +100,23 @@ module Heirloom
       end
 
       def delete(domain, key)
-        @sdb.delete_attributes domain, key
+        with_retries(retry_options) do
+          @sdb.delete_attributes domain, key
+        end
       end
 
       def count(domain)
-        body = @sdb.select("SELECT count(*) FROM `#{domain}`").body
-        body['Items']['Domain']['Count'].first.to_i
+        with_retries(retry_options) do
+          body = @sdb.select("SELECT count(*) FROM `#{domain}`").body
+          body['Items']['Domain']['Count'].first.to_i
+        end
       end
 
       def item_count(domain, item)
-        query = "SELECT count(*) FROM `#{domain}` WHERE itemName() = '#{item}'"
-        @sdb.select(query).body['Items']['Domain']['Count'].first.to_i
+        with_retries(retry_options) do
+          query = "SELECT count(*) FROM `#{domain}` WHERE itemName() = '#{item}'"
+          @sdb.select(query).body['Items']['Domain']['Count'].first.to_i
+        end
       end
 
       def logger

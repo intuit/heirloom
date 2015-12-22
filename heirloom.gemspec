@@ -5,8 +5,8 @@ require "heirloom/version"
 Gem::Specification.new do |s|
   s.name        = "heirloom"
   s.version     = Heirloom::VERSION
-  s.authors     = ["Brett Weaver"]
-  s.email       = ["brett@weav.net"]
+  s.authors     = ["Intuit Open Source"]
+  s.email       = ["CTO-DevOpenSource@intuit.com"]
   s.homepage    = ""
   s.summary     = %q{I help with deploying code into the cloud}
   s.description = %q{I help build and manage building tar.gz files and deploying them into the cloud}
